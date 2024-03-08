@@ -59,6 +59,7 @@ class MagneticElement(IgnoreExtra):
     systematic_multipoles: Multipoles = Multipoles()
     random_multipoles: Multipoles = Multipoles()
     field_integral_coefficients: FieldIntegral = FieldIntegral()
+    settle_time:    float = Field(alias='mag_set_max_wait_time', default=45.0)
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)

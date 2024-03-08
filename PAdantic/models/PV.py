@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_serializer, ConfigDict, field_validator, ValidationInfo
+from pydantic import BaseModel, model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model
 from typing import Dict, Any
 import yaml
 
@@ -68,14 +68,22 @@ class PV(PVSet):
     @classmethod
     def validate_record(cls, v: str, info: ValidationInfo) -> str:
         classname = info.data['classname']
-        if v.upper() not in map(str.upper, classrecordNames[classname]):
-            raise ValueError('Invalid Record Name')
+        typename = info.data['typename']
+        if classname in classrecordNames:
+            records = classrecordNames[classname]
+        elif typename in classrecordNames:
+            records = classrecordNames[typename]
+        else:
+            raise ValueError('Invalid Record classname/typename')
+        if v.upper() not in map(str.upper, records):
+            # raise ValueError('Invalid Record Name')
+            print(typename, '    - ',v)
         return v
 
     @classmethod
     def fromString(cls, pv: str) -> T:
         assert ':' in pv
-        prefix, postfix = pv.split(':')
+        prefix, postfix = pv.split(':', 1)
         substr = prefix.split('-')
         assert len(substr) == 5
         return cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
@@ -105,26 +113,16 @@ class PV(PVSet):
     def ser_model(self) -> str:
         return self.__str__()
 
-class MagnetPV(BaseModel):
-    ''' Magnet PV model. '''
-    GETSETI:    PV | None = None
-    READI:      PV | None = None
-    RILK:       PV | None = None
-    RPOWER:     PV | None = None
-    SETI:       PV | None = None
-    SPOWER:     PV | None = None
-    ILK_RESET:  PV | None = None
-    K_DIP_P:    PV | None = None
-    INT_STR_MM: PV | None = None
-    INT_STR:    PV | None = None
-    K_SET_P:    PV | None = None
-    K_ANG:      PV | None = None
-    K_MRAD:     PV | None = None
-    K_VAL:      PV | None = None
+class ElementPV(BaseModel):
 
     def __str__(self) -> str:
-        return 'MagnetPV(' + ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])
+        return ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])
 
     @model_serializer
     def ser_model(self) -> Dict[str, Any]:
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) is not None}
+
+for k, v in {'MAG': 'Magnet', 'BPM': 'BPM', 'CAM': 'Camera'}.items():
+    pvs = {p: (PV, Field(default=None)) for p in classPVNames[k]}
+    PVData = create_model(v+'PV', **pvs, __base__=ElementPV)
+    globals()[v+'PV'] = type(v+'PV', (PVData, ), {})

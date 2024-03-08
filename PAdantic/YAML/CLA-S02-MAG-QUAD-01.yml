@@ -1,0 +1,39 @@
+controls_information:
+  PV: true
+  pv_record_map:
+    GETSETI: CLA-S02-MAG-QUAD-01:GETSETI
+    READI: CLA-S02-MAG-QUAD-01:READI
+    RILK: CLA-S02-MAG-QUAD-01:RILK
+    RPOWER: CLA-S02-MAG-QUAD-01:RPOWER
+    SETI: CLA-S02-MAG-QUAD-01:SETI
+    SPOWER: CLA-S02-MAG-QUAD-01:SPOWER
+    ILK_RESET: CLA-S02-MAG-QUAD-01:Rst
+    K_DIP_P:    CLA-S02-MAG-QUAD-01:K_DIP_P
+    INT_STR_MM: CLA-S02-MAG-QUAD-01:INT_STR_MM
+    INT_STR:    CLA-S02-MAG-QUAD-01:INT_STR
+    K_SET_P:    CLA-S02-MAG-QUAD-01:K_SET_P
+    K_ANG:      CLA-S02-MAG-QUAD-01:K_ANG
+    K_MRAD:     CLA-S02-MAG-QUAD-01:K_MRAD
+    K_VAL:      CLA-S02-MAG-QUAD-01:K_VAL
+  records: RILK, SETI, GETSETI, READI, SPOWER, RPOWER, K_DIP_P, INT_STR_MM, INT_STR, K_SET_P, K_ANG, K_MRAD, K_VAL
+properties:
+  degauss_tolerance: 0.5
+  degauss_values: "58.0,-58.0,30.0,-30.0,15.0,-15.0,7.0,-7.0,3.0,-3.0,0.0"
+  field_integral_coefficients: "-2.23133410405682E-10,4.5196171252132E-08,-3.46208258004659E-06,1.11195870210961E-04,2.38129337415767E-02,9.81229429460256E-03"
+  hardware_type: Magnet
+  machine_area: S02
+  mag_set_max_wait_time: 45.0
+  mag_type: QUADRUPOLE
+  magnetic_length: 128.68478212775
+  manufacturer: Danfysik
+  name: CLA-S02-MAG-QUAD-01
+  name_alias: S02-QUAD01,S02-QUAD-01,S02-QUAD1
+  num_degauss_steps: 11
+  position: 3.577500313
+  ri_tolerance: 0.2
+  serial_number: '13248'
+  min_i : -58.0
+  max_i : 58.0
+  
+  
+  

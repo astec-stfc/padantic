@@ -20,6 +20,8 @@ areaNames:
   - FED
   - C2V
   - VELA
+  - C10
+  - LAS
 classtypeNames:
     MAG:
       - QUAD
@@ -31,12 +33,16 @@ classtypeNames:
       - BPM
       - ICT
       - BAM
+      - CAM
+      - LED
     PS:
       - SHTR
     VAC:
       -APER
     SIM:
       - MARK
+    IOC:
+      - CS
 classrecordNames:
   MAG:
     - RILK
@@ -53,7 +59,280 @@ classrecordNames:
     - K_MRAD
     - K_VAL
     - Rst
-magnetTypes:
+  BPM:
+    - SA1
+    - SA2
+    - SD1
+    - SD2
+    - RA1
+    - RA2
+    - RD1
+    - RD2
+    - X
+    - Y
+    - AWAK
+    - RDY
+    - DATA:B2V.VALA
+  CAM:
+    -  ANA:SetX
+    -  ANA:SetY
+    -  ANA:SetXRad
+    -  ANA:SetYRad
+    -  ANA:MaskXCenter
+    -  ANA:MaskYCenter
+    -  ANA:MaskXRad
+    -  ANA:MaskYRad
+    -  ANA:MaskYRad_RBV
+    -  ANA:MaskXRad_RBV
+    -  ANA:MaskWidth_RBV
+    -  ANA:MaskHeight_RBV
+    -  ANA:MaskYCenter_RBV
+    -  ANA:MaskXCenter_RBV
+    -  ROI1:MinX
+    -  ROI1:MinY
+    -  ROI1:SizeX
+    -  ROI1:SizeY
+    -  ROI1:MinY_RBV
+    -  ROI1:MinX_RBV
+    -  ROI1:SizeY_RBV
+    -  ROI1:SizeX_RBV
+    -  CAM3:ArrayData
+    -  ANA:CenterX
+    -  ANA:CenterY
+    -  ANA:CenterX_RBV
+    -  ANA:CenterY_RBV
+    -  CAM:Acquire_RBV
+    -  CAM:Stop
+    -  CAM:Start
+    -  ANA:EnableCallbacks
+    -  ANA:EnableCallbacks_RBV
+    -  OVER:3:Use
+    -  OVER:1:Use
+    -  OVER:2:Use
+    -  OVER:3:Use_RBV
+    -  OVER:1:Use_RBV
+    -  OVER:2:Use_RBV
+    -  ANA:NewBkgrnd
+    -  ANA:UseBkgrnd
+    -  ANA:UseBkgrnd_RBV
+    -  ANA:NewBkgrnd_RBV
+    -  ANA:UseFloor
+    -  ANA:Floor
+    -  ANA:UseFloor_RBV
+    -  ANA:Floor_RBV
+    -  ANA:FLOORED_PTS
+    -  ANA:FLOORED_PCENT
+    -  ANA:ANA_CPU
+    -  ANA:DP_CPU
+    -  ANA:NP_CPU
+    -  ANA:CSM_CPU
+    -  ANA:PixMM
+    -  ANA:PixW_RBV
+    -  ANA:PixH_RBV
+    -  ANA:PixMM_RBV
+    -  ANA:UseNPoint
+    -  ANA:UseNPoint_RBV
+    -  ANA:StepSize
+    -  ANA:StepSize_RBV
+    -  ANA:X_RBV
+    -  ANA:Y_RBV
+    -  ANA:XPix_RBV
+    -  ANA:YPix_RBV
+    -  ANA:CovXY_RBV
+    -  ANA:SigmaY_RBV
+    -  ANA:SigmaX_RBV
+    -  ANA:CovXYPix_RBV
+    -  ANA:SigmaYPix_RBV
+    -  ANA:SigmaXPix_RBV
+    -  ANA:Intensity_RBV
+    -  ANA:MMResults_RBV
+    -  ANA:PixelResults_RBV
+    -  ANA:AvgIntensity_RBV
+    -  CAM1:ArrayData
+    -  CAM2:ArrayData
+    -  HDFB:FileNumber
+    -  CAM:Trigger.PROC
+    -  HDFB:FileNumber_RBV
+    -  HDFB:FilePath
+    -  HDFB:FileName
+    -  HDFB:FileName_RBV
+    -  HDFB:FilePath_RBV
+    -  CAM:ArrayRate_RBV
+    -  CAM:Temperature_RBV
+    -  CAM:AcquireTime_RBV
+    -  CAM:AcquirePeriod_RBV
+    -  HDF:Capture
+    -  HDF:FilePath
+    -  HDF:FileName
+    -  HDF:WriteFile
+    -  HDF:FileNumber
+    -  HDF:NumCapture
+    -  HDF:WriteStatus
+    -  HDF:Capture_RBV
+    -  HDF:WriteMessage
+    -  HDF:FilePath_RBV
+    -  HDF:FileName_RBV
+    -  HDF:WriteFile_RBV
+    -  HDF:FileNumber_RBV
+    -  HDF:NumCapture_RBV
+  CS:
+    - cameraCount
+    - cameraLimit
+  LED:
+    - 'Sta'
+    - 'Off'
+    - 'On'
+classPVNames:
+  MAG:
+    - RILK
+    - SETI
+    - GETSETI
+    - READI
+    - SPOWER
+    - RPOWER
+    - K_DIP_P
+    - INT_STR_MM
+    - INT_STR
+    - K_SET_P
+    - K_ANG
+    - K_MRAD
+    - K_VAL
+    - Rst
+  BPM:
+    - SA1
+    - SA2
+    - SD1
+    - SD2
+    - RA1
+    - RA2
+    - RD1
+    - RD2
+    - X
+    - Y
+    - AWAK
+    - RDY
+    - DATA:B2V.VALA
+  CAM:
+    - ROIandMask_SetX
+    - ROIandMask_SetY
+    - ROIandMask_SetXrad
+    - ROIandMask_SetYrad
+    - ANA_MaskXCenter
+    - ANA_MaskYCenter
+    - ANA_MaskXRad
+    - ANA_MaskYRad
+    - ANA_MaskYRad_RBV
+    - ANA_MaskXRad_RBV
+    - ANA_MaskWidth_RBV
+    - ANA_MaskHeight_RBV
+    - ANA_MaskYCenter_RBV
+    - ANA_MaskXCenter_RBV
+    - ROI1_MinX
+    - ROI1_MinY
+    - ROI1_SizeX
+    - ROI1_SizeY
+    - ROI1_MinY_RBV
+    - ROI1_MinX_RBV
+    - ROI1_SizeY_RBV
+    - ROI1_SizeX_RBV
+    - ROI1_ImageData_RBV
+    - ANA_CenterX
+    - ANA_CenterY
+    - ANA_CenterX_RBV
+    - ANA_CenterY_RBV
+    - CAM_Acquire_RBV
+    - CAM_Active_Count
+    - CAM_Active_Limit
+    - CAM_Stop_Acquire
+    - CAM_Start_Acquire
+    - ANA_EnableCallbacks
+    - ANA_EnableCallbacks_RBV
+    - ANA_OVERLAY_3_MASK
+    - ANA_OVERLAY_1_CROSS
+    - ANA_OVERLAY_2_RESULT
+    - ANA_OVERLAY_3_MASK_RBV
+    - ANA_OVERLAY_1_CROSS_RBV
+    - ANA_OVERLAY_2_RESULT_RBV
+    - ANA_NewBkgrnd
+    - ANA_UseBkgrnd
+    - ANA_UseBkgrnd_RBV
+    - ANA_NewBkgrnd_RBV
+    - ANA_UseFloor
+    - ANA_FloorLevel
+    - ANA_UseFloor_RBV
+    - ANA_FloorLevel_RBV
+    - ANA_FlooredPoints_RBV
+    - ANA_FlooredPercent_RBV
+    - ANA_CPU_RBV
+    - ANA_CPU_Dot_RBV
+    - ANA_CPU_Npoint_RBV
+    - ANA_CPU_CropSubMask_RBV
+    - ANA_PixMM
+    - ANA_PixW_RBV
+    - ANA_PixH_RBV
+    - ANA_PixMM_RBV
+    - ANA_UseNPoint
+    - ANA_UseNPoint_RBV
+    - ANA_NPointStepSize
+    - ANA_NPointStepSize_RBV
+    - ANA_X_RBV
+    - ANA_Y_RBV
+    - ANA_XPix_RBV
+    - ANA_YPix_RBV
+    - ANA_CovXY_RBV
+    - ANA_SigmaY_RBV
+    - ANA_SigmaX_RBV
+    - ANA_CovXYPix_RBV
+    - ANA_SigmaYPix_RBV
+    - ANA_SigmaXPix_RBV
+    - ANA_Intensity_RBV
+    - ANA_MMResults_RBV
+    - ANA_PixelResults_RBV
+    - ANA_AvgIntensity_RBV
+    - CAM1_ArrayData
+    - CAM2_ArrayData
+    - HDFB_Buffer_FileNumber
+    - HDFB_image_buffer_trigger
+    - HDFB_Buffer_FileNumber_RBV
+    - HDFB_image_buffer_filePath
+    - HDFB_image_buffer_fileName
+    - HDFB_image_buffer_fileName_RBV
+    - HDFB_image_buffer_filePath_RBV
+    - CAM_ArrayRate_RBV
+    - CAM_Temperature_RBV
+    - CAM_AcquireTime_RBV
+    - CAM_AcquirePeriod_RBV
+    - HDF_Capture
+    - HDF_FilePath
+    - HDF_FileName
+    - HDF_WriteFile
+    - HDF_FileNumber
+    - HDF_NumCapture
+    - HDF_WriteStatus
+    - HDF_Capture_RBV
+    - HDF_WriteMessage
+    - HDF_FilePath_RBV
+    - HDF_FileName_RBV
+    - HDF_WriteFile_RBV
+    - HDF_FileNumber_RBV
+    - HDF_NumCapture_RBV
+    - LED_Sta
+    - LED_Off
+    - LED_On
+  CS:
+    - CAM_Active_Count
+    - CAM_Active_Limit
+  LED:
+    - 'LED_Sta'
+    - 'LED_Off'
+    - 'LED_On'
+elementTypes:
     DIPOLE: Dipole
     QUADRUPOLE: Quadrupole
     SEXTUPOLE: Sextupole
+    STRIPLINE: BPM
+    Camera: Camera
+PVTypes:
+    Magnet: MagnetPV
+    BPM: BPMPV
+    Camera: CameraPV
