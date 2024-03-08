@@ -1,11 +1,11 @@
-from pydantic import BaseModel, model_serializer, ConfigDict, Field, field_validator, ValidationInfo
-from typing import TypeVar, Dict, Any
+from pydantic import BaseModel, model_serializer, ConfigDict, field_validator, ValidationInfo
+from typing import Dict, Any
 import yaml
 
 from .baseModels import T
 
 # Load PV definitions
-with open('./PV_Values.yaml','r') as stream:
+with open('PV_Values.yaml','r') as stream:
     data = yaml.load(stream, Loader=yaml.Loader)
     for k,v in data.items():
         globals()[k] = v

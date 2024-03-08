@@ -1,9 +1,7 @@
 from pydantic import BaseModel, model_serializer, Field, field_validator, NonNegativeInt, create_model, NonNegativeFloat
-from typing import TypeVar, Dict, Any, List
+from typing import Dict, Any, List
 
 from .baseModels import IgnoreExtra
-
-from .PV import PV, MagnetPV, magnetTypes
 
 class Multipole(BaseModel):
     ''' Single order magnetic multipole model. '''

@@ -1,5 +1,7 @@
-from pydantic import BaseModel, model_serializer, field_validator, confloat, Field, NonNegativeFloat
+from pydantic import field_validator, confloat, Field, NonNegativeFloat
 from typing import List
+
+from ._functions import _rotation_matrix
 
 from .baseModels import IgnoreExtra, NumpyVectorModel
 
