@@ -1,0 +1,59 @@
+machineNames:
+  - CLA
+areaNames:
+  - S01
+  - S02
+  - S03
+  - S04
+  - S05
+  - S06
+  - S07
+  - L01
+  - L02
+  - L03
+  - L04
+  - L4H
+  - SP2
+  - SP3
+  - FEA
+  - FEH
+  - FED
+  - C2V
+  - VELA
+classtypeNames:
+    MAG:
+      - QUAD
+      - DIP
+      - HVCOR
+      - SEXT
+    DIA:
+      - SCR
+      - BPM
+      - ICT
+      - BAM
+    PS:
+      - SHTR
+    VAC:
+      -APER
+    SIM:
+      - MARK
+classrecordNames:
+  MAG:
+    - RILK
+    - SETI
+    - GETSETI
+    - READI
+    - SPOWER
+    - RPOWER
+    - K_DIP_P
+    - INT_STR_MM
+    - INT_STR
+    - K_SET_P
+    - K_ANG
+    - K_MRAD
+    - K_VAL
+    - Rst
+magnetTypes:
+    DIPOLE: Dipole
+    QUADRUPOLE: Quadrupole
+    SEXTUPOLE: Sextupole

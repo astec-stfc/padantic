@@ -1,10 +1,10 @@
 from pydantic import BaseModel, NonNegativeFloat, model_serializer, ConfigDict, NonNegativeInt, Field, create_model, field_validator, confloat, ValidationInfo
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict
 from annotated_types import Ge
 import numpy as np
 from _functions import _rotation_matrix
 from typing import TypeVar, Type
-
+import yaml
 
 import logging
 import importlib
@@ -24,6 +24,23 @@ def debug(fn):
 
 # Create a generic variable that can be 'Parent', or any subclass.
 T = TypeVar('T', bound='BaseModel')
+
+# Load PV definitions
+with open('PV_Values.yaml','r') as stream:
+    data = yaml.load(stream, Loader=yaml.Loader)
+    for k,v in data.items():
+        globals()[k] = v
+
+class IgnoreExtra(BaseModel):
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        extra="ignore",
+    )
+
+    @model_serializer
+    def ser_model(self) -> Dict[str, Any]:
+        # print(self.__class__.__name__, [getattr(self,k) for k in self.model_fields.keys()])
+        return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) != 0 and getattr(self,k) is not None and getattr(self,k) != {}}
 
 class NumpyModel(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -46,28 +63,73 @@ class NumpyModel(BaseModel):
         assert len(values) == len(cls.model_fields)
         return cls(**dict(zip(list(cls.model_fields.keys()), values)))
 
-class Position(NumpyModel):
-    x: confloat(ge=-1,le=1) = 0.
-    y: confloat(ge=-1,le=1) = 0.
+class NumpyVectorModel(NumpyModel):
+
+    def __iter__(self):
+        return iter([getattr(self, k) for k in self.model_fields.keys()])
+
+    def __eq__(self, other: Any) -> bool:
+        if other == 0 or other == 0. or other == None:
+            if all([getattr(self, k) == 0 for k in self.model_fields.keys()]):
+                return True
+            return False
+        return list(self) == list(other)
+
+    def __neq__(self, other: Any) -> bool:
+        # print('__neq__ called', other)
+        if other == 0 or other == 0. or other == None:
+            if all([getattr(self, k) == 0 for k in self.model_fields.keys()]):
+                return False
+            return True
+        return list(self) != list(other)
+
+class Position(NumpyVectorModel):
+    x: confloat(ge=-1,le=1)  = 0.
+    y: confloat(ge=-1,le=1)  = 0.
     z: confloat(ge=0,le=100) = 0.
 
-class Rotation(NumpyModel):
+class Rotation(NumpyVectorModel):
     phi:    confloat(ge=0,le=6.29)   = 0.
-    psi:    confloat(ge=0,le=6.29)  = 0.
+    psi:    confloat(ge=0,le=6.29)   = 0.
     theta:  confloat(ge=0,le=6.29)   = 0.
 
-class ElementError(BaseModel):
+class ElementError(IgnoreExtra):
     position_error: Position = Position(x=0,y=0,z=0)
     rotation_error: Rotation = Rotation(theta=0, phi=0, psi=0)
     survey_position: Position = Position(x=0,y=0,z=0)
     survey_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
 
-class PhysicalElement(BaseModel):
-    middle: Position
+class PhysicalElement(IgnoreExtra):
+    middle: Position = Field(alias='position')
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
-    position_error: ElementError = ElementError()
+    error: ElementError = ElementError()
     length: NonNegativeFloat = 0.
+
+    @field_validator('middle', mode='before')
+    @classmethod
+    def validate_middle(cls, v: float|int|List) -> Position:
+        if isinstance(v, (float, int)):
+            return Position(z=v)
+        elif isinstance(v, (list, tuple)):
+            if len(v) == 3:
+                return Position(x=v[0], y=v[1], z=v[2])
+            elif len(v) == 2:
+                return Position(x=v[0], y=0, z=v[1])
+        else:
+            raise ValueError('middle should be a number or a list of floats')
+
+    @field_validator('rotation', 'global_rotation', mode='before')
+    @classmethod
+    def validate_rotation(cls, v: float|int|List) -> Position:
+        if isinstance(v, (float, int)):
+            return Rotation(theta=v)
+        elif isinstance(v, (list, tuple)):
+            if len(v) == 3:
+                return Rotation(phi=v[0], psi=v[1], theta=v[2])
+        else:
+            raise ValueError('middle should be a number or a list of floats')
+
 
     @property
     def rotation_matrix(self) -> List[int|float]:
@@ -109,12 +171,21 @@ class Multipoles(MultipolesData):
     def __str__(self):
         return ' '.join(['K'+str(i)+'L=Multipole('+getattr(self, 'K'+str(i)+'L').__str__()+')' for i in range(13) if abs(getattr(self, 'K'+str(i)+'L').normal) > 0 or abs(getattr(self, 'K'+str(i)+'L').skew) > 0])
 
-    # @debug
+    @model_serializer
+    def ser_model(self) -> Dict[str, Any]:
+        return {k: getattr(self,k) for k in self.model_fields.keys() if abs(getattr(self, k).normal) > 0 or abs(getattr(self, k).skew) > 0}
+
     def normal(self, order: int) -> int|float:
         return getattr(self, 'K'+str(order)+'L').normal
 
     def skew(self, order: int) -> int|float:
         return getattr(self, 'K'+str(order)+'L').skew
+
+    def __eq__(self, other) -> bool:
+        return self.ser_model() == other
+
+    def __neq__(self) -> bool:
+        return not self.__eq__(other)
 
 class FieldIntegral(BaseModel):
     coefficients: List[float] = [0]
@@ -127,10 +198,13 @@ class FieldIntegral(BaseModel):
         effect = (constants.speed_of_light / 1e6) * int_strength / energy
         return effect
 
-class MagneticElement(PhysicalElement):
+    def __iter__(self):
+        return iter(self.coefficients)
+
+class MagneticElement(IgnoreExtra):
     order: int = Field(repr=False, default=-1, frozen=True)
     skew: bool = False
-    magnetic_length: NonNegativeFloat = 0.
+    length: NonNegativeFloat = 0.
     multipoles: Multipoles = Multipoles()
     systematic_multipoles: Multipoles = Multipoles()
     random_multipoles: Multipoles = Multipoles()
@@ -138,11 +212,22 @@ class MagneticElement(PhysicalElement):
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)
-        self.kl = data['kl'] if 'kl' in data else None
+        self.kl = data['kl'] if 'kl' in data else 0
         if self.skew:
             setattr(self.multipoles, 'K'+str(self.order)+'L', Multipole(skew=self.kl, order=self.order))
         else:
             setattr(self.multipoles, 'K'+str(self.order)+'L', Multipole(normal=self.kl, order=self.order))
+
+    @field_validator('field_integral_coefficients', mode='before')
+    @classmethod
+    def validate_field_integral_coefficients(cls, v: str|List) -> FieldIntegral:
+        if isinstance(v, str):
+            return FieldIntegral(coefficients=list(map(float, v.split(','))))
+        elif isinstance(v, (list, tuple)):
+            return FieldIntegral(coefficients=list(v))
+        else:
+            raise ValueError('field_integral_coefficients should be a string or a list of floats')
+
 
     # @debug
     def KnL(self, order: int = None) -> int|float:
@@ -164,38 +249,31 @@ class MagneticElement(PhysicalElement):
     def angle(self) -> float:
         return self.KnL(order=0)
 
-class DegaussablElement(MagneticElement):
-    degauss_tolerance: float = 0.5
-    degauss_values: List[float] = []
-    num_degauss_steps: int = 11
+class DegaussablElement(IgnoreExtra):
+    degauss_tolerance: float = Field(default=0.5)
+    degauss_values: List[float] = Field(default=[])
+    degauss_steps: int = Field(alias='num_degauss_steps', default=11)
 
-class Dipole_Magnet(DegaussablElement):
-    order: int = Field(repr=False, default=0, frozen=True)
+    @field_validator('degauss_values', mode='before')
+    @classmethod
+    def validate_degauss_values(cls, v: str|List) -> str:
+        if isinstance(v, str):
+            return list(map(float, v.split(',')))
+        elif isinstance(v, (list, tuple)):
+            return list(v)
+        else:
+            raise ValueError('degauss_values should be a string or a list of floats')
 
-class Quadrupole_Magnet(DegaussablElement):
-    order: int = Field(repr=False, default=1, frozen=True)
+class ElectricalElement(IgnoreExtra):
+    settle_time:    float = Field(alias='mag_set_max_wait_time', default=45.0)
+    minI:           float = Field(alias='min_i', default=0)
+    maxI:           float = Field(alias='max_i', default=0)
+    read_tolerance: float = Field(alias='ri_tolerance', default=0.1)
 
-class Sextupole_Magnet(DegaussablElement):
-    order: int = Field(repr=False, default=2, frozen=True)
-
-class ElectricalElement(BaseModel):
-    settle_time: float = 45.0
-    minI: float = -0
-    maxI: float = 0
-    read_tolerance: float = 0.1
-
-machineOptions = map(str.upper, ['CLA'])
-areaOptions = map(str.upper, ['S01','S02','S03','S04','S05','S06','S07','L01','L02','L03','L04','L4H','SP2','SP3','FEA','FEH','FED'])
-classtypeOptions = {
-'MAG': ['QUAD', 'DIP', 'HVCOR', 'SEXT'],
-'DIA': ['SCR', 'BPM', 'ICT', 'BAM'],
-'PS': ['SHTR'],
-'VAC': ['APER'],
-'SIM': ['MARK']
-}
-classrecordOptions = {
-'MAG': ['RILK', 'SETI', 'GETSETI', 'READI', 'SPOWER', 'RPOWER', 'K_DIP_P', 'INT_STR_MM', 'INT_STR', 'K_SET_P', 'K_ANG', 'K_MRAD', 'K_VAL']
-}
+class ManufacturerElement(IgnoreExtra):
+    manufacturer: str
+    serial_number: str
+    hardware_type: str
 
 class PVSet(BaseModel):
     model_config = ConfigDict(
@@ -211,26 +289,26 @@ class PV(PVSet):
     classname: str
     typename: str
     index: int | str
-    record: str = ''
+    record: str
 
     @field_validator('machine', mode='before')
     @classmethod
     def validate_machine(cls, v: str) -> str:
-        if v.upper() not in machineOptions:
-            raise ValueError('Invalid Machine')
+        if v.upper() not in map(str.upper, machineNames):
+            raise ValueError('Invalid Machine', v.upper())
         return v.upper()
 
     @field_validator('area', mode='before')
     @classmethod
     def validate_area(cls, v: str) -> str:
-        if v.upper() not in areaOptions:
+        if v.upper() not in map(str.upper, areaNames):
             raise ValueError('Invalid Area')
         return v.upper()
 
     @field_validator('classname', mode='before')
     @classmethod
     def validate_class(cls, v: str) -> str:
-        if v.upper() not in classtypeOptions.keys():
+        if v.upper() not in map(str.upper, classtypeNames.keys()):
             raise ValueError('Invalid Class Name')
         return v.upper()
 
@@ -238,7 +316,7 @@ class PV(PVSet):
     @classmethod
     def validate_type(cls, v: str, info: ValidationInfo) -> str:
         classname = info.data['classname']
-        if v.upper() not in classtypeOptions[classname]:
+        if v.upper() not in map(str.upper, classtypeNames[classname]):
             raise ValueError('Invalid Type Name')
         return v.upper()
 
@@ -253,9 +331,9 @@ class PV(PVSet):
     @classmethod
     def validate_record(cls, v: str, info: ValidationInfo) -> str:
         classname = info.data['classname']
-        if v.upper() not in classrecordOptions[classname]:
+        if v.upper() not in map(str.upper, classrecordNames[classname]):
             raise ValueError('Invalid Record Name')
-        return v.upper()
+        return v
 
     @classmethod
     def fromString(cls, pv: str) -> T:
@@ -286,31 +364,80 @@ class PV(PVSet):
     def __int__(self):
         return self.index
 
+    @model_serializer
+    def ser_model(self) -> str:
+        return self.__str__()
+
 class MagnetPV(BaseModel):
-    GETSETI:    PV()
-    READI:      PV()
-    RILK:       PV()
-    RPOWER:     PV()
-    SETI:       PV()
-    SPOWER:     PV()
-    ILK_RESET:  PV()
-    K_DIP_P:    PV()
-    INT_STR_MM: PV()
-    INT_STR:    PV()
-    K_SET_P:    PV()
-    K_ANG:      PV()
-    K_MRAD:     PV()
-    K_VAL:      PV()
+    GETSETI:    PV | None = None
+    READI:      PV | None = None
+    RILK:       PV | None = None
+    RPOWER:     PV | None = None
+    SETI:       PV | None = None
+    SPOWER:     PV | None = None
+    ILK_RESET:  PV | None = None
+    K_DIP_P:    PV | None = None
+    INT_STR_MM: PV | None = None
+    INT_STR:    PV | None = None
+    K_SET_P:    PV | None = None
+    K_ANG:      PV | None = None
+    K_MRAD:     PV | None = None
+    K_VAL:      PV | None = None
+
+    def __str__(self):
+        return 'MagnetPV(' + ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])
+
+    @model_serializer
+    def ser_model(self) -> Dict[str, Any]:
+        return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) is not None}
+
+class Dipole_Magnet(MagneticElement):
+    order: int = Field(repr=False, default=0, frozen=True)
+
+class Quadrupole_Magnet(MagneticElement):
+    order: int = Field(repr=False, default=1, frozen=True)
+
+class Sextupole_Magnet(MagneticElement):
+    order: int = Field(repr=False, default=2, frozen=True)
+
+class Element(BaseModel):
+    physical:   PhysicalElement
+    degauss :   DegaussablElement
+    electrical: ElectricalElement
+    manufacturer: ManufacturerElement
+    controls: MagnetPV
+
+class Dipole(Element):
+    magnetic: Dipole_Magnet
+
+class Quadrupole(Element):
+    magnetic: Quadrupole_Magnet
+
+class Sextupole(Element):
+    magnetic: Sextupole_Magnet
+
+def readYAML(filename):
+    with open(filename, 'r') as stream:
+        data = yaml.load(stream, Loader=yaml.Loader)
+    magPV = MagnetPV(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
+    f = globals()[magnetTypes[data['properties']['mag_type']]]
+    fields = {k:v.annotation(**data['properties']) for k,v in f.model_fields.items() if k != 'PV'}
+    fields['controls'] = magPV
+    return f(**fields)
 
 if __name__ == "__main__":
-    pos = Dipole_Magnet(middle=Position(z=1.2), kl=np.pi/6, length=0.3, global_rotation=Rotation(theta=0*np.pi/6))
+    # pos = Dipole_Magnet(middle=Position(z=1.2), kl=np.pi/6, length=0.3, global_rotation=Rotation(theta=0*np.pi/6))
     # print(pos.multipoles)
-    print(pos.angle)
-    print(pos.middle)
-    print(pos.start)
-    print(pos.end)
-    print(PV.fromString('CLA-S02-MAG-QUAD-01:GETSETI').basename)
+    # print(pos.angle)
+    # print(pos.middle)
+    # print(pos.start)
+    # print(pos.end)
+    # print(PV.fromString('CLA-S02-MAG-QUAD-01:GETSETI').basename)
     # print(pos.KnL(1))
     # pos.kl = 5
     # pos.multipoles.K2L.skew = 2.
     # print(pos.multipoles)
+    # print([a.annotation.__name__ for a in Element.model_fields.values()])
+    elem = readYAML(r'\\claraserv3.dl.ac.uk\claranet\packages\CATAP\Nightly\CATAP_Nightly_17_01_2024\python310\MasterLattice\Magnet\CLA-C2V-MAG-DIP-01.yml')
+    elem.physical.error.position_error.x = 1
+    print(elem.model_dump())
