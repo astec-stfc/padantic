@@ -32,6 +32,7 @@ with open('PV_Values.yaml','r') as stream:
         globals()[k] = v
 
 class IgnoreExtra(BaseModel):
+    ''' Base Model that ignores extra fields. '''
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         extra="ignore",
@@ -43,6 +44,8 @@ class IgnoreExtra(BaseModel):
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) != 0 and getattr(self,k) is not None and getattr(self,k) != {}}
 
 class NumpyModel(BaseModel):
+    ''' Model using numpy arrays. '''
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @model_serializer
@@ -64,8 +67,9 @@ class NumpyModel(BaseModel):
         return cls(**dict(zip(list(cls.model_fields.keys()), values)))
 
 class NumpyVectorModel(NumpyModel):
+    ''' vector model using numpy arrays. '''
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
         return iter([getattr(self, k) for k in self.model_fields.keys()])
 
     def __eq__(self, other: Any) -> bool:
@@ -84,22 +88,26 @@ class NumpyVectorModel(NumpyModel):
         return list(self) != list(other)
 
 class Position(NumpyVectorModel):
+    ''' Position model. '''
     x: confloat(ge=-1,le=1)  = 0.
     y: confloat(ge=-1,le=1)  = 0.
     z: confloat(ge=0,le=100) = 0.
 
 class Rotation(NumpyVectorModel):
+    ''' Rotation model. '''
     phi:    confloat(ge=0,le=6.29)   = 0.
     psi:    confloat(ge=0,le=6.29)   = 0.
     theta:  confloat(ge=0,le=6.29)   = 0.
 
 class ElementError(IgnoreExtra):
+    ''' Position/Rotation error model. '''
     position_error: Position = Position(x=0,y=0,z=0)
     rotation_error: Rotation = Rotation(theta=0, phi=0, psi=0)
     survey_position: Position = Position(x=0,y=0,z=0)
     survey_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
 
 class PhysicalElement(IgnoreExtra):
+    ''' Physical info model. '''
     middle: Position = Field(alias='position')
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
@@ -121,7 +129,7 @@ class PhysicalElement(IgnoreExtra):
 
     @field_validator('rotation', 'global_rotation', mode='before')
     @classmethod
-    def validate_rotation(cls, v: float|int|List) -> Position:
+    def validate_rotation(cls, v: float|int|List) -> Rotation:
         if isinstance(v, (float, int)):
             return Rotation(theta=v)
         elif isinstance(v, (list, tuple)):
@@ -158,6 +166,7 @@ class PhysicalElement(IgnoreExtra):
         return Position.from_list(end)
 
 class Multipole(BaseModel):
+    ''' Single order magnetic multipole model. '''
     order: NonNegativeInt = 0
     normal: float = 0.
     skew: float = 0.
@@ -167,6 +176,7 @@ multipoles = {'K'+str(l)+'L': (Multipole, Field(default=Multipole(order=l), repr
 MultipolesData = create_model('Multipoles', **multipoles)
 
 class Multipoles(MultipolesData):
+    ''' Magnetic multipoles model. '''
 
     def __str__(self):
         return ' '.join(['K'+str(i)+'L=Multipole('+getattr(self, 'K'+str(i)+'L').__str__()+')' for i in range(13) if abs(getattr(self, 'K'+str(i)+'L').normal) > 0 or abs(getattr(self, 'K'+str(i)+'L').skew) > 0])
@@ -188,6 +198,7 @@ class Multipoles(MultipolesData):
         return not self.__eq__(other)
 
 class FieldIntegral(BaseModel):
+    ''' Field integral coefficients model. '''
     coefficients: List[float] = [0]
 
     def currentToK(self, current: float, energy: float) -> float:
@@ -198,10 +209,11 @@ class FieldIntegral(BaseModel):
         effect = (constants.speed_of_light / 1e6) * int_strength / energy
         return effect
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
         return iter(self.coefficients)
 
 class MagneticElement(IgnoreExtra):
+    ''' Magnetic info model. '''
     order: int = Field(repr=False, default=-1, frozen=True)
     skew: bool = False
     length: NonNegativeFloat = 0.
@@ -250,13 +262,14 @@ class MagneticElement(IgnoreExtra):
         return self.KnL(order=0)
 
 class DegaussablElement(IgnoreExtra):
+    ''' Degauss info model. '''
     degauss_tolerance: float = Field(default=0.5)
     degauss_values: List[float] = Field(default=[])
     degauss_steps: int = Field(alias='num_degauss_steps', default=11)
 
     @field_validator('degauss_values', mode='before')
     @classmethod
-    def validate_degauss_values(cls, v: str|List) -> str:
+    def validate_degauss_values(cls, v: str|List) -> list:
         if isinstance(v, str):
             return list(map(float, v.split(',')))
         elif isinstance(v, (list, tuple)):
@@ -265,17 +278,20 @@ class DegaussablElement(IgnoreExtra):
             raise ValueError('degauss_values should be a string or a list of floats')
 
 class ElectricalElement(IgnoreExtra):
+    ''' Electrical info model. '''
     settle_time:    float = Field(alias='mag_set_max_wait_time', default=45.0)
     minI:           float = Field(alias='min_i', default=0)
     maxI:           float = Field(alias='max_i', default=0)
     read_tolerance: float = Field(alias='ri_tolerance', default=0.1)
 
 class ManufacturerElement(IgnoreExtra):
+    ''' Manufacturer info model. '''
     manufacturer: str
     serial_number: str
     hardware_type: str
 
 class PVSet(BaseModel):
+    ''' Base PV model. '''
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         extra="forbid",
@@ -284,6 +300,7 @@ class PVSet(BaseModel):
     ...
 
 class PV(PVSet):
+    ''' PV model. '''
     machine: str
     area: str
     classname: str
@@ -322,7 +339,7 @@ class PV(PVSet):
 
     @field_validator('index', mode='before')
     @classmethod
-    def validate_index(cls, v: str) -> str:
+    def validate_index(cls, v: str) -> int:
         if not v.isdigit():
             raise ValueError('Invalid Type Name')
         return int(v)
@@ -345,23 +362,23 @@ class PV(PVSet):
                              'typename': substr[3], 'index': substr[4], 'record': postfix})
 
     @property
-    def _indexString(self):
+    def _indexString(self) -> str:
         return str(self.index).zfill(2)
 
     @property
-    def basename(self):
+    def basename(self) -> str:
         name = '-'.join([getattr(self, a) for a in ['machine', 'area', 'classname', 'typename']]) + '-' + self._indexString
         return name
 
     @property
-    def name(self):
+    def name(self) -> str:
         name = self.basename + ':' + self.record
         return name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.index
 
     @model_serializer
@@ -369,6 +386,7 @@ class PV(PVSet):
         return self.__str__()
 
 class MagnetPV(BaseModel):
+    ''' Magnet PV model. '''
     GETSETI:    PV | None = None
     READI:      PV | None = None
     RILK:       PV | None = None
@@ -384,7 +402,7 @@ class MagnetPV(BaseModel):
     K_MRAD:     PV | None = None
     K_VAL:      PV | None = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'MagnetPV(' + ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])
 
     @model_serializer
@@ -392,15 +410,19 @@ class MagnetPV(BaseModel):
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) is not None}
 
 class Dipole_Magnet(MagneticElement):
+    ''' Sextupole magnet with magnetic order 0. '''
     order: int = Field(repr=False, default=0, frozen=True)
 
 class Quadrupole_Magnet(MagneticElement):
+    ''' Sextupole magnet with magnetic order 1. '''
     order: int = Field(repr=False, default=1, frozen=True)
 
 class Sextupole_Magnet(MagneticElement):
+    ''' Sextupole magnet with magnetic order 2. '''
     order: int = Field(repr=False, default=2, frozen=True)
 
 class Element(BaseModel):
+    ''' Element with physical, degaussable, electrical, manufacturer, and controls items. '''
     physical:   PhysicalElement
     degauss :   DegaussablElement
     electrical: ElectricalElement
@@ -408,15 +430,19 @@ class Element(BaseModel):
     controls: MagnetPV
 
 class Dipole(Element):
+    ''' Dipole element. '''
     magnetic: Dipole_Magnet
 
 class Quadrupole(Element):
+    ''' Quadrupole element. '''
     magnetic: Quadrupole_Magnet
 
 class Sextupole(Element):
+    ''' Sextupole element. '''
     magnetic: Sextupole_Magnet
 
 def readYAML(filename):
+    ''' read a CATAP YAML file and convert to a pydantic model. '''
     with open(filename, 'r') as stream:
         data = yaml.load(stream, Loader=yaml.Loader)
     magPV = MagnetPV(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
