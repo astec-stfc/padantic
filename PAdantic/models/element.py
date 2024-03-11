@@ -16,6 +16,10 @@ class Element(BaseModel):
     electrical: ElectricalElement
     manufacturer: ManufacturerElement
 
+    @classmethod
+    def from_CATAP(cls: Type[T], fields: dict) -> T:
+        return cls(**fields)
+
 class Dipole(Element):
     ''' Dipole element. '''
     magnetic: Dipole_Magnet
