@@ -1,5 +1,7 @@
+from typing import Type
 from pydantic import BaseModel
 
+from models.baseModels import T
 from models.PV import MagnetPV, BPMPV, CameraPV
 from models.manufacturer import ManufacturerElement
 from models.electrical import ElectricalElement
@@ -39,3 +41,7 @@ class BPM(Element):
 class Camera(BaseModel):
     diagnostic: Camera_Diagnostic
     controls: CameraPV
+
+    @classmethod
+    def from_CATAP(cls: Type[T], fields: dict) -> T:
+        return cls(**fields)

@@ -1,0 +1,13 @@
+controls_information : 
+    PV : true
+    records : Q
+    pv_record_map :
+        Q : CLA-S01-DIA-WCM-01:Q
+properties :
+    machine_area : S01
+    hardware_type : Charge
+    name : CLA-S01-DIA-WCM-01
+    virtual_name : VM-CLA-S01-DIA-WCM-01
+    name_alias : "S01-WCM-01, WCM-01, S01-WCM"
+    position : 0.6777
+    charge_type : WCM

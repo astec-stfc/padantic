@@ -1,0 +1,12 @@
+controls_information: 
+    PV: true
+    pv_record_map:
+        Sta: EBT-INJ-VAC-IMG-02:STA
+        P: EBT-INJ-VAC-IMG-02:P
+properties:
+    machine_area: INJ
+    hardware_type: IMG
+    img_type: INJ
+    name: EBT-INJ-VAC-IMG-02
+    virtual_name: VM-EBT-INJ-VAC-IMG-02
+    name_alias: "IMG-02"

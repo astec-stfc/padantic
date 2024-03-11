@@ -2,7 +2,7 @@ import yaml
 from models.PV import MagnetPV, BPMPV, CameraPV, PV, elementTypes, PVTypes
 from models.element import Element, Dipole, Quadrupole, Sextupole, BPM, Camera
 
-def readYAML(filename):
+def read_CATAP_YAML(filename):
     ''' read a CATAP YAML file and convert to a pydantic model. '''
     with open(filename, 'r') as stream:
         data = yaml.load(stream, Loader=yaml.Loader)
@@ -20,13 +20,13 @@ def readYAML(filename):
 
     elemPV = fpv(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
 
-    fields = {k:v.annotation(**data['properties']) for k,v in felem.model_fields.items() if k != 'PV'}
+    fields = {k:v.annotation.from_CATAP(data['properties']) for k,v in felem.model_fields.items() if k != 'controls'}
     fields['controls'] = elemPV
-    return felem(**fields)
+    return felem.from_CATAP(fields)
 
 if __name__ == "__main__":
-    # elem = readYAML(r'YAML\CLA-S02-MAG-QUAD-01.yml')
-    # elem = readYAML(r'YAML\\CLA-C2V-DIA-BPM-01.yaml')
-    elem = readYAML(r'YAML\CLA-S01-DIA-CAM-01.yaml')
+    # elem = read_CATAP_YAML(r'YAML\CLA-S02-MAG-QUAD-01.yml')
+    # elem = read_CATAP_YAML(r'YAML\\CLA-C2V-DIA-BPM-01.yaml')
+    elem = read_CATAP_YAML(r'YAML\CLA-S01-DIA-CAM-01.yaml')
     # elem.physical.error.position_error.x = 1
-    print(elem.model_dump())
+    print(elem)

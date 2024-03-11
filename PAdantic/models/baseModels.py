@@ -18,6 +18,16 @@ class IgnoreExtra(BaseModel):
         # print(self.__class__.__name__, [getattr(self,k) for k in self.model_fields.keys()])
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) != 0 and getattr(self,k) is not None and getattr(self,k) != {}}
 
+    def _create_field_class(self, fields: dict, fieldname: str, fieldclass: List[str]) -> None:
+        fields[fieldname] = fieldclass.from_CATAP(fields)
+
+    def _create_field(self, fields: dict, fieldname: str, fieldinputs: List[str]) -> None:
+        fields[fieldname] = [fields[x] for x in fieldinputs]
+
+    @classmethod
+    def from_CATAP(cls: Type[T], fields: dict) -> T:
+        return cls(**fields)
+
 class NumpyModel(BaseModel):
     ''' Model using numpy arrays. '''
 
