@@ -1,9 +1,8 @@
-from pydantic import Field, NonNegativeFloat, NonNegativeInt
+from pydantic import Field, NonNegativeFloat, NonNegativeInt, field_validator
 from typing import List, Type
-from .baseModels import IgnoreExtra, T
+from .baseModels import IgnoreExtra, T, Aliases, DeviceList
 
 class DiagnosticElement(IgnoreExtra): ...
-
 
 class BPM_Diagnostic(DiagnosticElement):
     ''' BPM Diagnostic model. '''
@@ -89,3 +88,23 @@ class Camera_Diagnostic(DiagnosticElement):
         cls._create_field_class(cls, fields, 'mask', Camera_Mask)
         cls._create_field_class(cls, fields, 'sensor', Camera_Sensor)
         return super().from_CATAP(fields)
+
+class Screen_Diagnostic(DiagnosticElement):
+    ''' Camera Diagnostic model. '''
+    type: str = Field(alias='screen_type')
+    has_camera: bool
+    camera_name: str = ''
+    devices: str|list|DeviceList = DeviceList()
+
+    @field_validator('devices', mode='before')
+    @classmethod
+    def validate_devices(cls, v: str|List) -> DeviceList:
+        if isinstance(v, str):
+            return DeviceList(devices=list(map(str.strip, v.split(','))))
+        elif isinstance(v, (list, tuple)):
+            return DeviceList(devices=list(v))
+        else:
+            raise ValueError('devices should be a string or a list of strings')
+
+class Charge_Diagnostic(DiagnosticElement):
+    type: str = Field(alias='charge_type')

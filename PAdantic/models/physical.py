@@ -19,18 +19,44 @@ class Rotation(NumpyVectorModel):
 
 class ElementError(IgnoreExtra):
     ''' Position/Rotation error model. '''
-    position_error: Position = Position(x=0,y=0,z=0)
-    rotation_error: Rotation = Rotation(theta=0, phi=0, psi=0)
-    survey_position: Position = Position(x=0,y=0,z=0)
-    survey_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
+    position: Position = Position(x=0,y=0,z=0)
+    rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
+
+    def __str__(self):
+        if any([getattr(self, k) != 0 for k in self.model_fields.keys()]):
+            return ' '.join([getattr(self, k).__repr__() for k in self.model_fields.keys() if getattr(self, k) != 0])
+        else:
+            return str(None)
+
+    def __repr__(self):
+        return self.__class__.__name__+'('+self.__str__()+')'
+
+    def __eq__(self, other):
+        if other == 0:
+            return all([getattr(self, k) == 0 for k in self.model_fields.keys()])
+        else:
+            return super().__eq__(other)
+
+class ElementSurvey(ElementError): ...
 
 class PhysicalElement(IgnoreExtra):
     ''' Physical info model. '''
-    middle: Position = Field(alias='position')
+    middle: Position = Field(alias='position', default=0)
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     error: ElementError = ElementError()
+    survey: ElementSurvey = ElementSurvey()
     length: NonNegativeFloat = 0.
+
+    def __str__(self):
+        # print({k: getattr(self, k) != 0 for k in self.model_fields.keys()})
+        if any([getattr(self, k) != 0 for k in self.model_fields.keys()]):
+            return ' '.join([str(k)+'='+getattr(self, k).__repr__() for k in self.model_fields.keys() if getattr(self, k) != 0])
+        else:
+            return str()
+
+    def __repr__(self):
+        return self.__class__.__name__+'('+self.__str__()+')'
 
     @field_validator('middle', mode='before')
     @classmethod

@@ -38,7 +38,7 @@ class PV(PVSet):
     @field_validator('area', mode='before')
     @classmethod
     def validate_area(cls, v: str) -> str:
-        if v.upper() not in map(str.upper, areaNames):
+        if v.upper() not in map(str.upper, areaNames) and not v == '':
             raise ValueError('Invalid Area')
         return v.upper()
 
@@ -68,7 +68,10 @@ class PV(PVSet):
     @classmethod
     def validate_record(cls, v: str, info: ValidationInfo) -> str:
         classname = info.data['classname']
-        typename = info.data['typename']
+        if 'typename' in info.data:
+            typename = info.data['typename']
+        else:
+            raise ValueError('typename missing')
         if classname in classrecordNames:
             records = classrecordNames[classname]
         elif typename in classrecordNames:
@@ -77,7 +80,7 @@ class PV(PVSet):
             raise ValueError('Invalid Record classname/typename')
         if v.upper() not in map(str.upper, records):
             # raise ValueError('Invalid Record Name')
-            print(typename, '    - ',v)
+            print('    -',v)
         return v
 
     @classmethod
@@ -85,9 +88,12 @@ class PV(PVSet):
         assert ':' in pv
         prefix, postfix = pv.split(':', 1)
         substr = prefix.split('-')
-        assert len(substr) == 5
-        return cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+        if len(substr) == 5:
+            return cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
                              'typename': substr[3], 'index': substr[4], 'record': postfix})
+        elif len(substr) == 4:
+            return cls.model_validate({'machine': substr[0], 'area': '', 'classname': substr[1],
+                             'typename': substr[2], 'index': substr[3], 'record': postfix})
 
     @property
     def _indexString(self) -> str:
@@ -122,7 +128,21 @@ class ElementPV(BaseModel):
     def ser_model(self) -> Dict[str, Any]:
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) is not None}
 
-for k, v in {'MAG': 'Magnet', 'BPM': 'BPM', 'CAM': 'Camera'}.items():
+PVMappings = {
+    'MAG': 'Magnet',
+    'BPM': 'BPM',
+    'CAM': 'Camera',
+    'SCR': 'Screen',
+    'WCM': 'ChargeDiagnostic',
+    'FCUP': 'ChargeDiagnostic',
+    'IMG': 'VacuumGuage',
+    'EM': 'LaserEnergyMeter',
+    'HWP': 'LaserHWP',
+    'PICO': 'LaserMirror',
+    'Lighting': 'Lighting'
+}
+
+for k, v in PVMappings.items():
     pvs = {p: (PV, Field(default=None)) for p in classPVNames[k]}
     PVData = create_model(v+'PV', **pvs, __base__=ElementPV)
     globals()[v+'PV'] = type(v+'PV', (PVData, ), {})

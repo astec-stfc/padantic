@@ -65,9 +65,25 @@ class NumpyVectorModel(NumpyModel):
         return list(self) == list(other)
 
     def __neq__(self, other: Any) -> bool:
-        # print('__neq__ called', other)
         if other == 0 or other == 0. or other == None:
             if all([getattr(self, k) == 0 for k in self.model_fields.keys()]):
                 return False
             return True
         return list(self) != list(other)
+
+class objectList(IgnoreExtra):
+
+    def __iter__(self) -> iter:
+        return iter(getattr(self, list(self.model_fields.keys())[0]))
+
+    def __str__(self) -> str:
+        return str(list(getattr(self, list(self.model_fields.keys())[0])))
+
+    def __repr__(self) -> repr:
+        return repr(list(getattr(self, list(self.model_fields.keys())[0])))
+
+class DeviceList(objectList):
+    devices: list = []
+
+class Aliases(objectList):
+    aliases: list = []

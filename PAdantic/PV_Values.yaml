@@ -1,5 +1,7 @@
 machineNames:
   - CLA
+  - EBT
+  - INF
 areaNames:
   - S01
   - S02
@@ -22,6 +24,7 @@ areaNames:
   - VELA
   - C10
   - LAS
+  - INJ
 classtypeNames:
     MAG:
       - QUAD
@@ -35,6 +38,9 @@ classtypeNames:
       - BAM
       - CAM
       - LED
+      - WCM
+      - FCUP
+      - EM
     PS:
       - SHTR
     VAC:
@@ -43,6 +49,13 @@ classtypeNames:
       - MARK
     IOC:
       - CS
+    VAC:
+      - IMG
+    OPT:
+      - HWP
+      - PICO
+    SRV:
+      - LIGHT
 classrecordNames:
   MAG:
     - RILK
@@ -182,6 +195,60 @@ classrecordNames:
     - 'Sta'
     - 'Off'
     - 'On'
+  SCR:
+    - H:SDEV
+    - H:TRIGGER
+    - H:EX
+    - H:TGTPOS
+    - H:JOG
+    - H:JDIFF
+    - H:MOVING
+    - H:READY
+    - H:GET_DEV
+    - H:DEV_STATE
+    - H:MAX_POS
+    - H:DEV_CENT
+    - H:ACTPOS
+    - H:EN
+    - V:SDEV
+    - V:TRIGGER
+    - V:EX
+    - V:TGTPOS
+    - V:JOG
+    - V:JDIFF
+    - V:MOVING
+    - V:READY
+    - V:GET_DEV
+    - V:DEV_STATE
+    - V:MAX_POS
+    - V:DEV_CENT
+    - V:ACTPOS
+    - V:EN
+  WCM:
+    - Q
+  FCUP:
+    - Q
+  IMG:
+    - Sta
+    - P
+  EM:
+    - OverRange_RB
+    - Run_SP
+    - Range_SP
+    - E_RB
+  HWP:
+    - ROT:MABS
+    - ROT:RPOS
+    - ROT:ENABLE
+  PICO:
+    - MREL
+    - RCUM1
+    - RCUM3
+    - RPOS
+  LIGHT:
+    - 'Off'
+    - 'On'
+    - Sta
 classPVNames:
   MAG:
     - RILK
@@ -323,16 +390,95 @@ classPVNames:
     - CAM_Active_Count
     - CAM_Active_Limit
   LED:
-    - 'LED_Sta'
-    - 'LED_Off'
-    - 'LED_On'
+    - LED_Sta
+    - LED_Off
+    - LED_On
+  Lighting:
+    - CLARA_LED_Sta
+    - CLARA_LED_Off
+    - CLARA_LED_On
+    - VELA_LED_Sta
+    - VELA_LED_Off
+    - VELA_LED_On
+    - ACCELERATOR_HALL_LIGHT_On
+    - ACCELERATOR_HALL_LIGHT_Off
+    - ACCELERATOR_HALL_LIGHT_Sta
+    - BA1_LIGHT_On
+    - BA1_LIGHT_Off
+    - BA1_LIGHT_Sta
+  SCR:
+    - H_SDEV
+    - H_TRIGGER
+    - H_EX
+    - H_TGTPOS
+    - H_JOG
+    - H_JDIFF
+    - H_MOVING
+    - H_READY
+    - H_GET_DEV
+    - H_DEV_STATE
+    - H_MAX_POS
+    - H_DEV_CENT
+    - H_ACTPOS
+    - H_EN
+    - V_SDEV
+    - V_TRIGGER
+    - V_EX
+    - V_TGTPOS
+    - V_JOG
+    - V_JDIFF
+    - V_MOVING
+    - V_READY
+    - V_GET_DEV
+    - V_DEV_STATE
+    - V_MAX_POS
+    - V_DEV_CENT
+    - V_ACTPOS
+    - V_EN
+  WCM:
+    - Q
+  FCUP:
+    - Q
+  IMG:
+    - Sta
+    - P
+  EM:
+    - OVERRANGE
+    - RUNSP
+    - RANGESP
+    - ENERGYREADBACK
+  HWP:
+    - "ROT:MABS"
+    - "ROT:RPOS"
+    - ENABLE
+  PICO:
+    - H_MREL
+    - V_MREL
+    - H_POS
+    - V_POS
+    - H_MREL_RBV
+    - V_MREL_RBV
 elementTypes:
     DIPOLE: Dipole
     QUADRUPOLE: Quadrupole
     SEXTUPOLE: Sextupole
-    STRIPLINE: BPM
+    BPM: BPM
     Camera: Camera
+    Screen: Screen
+    Charge: ChargeDiagnostic
+    IMG: VacuumGuage
+    LaserEnergyMeter: LaserEnergyMeter
+    LaserHWP: LaserHalfWavePlate
+    LaserMirror: LaserMirror
+    Lighting: Lighting
 PVTypes:
     Magnet: MagnetPV
     BPM: BPMPV
     Camera: CameraPV
+    Screen: ScreenPV
+    Charge: ChargeDiagnosticPV
+    IMG: VacuumGuagePV
+    LaserEnergyMeter: LaserEnergyMeterPV
+    LaserHWP: LaserHWPPV
+    LaserMirror: LaserMirrorPV
+    Lighting: LightingPV
