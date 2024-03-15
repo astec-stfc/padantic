@@ -94,7 +94,7 @@ class PV(PVSet):
             records = classrecordNames[classrecordNames[typename]]
         # print(f'validate_record {typename}', records)
         if v.upper() not in map(str.upper, records):
-            print(f'validate_record {v}','    -',v)
+            # print(f'validate_record {v}','    -',v)
             raise ValueError('Invalid Record Name')
         return v
 
@@ -156,6 +156,7 @@ class PV(PVSet):
         return self.__str__()
 
 class ElementPV(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
 
     def __str__(self) -> str:
         return ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])
@@ -163,6 +164,23 @@ class ElementPV(BaseModel):
     @model_serializer
     def ser_model(self) -> Dict[str, Any]:
         return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) is not None}
+
+    @classmethod
+    def with_defaults(cls, *args):
+        d = {}
+        for k, v in cls.model_fields.items():
+            for name in args:
+                try:
+                    pv = PV.fromString(name + ':' + v.json_schema_extra['postfixdefault'])
+                    d[k] = pv
+                    break
+                except:
+                    pass
+        return cls(**d)
+
+    def update(self, **new_data):
+        for field, value in new_data.items():
+           setattr(self, field, value)
 
 PVMappings = {
     'MAG': 'Magnet',
@@ -186,6 +204,12 @@ PVMappings = {
 }
 
 for k, v in PVMappings.items():
-    pvs = {p: (PV, Field(default=None)) for p in classPVNames[k]}
+    pvs = {}
+    for p in classPVNames[k]:
+        if isinstance(p, str):
+            pvs[p] = (PV, Field(postfixdefault=p))
+        if isinstance(p, dict):
+            for pd,vd in p.items():
+                pvs[pd] = (PV, Field(postfixdefault=vd))
     PVData = create_model(v+'PV', **pvs, __base__=ElementPV)
     globals()[v+'PV'] = type(v+'PV', (PVData, ), {})

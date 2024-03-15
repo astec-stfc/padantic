@@ -532,48 +532,13 @@ classrecordNames:
     - 'Rst'
     - 'Sta'
     - 'Cmi'
-  PROTCH:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTCL:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTG:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTT:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTVH:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTVL:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
-  PROTL01:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
+  PROTCH: PROTE
+  PROTCL: PROTE
+  PROTG: PROTE
+  PROTT: PROTE
+  PROTVH: PROTE
+  PROTVL: PROTE
+  PROTL01: PROTE
   4C-PM:
     - H:MREL
     - V:MREL
@@ -596,7 +561,7 @@ classPVNames:
     - K_ANG
     - K_MRAD
     - K_VAL
-    - Rst
+    - ILK_RESET: Rst
   BPM:
     - SA1
     - SA2
@@ -610,114 +575,114 @@ classPVNames:
     - Y
     - AWAK
     - RDY
-    - DATA:B2V.VALA
+    - DATA: DATA:B2V.VALA
   CAM:
-    - ROIandMask_SetX
-    - ROIandMask_SetY
-    - ROIandMask_SetXrad
-    - ROIandMask_SetYrad
-    - ANA_MaskXCenter
-    - ANA_MaskYCenter
-    - ANA_MaskXRad
-    - ANA_MaskYRad
-    - ANA_MaskYRad_RBV
-    - ANA_MaskXRad_RBV
-    - ANA_MaskWidth_RBV
-    - ANA_MaskHeight_RBV
-    - ANA_MaskYCenter_RBV
-    - ANA_MaskXCenter_RBV
-    - ROI1_MinX
-    - ROI1_MinY
-    - ROI1_SizeX
-    - ROI1_SizeY
-    - ROI1_MinY_RBV
-    - ROI1_MinX_RBV
-    - ROI1_SizeY_RBV
-    - ROI1_SizeX_RBV
-    - ROI1_ImageData_RBV
-    - ANA_CenterX
-    - ANA_CenterY
-    - ANA_CenterX_RBV
-    - ANA_CenterY_RBV
-    - CAM_Acquire_RBV
-    - CAM_Active_Count
-    - CAM_Active_Limit
-    - CAM_Stop_Acquire
-    - CAM_Start_Acquire
-    - ANA_EnableCallbacks
-    - ANA_EnableCallbacks_RBV
-    - ANA_OVERLAY_3_MASK
-    - ANA_OVERLAY_1_CROSS
-    - ANA_OVERLAY_2_RESULT
-    - ANA_OVERLAY_3_MASK_RBV
-    - ANA_OVERLAY_1_CROSS_RBV
-    - ANA_OVERLAY_2_RESULT_RBV
-    - ANA_NewBkgrnd
-    - ANA_UseBkgrnd
-    - ANA_UseBkgrnd_RBV
-    - ANA_NewBkgrnd_RBV
-    - ANA_UseFloor
-    - ANA_FloorLevel
-    - ANA_UseFloor_RBV
-    - ANA_FloorLevel_RBV
-    - ANA_FlooredPoints_RBV
-    - ANA_FlooredPercent_RBV
-    - ANA_CPU_RBV
-    - ANA_CPU_Dot_RBV
-    - ANA_CPU_Npoint_RBV
-    - ANA_CPU_CropSubMask_RBV
-    - ANA_PixMM
-    - ANA_PixW_RBV
-    - ANA_PixH_RBV
-    - ANA_PixMM_RBV
-    - ANA_UseNPoint
-    - ANA_UseNPoint_RBV
-    - ANA_NPointStepSize
-    - ANA_NPointStepSize_RBV
-    - ANA_X_RBV
-    - ANA_Y_RBV
-    - ANA_XPix_RBV
-    - ANA_YPix_RBV
-    - ANA_CovXY_RBV
-    - ANA_SigmaY_RBV
-    - ANA_SigmaX_RBV
-    - ANA_CovXYPix_RBV
-    - ANA_SigmaYPix_RBV
-    - ANA_SigmaXPix_RBV
-    - ANA_Intensity_RBV
-    - ANA_MMResults_RBV
-    - ANA_PixelResults_RBV
-    - ANA_AvgIntensity_RBV
-    - CAM1_ArrayData
-    - CAM2_ArrayData
-    - HDFB_Buffer_FileNumber
-    - HDFB_image_buffer_trigger
-    - HDFB_Buffer_FileNumber_RBV
-    - HDFB_image_buffer_filePath
-    - HDFB_image_buffer_fileName
-    - HDFB_image_buffer_fileName_RBV
-    - HDFB_image_buffer_filePath_RBV
-    - CAM_ArrayRate_RBV
-    - CAM_Temperature_RBV
-    - CAM_AcquireTime_RBV
-    - CAM_AcquirePeriod_RBV
-    - HDF_Capture
-    - HDF_FilePath
-    - HDF_FileName
-    - HDF_WriteFile
-    - HDF_FileNumber
-    - HDF_NumCapture
-    - HDF_WriteStatus
-    - HDF_Capture_RBV
-    - HDF_WriteMessage
-    - HDF_FilePath_RBV
-    - HDF_FileName_RBV
-    - HDF_WriteFile_RBV
-    - HDF_FileNumber_RBV
-    - HDF_NumCapture_RBV
-    - LED_Sta
-    - LED_Off
-    - LED_On
+    - ROIandMask_SetX: ANA:SetX
+    - ROIandMask_SetY: ANA:SetY
+    - ROIandMask_SetXrad: ANA:SetXrad
+    - ROIandMask_SetYrad: ANA:SetYrad
+    - ANA_MaskXCenter: ANA:MaskXCenter
+    - ANA_MaskYCenter: ANA:MaskYCenter
+    - ANA_MaskXRad: ANA:MaskXRad
+    - ANA_MaskYRad: ANA:MaskYRad
+    - ANA_MaskYRad_RBV: ANA:MaskYRad_RBV
+    - ANA_MaskXRad_RBV: ANA:MaskXRad_RBV
+    - ANA_MaskWidth_RBV: ANA:MaskWidth_RBV
+    - ANA_MaskHeight_RBV: ANA:MaskHeight_RBV
+    - ANA_MaskYCenter_RBV: ANA:MaskYCenter_RBV
+    - ANA_MaskXCenter_RBV: ANA:MaskXCenter_RBV
+    - ROI1_MinX: ROI1:MinX
+    - ROI1_MinY: ROI1:MinY
+    - ROI1_SizeX: ROI1:SizeX
+    - ROI1_SizeY: ROI1:SizeY
+    - ROI1_MinY_RBV: ROI1:MinY_RBV
+    - ROI1_MinX_RBV: ROI1:MinX_RBV
+    - ROI1_SizeY_RBV: ROI1:SizeY_RBV
+    - ROI1_SizeX_RBV: ROI1:SizeX_RBV
+    - ROI1_ImageData_RBV: CAM3:ArrayData
+    - ANA_CenterX: ANA:CenterX
+    - ANA_CenterY: ANA:CenterY
+    - ANA_CenterX_RBV: ANA:CenterX_RBV
+    - ANA_CenterY_RBV: ANA:CenterY_RBV
+    - CAM_Acquire_RBV: CAM:Acquire_RBV
+    - CAM_Active_Count: cameraCount
+    - CAM_Active_Limit: cameraLimit
+    - CAM_Stop_Acquire: CAM:Stop
+    - CAM_Start_Acquire: CAM:Start
+    - ANA_EnableCallbacks: ANA:EnableCallbacks
+    - ANA_EnableCallbacks_RBV: ANA:EnableCallbacks_RBV
+    - ANA_OVERLAY_3_MASK: OVER:3:Use
+    - ANA_OVERLAY_1_CROSS: OVER:1:Use
+    - ANA_OVERLAY_2_RESULT: OVER:2:Use
+    - ANA_OVERLAY_3_MASK_RBV: OVER:3:Use_RBV
+    - ANA_OVERLAY_1_CROSS_RBV: OVER:1:Use_RBV
+    - ANA_OVERLAY_2_RESULT_RBV: OVER:2:Use_RBV
+    - ANA_NewBkgrnd: ANA:NewBkgrnd
+    - ANA_UseBkgrnd: ANA:UseBkgrnd
+    - ANA_UseBkgrnd_RBV: ANA:UseBkgrnd_RBV
+    - ANA_NewBkgrnd_RBV: ANA:NewBkgrnd_RBV
+    - ANA_UseFloor: ANA:UseFloor
+    - ANA_FloorLevel: ANA:Floor
+    - ANA_UseFloor_RBV: ANA:UseFloor_RBV
+    - ANA_FloorLevel_RBV: ANA:Floor_RBV
+    - ANA_FlooredPoints_RBV: ANA:FLOORED_PTS
+    - ANA_FlooredPercent_RBV: ANA:FLOORED_PCENT
+    - ANA_CPU_RBV: ANA:ANA_CPU
+    - ANA_CPU_Dot_RBV: ANA:DP_CPU
+    - ANA_CPU_Npoint_RBV: ANA:NP_CPU
+    - ANA_CPU_CropSubMask_RBV: ANA:CSM_CPU
+    - ANA_PixMM: ANA:PixMM
+    - ANA_PixW_RBV: ANA:PixW_RBV
+    - ANA_PixH_RBV: ANA:PixH_RBV
+    - ANA_PixMM_RBV: ANA:PixMM_RBV
+    - ANA_UseNPoint: ANA:UseNPoint
+    - ANA_UseNPoint_RBV: ANA:UseNPoint_RBV
+    - ANA_NPointStepSize: ANA:StepSize
+    - ANA_NPointStepSize_RBV: ANA:StepSize_RBV
+    - ANA_X_RBV: ANA:X_RBV
+    - ANA_Y_RBV: ANA:Y_RBV
+    - ANA_XPix_RBV: ANA:XPix_RBV
+    - ANA_YPix_RBV: ANA:YPix_RBV
+    - ANA_CovXY_RBV: ANA:CovXY_RBV
+    - ANA_SigmaY_RBV: ANA:SigmaY_RBV
+    - ANA_SigmaX_RBV: ANA:SigmaX_RBV
+    - ANA_CovXYPix_RBV: ANA:CovXYPix_RBV
+    - ANA_SigmaYPix_RBV: ANA:SigmaYPix_RBV
+    - ANA_SigmaXPix_RBV: ANA:SigmaXPix_RBV
+    - ANA_Intensity_RBV: ANA:Intensity_RBV
+    - ANA_MMResults_RBV: ANA:MMResults_RBV
+    - ANA_PixelResults_RBV: ANA:PixelResults_RBV
+    - ANA_AvgIntensity_RBV: ANA:AvgIntensity_RBV
+    - CAM1_ArrayData: CAM1:ArrayData
+    - CAM2_ArrayData: CAM2:ArrayData
+    - HDFB_Buffer_FileNumber: HDFB:FileNumber
+    - HDFB_image_buffer_trigger: CAM:Trigger.PROC
+    - HDFB_Buffer_FileNumber_RBV: HDFB:FileNumber_RBV
+    - HDFB_image_buffer_filePath: HDFB:FilePath
+    - HDFB_image_buffer_fileName: HDFB:FileName
+    - HDFB_image_buffer_fileName_RBV: HDFB:FileName_RBV
+    - HDFB_image_buffer_filePath_RBV: HDFB:FilePath_RBV
+    - CAM_ArrayRate_RBV: CAM:ArrayRate_RBV
+    - CAM_Temperature_RBV: CAM:Temperature_RBV
+    - CAM_AcquireTime_RBV: CAM:AcquireTime_RBV
+    - CAM_AcquirePeriod_RBV: CAM:AcquirePeriod_RBV
+    - HDF_Capture: HDF:Capture
+    - HDF_FilePath: HDF:FilePath
+    - HDF_FileName: HDF:FileName
+    - HDF_WriteFile: HDF:WriteFile
+    - HDF_FileNumber: HDF:FileNumber
+    - HDF_NumCapture: HDF:NumCapture
+    - HDF_WriteStatus: HDF:WriteStatus
+    - HDF_Capture_RBV: HDF:Capture_RBV
+    - HDF_WriteMessage: HDF:WriteMessage
+    - HDF_FilePath_RBV: HDF:FilePath_RBV
+    - HDF_FileName_RBV: HDF:FileName_RBV
+    - HDF_WriteFile_RBV: HDF:WriteFile_RBV
+    - HDF_FileNumber_RBV: HDF:FileNumber_RBV
+    - HDF_NumCapture_RBV: HDF:NumCapture_RBV
+    - LED_Sta: Sta
+    - LED_Off: Off
+    - LED_On: On
   CS:
     - CAM_Active_Count
     - CAM_Active_Limit

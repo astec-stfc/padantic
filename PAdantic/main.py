@@ -43,6 +43,15 @@ class ReplacePc():
             self.buffer = ''
         return chunk
 
+def get_possible_pv_names(pvdict):
+    names = []
+    for pv in pvdict.values():
+        prefix, postfix = pv.split(':', 1)
+        names.append(prefix)
+    sortednames = [(i, names.count(i)) for i in set(names)]
+    sortednames.sort(reverse=True, key=lambda x: x[1])
+    return [n[0] for n in sortednames]
+
 def read_CATAP_YAML(filename):
     ''' read a CATAP YAML file and convert to a pydantic model. '''
     with ReplacePc(filename) as stream:
@@ -58,7 +67,12 @@ def read_CATAP_YAML(filename):
         felem = globals()[elementTypes[data['properties']['hardware_type']]]
 
     # print(data['controls_information']['pv_record_map'].items())
-    elemPV = fpv(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
+    if data['properties']['hardware_type'] == 'Camera':
+        names = get_possible_pv_names(data['controls_information']['pv_record_map'])
+        elemPV = fpv.with_defaults(*names)
+    else:
+        elemPV = fpv.with_defaults(data['properties']['name'])
+    elemPV.update(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
 
     fields = data['properties']
     fields.update(**{k:v.annotation.from_CATAP(data['properties']) for k,v in felem.model_fields.items() if k != 'controls' and hasattr(v.annotation, 'from_CATAP')})
@@ -69,7 +83,7 @@ def read_CATAP_YAML(filename):
 files = [
     # r'YAML\CLA-S02-MAG-QUAD-01.yml',
     # r'YAML\\CLA-C2V-DIA-BPM-01.yaml',
-    # r'YAML\CLA-S01-DIA-CAM-01.yaml',
+    r'YAML\CLA-S01-DIA-CAM-01.yaml',
     # r'YAML\CLA-S01-DIA-SCR-01.yaml',
     # r'YAML\CLA-S01-DIA-WCM-01.yaml',
     # r'YAML\CLA-S02-DIA-FCUP-01.yaml',
@@ -86,15 +100,16 @@ files = [
     # r'YAML\CLA-L01-RF-PROTE-01.yaml',
 ]
 
-files = glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yaml', recursive=True)
-files += glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yml', recursive=True)
+# files = glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yaml', recursive=True)
+# files += glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yml', recursive=True)
 
 if __name__ == "__main__":
+    # print(MagnetPV.with_defaults('CLA-S02-MAG-QUAD-01'))
     for f in files:
-            print(f)
+            # print(f)
         # try:
             elem = read_CATAP_YAML(f)
-        # elem.physical.error.position.x = 1
-            print('\n')
-        # except:
-        #     print(f)
+    #     # elem.physical.error.position.x = 1
+            print('\n',elem)
+    #     # except:
+    #     #     print(f)
