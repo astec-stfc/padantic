@@ -1,0 +1,24 @@
+controls_information:
+    PV: true
+    pv_record_map :
+        AVG_PHASE : CLA-L01-LRF-CTRL-01:vm:phase # double
+        FORWARD_PHASE_WEIGHT : CLA-L01-LRF-CTRL-01:ad1:ch3:phase:weight # double
+        PROBE_PHASE_WEIGHT : CLA-L01-LRF-CTRL-01:ad1:ch6:phase:weight # double
+        SCAN : CLA-L01-LRF-CTRL-01:vm:phase:pid.SCAN # DRB_ENUM
+        PID_OVAL : CLA-L01-LRF-CTRL-01:vm:phase:pid.OVAL # double
+        FORWARD_PHASE_WRAPPED : CLA-L01-LRF-CTRL-01:ad1:ch3:phase_wrapped # double
+        PROBE_PHASE_WRAPPED : CLA-L01-LRF-CTRL-01:ad1:ch6:phase_wrapped # double
+    records : AVG_PHASE, FORWARD_PHASE_WEIGHT, PROBE_PHASE_WEIGHT, SCAN, PID_OVAL, FORWARD_PHASE_WRAPPED, PROBE_PHASE_WRAPPED
+properties:
+    hardware_type : LinacPID
+    machine_area: L01
+    name: CLA-L01-LRF-CTRL-01
+    name_alias: L01-PID, L01
+    virtual_name: VM-CLA-L01-LRF-CTRL-01
+    forward_channel: 3
+    probe_channel: 6
+    enable: ZERO_POINT_ONE # THIS IS A STATE enum 
+    disable: PASSIVE # THIS IS A STATE enum 
+    phase_range: "-180.0,180.0"
+    phase_weight_range: "0.0,1.0" 
+    

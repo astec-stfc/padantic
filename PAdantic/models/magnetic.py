@@ -76,6 +76,8 @@ class MagneticElement(IgnoreExtra):
             return FieldIntegral(coefficients=list(map(float, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return FieldIntegral(coefficients=list(v))
+        elif isinstance(v, (FieldIntegral)):
+            return v
         else:
             raise ValueError('field_integral_coefficients should be a string or a list of floats')
 
@@ -101,13 +103,42 @@ class MagneticElement(IgnoreExtra):
         return self.KnL(order=0)
 
 class Dipole_Magnet(MagneticElement):
-    ''' Sextupole magnet with magnetic order 0. '''
+    ''' Dipole magnet with magnetic order 0. '''
     order: int = Field(repr=False, default=0, frozen=True)
 
 class Quadrupole_Magnet(MagneticElement):
-    ''' Sextupole magnet with magnetic order 1. '''
+    ''' Quadrupole with magnetic order 1. '''
     order: int = Field(repr=False, default=1, frozen=True)
 
 class Sextupole_Magnet(MagneticElement):
     ''' Sextupole magnet with magnetic order 2. '''
     order: int = Field(repr=False, default=2, frozen=True)
+
+solenoidFields = {'S'+str(l)+'L': (float, Field(default=0, repr=False)) for l in range(0,13)}
+solenoidFieldsData = create_model('Multipoles', **solenoidFields)
+
+class SolenoidFields(solenoidFieldsData):
+    ''' Magnetic multipoles model. '''
+
+    def __str__(self):
+        return ' '.join(['S'+str(i)+'L='+getattr(self, 'S'+str(i)+'L').__str__()+'' for i in range(13) if abs(getattr(self, 'S'+str(i)+'L')) > 0])
+
+    @model_serializer
+    def ser_model(self) -> Dict[str, Any]:
+        return {k: getattr(self,k) for k in self.model_fields.keys() if abs(getattr(self, k)) > 0}
+
+    def normal(self, order: int) -> int|float:
+        return getattr(self, 'S'+str(order)+'L')
+
+    def __eq__(self, other) -> bool:
+        return self.ser_model() == other
+
+    def __neq__(self) -> bool:
+        return not self.__eq__(other)
+
+class Solenoid_Magnet(MagneticElement):
+    ''' Solenoid magnet higher order fields. '''
+    order: int = Field(repr=False, default=0, frozen=True)
+    fields: SolenoidFields = SolenoidFields()
+    systematic_fields: SolenoidFields = SolenoidFields()
+    random_fields: SolenoidFields = SolenoidFields()

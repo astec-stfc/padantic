@@ -149,7 +149,7 @@ properties:
     CAM_TYPE : CLARA_CAM 
     SCREEN_NAME : CLA-S01-SCR-01,S01-YAG-01,S01-SCR-1,S01-YAG-1 # which screen is the camera looking at 
     IP_ADDRESS_STREAM : "" 
-    MAX_SHOTS_NUMBER  : 600 # max number of shots that can be taken in a single burst 
+    MAX_SHOTS_NUMBER  :	600 # max number of shots that can be taken in a single burst 
     ## these are the indices of each value in the array PixelResults_RBV
     RESULTS_COUNT : 5 #
     X_POS : 0 #
@@ -163,12 +163,12 @@ properties:
     X_SIGMA_NAME : X_SIGMA
     Y_SIGMA_NAME : Y_SIGMA
     COV_NAME : COV
-    X_MASK_DEF    : 1280 #; some default values, better values  are to be determined
-    Y_MASK_DEF    : 1080 #; some default values, better values  are to be determined
-    X_MASK_RAD_DEF   : 1240 #some default values, better values  are to be determined
-    Y_MASK_RAD_DEF   : 1040 #some default values, better values  are to be determined
-    X_MASK_RAD_MAX   : 300 ##max value of mask radius 
-    Y_MASK_RAD_MAX   : 300 #max value of mask radius
+    X_MASK_DEF				: 1280 #; some default values, better values  are to be determined
+    Y_MASK_DEF				: 1080 #; some default values, better values  are to be determined
+    X_MASK_RAD_DEF			: 1240 #some default values, better values  are to be determined
+    Y_MASK_RAD_DEF			: 1040 #some default values, better values  are to be determined
+    X_MASK_RAD_MAX			: 300 ##max value of mask radius 
+    Y_MASK_RAD_MAX			: 300 #max value of mask radius
     USE_MASK_RAD_LIMITS : TRUE #; shoudl use mask max values
     BINARY_NUM_PIX_X : 2160 #; the binary image is bigger than the array data passed through EPICS
     BINARY_NUM_PIX_Y : 2560 #; the binary image is bigger than the array data passed through EPICS
@@ -177,9 +177,9 @@ properties:
     AVG_PIXEL_VALUE_FOR_BEAM : 97.2 #;  emprically determined value for when laser is present
     X_CENTER_DEF      : 0 #;    where is (0,0) ? TBD
     Y_CENTER_DEF      : 0 #;
-    PIX_2_MM_RATIO_DEF : 0.0134 #; !!! http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras 
-    ARRAY_DATA_X_PIX_2_MM : 0.0134  #;  http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras
-    ARRAY_DATA_Y_PIX_2_MM :  0.0134  #; http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras
+    PIX_2_MM_RATIO_DEF : 0.0134	#; !!! http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras 
+    ARRAY_DATA_X_PIX_2_MM : 0.0134	 #;  http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras
+    ARRAY_DATA_Y_PIX_2_MM :  0.0134	 #; http://projects.astec.ac.uk/VELACLARAManual/index.php/Screens_and_Cameras
     SENSOR_MAX_TEMP : 27.0 #;
     SENSOR_MIN_TEMP : 5.0 #;
     MIN_X_PIXEL_POS : 150.0 #; these are used to decide if the beam is close to the edge    float  as analysis results in pixels returns float  

@@ -25,39 +25,64 @@ areaNames:
   - C10
   - LAS
   - INJ
+  - GUN
+  - VCA
+  - LRG1
 classtypeNames:
-    MAG:
-      - QUAD
-      - DIP
-      - HVCOR
-      - SEXT
-    DIA:
-      - SCR
-      - BPM
-      - ICT
-      - BAM
-      - CAM
-      - LED
-      - WCM
-      - FCUP
-      - EM
-    PS:
-      - SHTR
-    VAC:
-      -APER
-    SIM:
-      - MARK
-    IOC:
-      - CS
-    VAC:
-      - IMG
-    OPT:
-      - HWP
-      - PICO
-    SRV:
-      - LIGHT
-classrecordNames:
   MAG:
+    - QUAD
+    - DIP
+    - HVCOR
+    - SEXT
+    - HCOR
+    - VCOR
+    - SOL
+  DIA:
+    - SCR
+    - BPM
+    - ICT
+    - BAM
+    - CAM
+    - LED
+    - WCM
+    - FCUP
+    - EM
+  PS:
+    - SHTR
+  VAC:
+    - APER
+    - IMG
+    - VALV
+  SIM:
+    - MARK
+  IOC:
+    - CS
+  OPT:
+    - HWP
+    - PICO
+    - 4C-PM
+  SRV:
+    - LIGHT
+  LRF:
+    - CTRL
+  HRF:
+    - MOD
+  RFHOLD:
+    - ANY
+  LSR:
+    - SHUT
+  RF:
+    - PROTE
+    - SCR
+    - PROTCH
+    - PROTCL
+    - PROTG
+    - PROTT
+    - PROTVH
+    - PROTVL
+    - PROTL01
+classrecordNames:
+  magnets:
     - RILK
     - SETI
     - GETSETI
@@ -72,6 +97,11 @@ classrecordNames:
     - K_MRAD
     - K_VAL
     - Rst
+  DIP: magnets
+  HCOR: magnets
+  VCOR: magnets
+  QUAD: magnets
+  SOL: magnets
   BPM:
     - SA1
     - SA2
@@ -196,6 +226,7 @@ classrecordNames:
     - 'Off'
     - 'On'
   SCR:
+    - HB
     - H:SDEV
     - H:TRIGGER
     - H:EX
@@ -245,10 +276,311 @@ classrecordNames:
     - RCUM1
     - RCUM3
     - RPOS
+    - H:MREL
   LIGHT:
     - 'Off'
     - 'On'
     - Sta
+  CTRL:
+    - vm:phase
+    - ad1:ch3:phase:weight
+    - ad1:ch6:phase:weight
+    - vm:phase:pid.SCAN
+    - vm:phase:pid.OVAL
+    - ad1:ch3:phase_wrapped
+    - ad1:ch6:phase_wrapped
+    - vm:dsp:ff_amp:amplitude
+    - tcm:trig:source
+    - vm:dsp:sp_amp:amplitude
+    - vm:dsp:sp_amp:amplitude.DRVH
+    - vm:dsp:ff_ph:phase
+    - vm:dsp:sp_ph:phase
+    - app:rf_ctrl
+    - vm:dsp:ff_ph:lock
+    - vm:dsp:ff_amp:lock
+    - app:time_vector
+    - vm:feed_fwd:offset
+    - vm:feed_fwd:duration
+    - app:interlock:state
+    - vm:dsp:ff_pulse_shape:amp
+    - vm:dsp:ff_pulse_shape:apply_tables
+    - ad1:interlock:ch1:status
+    - ad1:interlock:ch1:enable
+    - ad1:interlock:ch1:U_level
+    - ad1:interlock:ch1:P_level
+    - ad1:interlock:ch1:Pdbm_level
+    - ad1:interlock:ch2:status
+    - ad1:interlock:ch2:enable
+    - ad1:interlock:ch2:U_level
+    - ad1:interlock:ch2:P_level
+    - ad1:interlock:ch2:Pdbm_level
+    - ad1:interlock:ch3:status
+    - ad1:interlock:ch3:enable
+    - ad1:interlock:ch3:U_level
+    - ad1:interlock:ch3:P_level
+    - ad1:interlock:ch3:Pdbm_level
+    - ad1:interlock:ch4:status
+    - ad1:interlock:ch4:enable
+    - ad1:interlock:ch4:U_level
+    - ad1:interlock:ch4:P_level
+    - ad1:interlock:ch4:Pdbm_level
+    - ad1:interlock:ch5:status
+    - ad1:interlock:ch5:enable
+    - ad1:interlock:ch5:U_level
+    - ad1:interlock:ch5:P_level
+    - ad1:interlock:ch5:Pdbm_level
+    - ad1:interlock:ch6:status
+    - ad1:interlock:ch6:enable
+    - ad1:interlock:ch6:U_level
+    - ad1:interlock:ch6:P_level
+    - ad1:interlock:ch6:Pdbm_level
+    - ad1:interlock:ch7:status
+    - ad1:interlock:ch7:enable
+    - ad1:interlock:ch7:U_level
+    - ad1:interlock:ch7:P_level
+    - ad1:interlock:ch7:Pdbm_level
+    - ad1:interlock:ch8:status
+    - ad1:interlock:ch8:enable
+    - ad1:interlock:ch8:U_level
+    - ad1:interlock:ch8:P_level
+    - ad1:interlock:ch8:Pdbm_level
+    - ad1:dod_demod_vec
+    - ad1:dod_demod_vec.SCAN
+    - ad1:dod_demod_vec.ACQM
+    - ad1:ch1:power_remote.SCAN
+    - ad1:ch1:power_remote.POWER
+    - ad1:ch1:power_remote.ACQM
+    - ad1:ch1:amp_phase.SCAN
+    - ad1:ch1:amp_phase.ACQM
+    - ad1:ch1:amp_phase.PHASE_REMOTE
+    - ad1:ch1:amp_derivative.SCAN
+    - ad1:ch1:amp_derivative.ACQM
+    - ad1:ch1:phase_derivative.SCAN
+    - ad1:ch1:phase_derivative.ACQM
+    - ad1:ch1:power_local.SCAN
+    - ad1:ch1:power_local.ACQM
+    - ad1:ch2:power_remote.SCAN
+    - ad1:ch2:power_remote.POWER
+    - ad1:ch2:power_remote.ACQM
+    - ad1:ch2:amp_phase.SCAN
+    - ad1:ch2:amp_phase.ACQM
+    - ad1:ch2:amp_phase.PHASE_REMOTE
+    - ad1:ch2:amp_derivative.SCAN
+    - ad1:ch2:amp_derivative.ACQM
+    - ad1:ch2:phase_derivative.SCAN
+    - ad1:ch2:phase_derivative.ACQM
+    - ad1:ch2:power_local.SCAN
+    - ad1:ch2:power_local.ACQM
+    - ad1:ch3:power_remote.SCAN
+    - ad1:ch3:power_remote.POWER
+    - ad1:ch3:power_remote.ACQM
+    - ad1:ch3:amp_phase.SCAN
+    - ad1:ch3:amp_phase.ACQM
+    - ad1:ch3:amp_phase.PHASE_REMOTE
+    - ad1:ch3:amp_derivative.SCAN
+    - ad1:ch3:amp_derivative.ACQM
+    - ad1:ch3:phase_derivative.SCAN
+    - ad1:ch3:phase_derivative.ACQM
+    - ad1:ch3:power_local.SCAN
+    - ad1:ch3:power_local.ACQM
+    - ad1:ch4:power_remote.SCAN
+    - ad1:ch4:power_remote.POWER
+    - ad1:ch4:power_remote.ACQM
+    - ad1:ch4:amp_phase.SCAN
+    - ad1:ch4:amp_phase.ACQM
+    - ad1:ch4:amp_phase.PHASE_REMOTE
+    - ad1:ch4:amp_derivative.SCAN
+    - ad1:ch4:amp_derivative.ACQM
+    - ad1:ch4:phase_derivative.SCAN
+    - ad1:ch4:phase_derivative.ACQM
+    - ad1:ch4:power_local.SCAN
+    - ad1:ch4:power_local.ACQM
+    - ad1:ch5:power_remote.SCAN
+    - ad1:ch5:power_remote.POWER
+    - ad1:ch5:power_remote.ACQM
+    - ad1:ch5:amp_phase.SCAN
+    - ad1:ch5:amp_phase.ACQM
+    - ad1:ch5:amp_phase.PHASE_REMOTE
+    - ad1:ch5:amp_derivative.SCAN
+    - ad1:ch5:amp_derivative.ACQM
+    - ad1:ch5:phase_derivative.SCAN
+    - ad1:ch5:phase_derivative.ACQM
+    - ad1:ch5:power_local.SCAN
+    - ad1:ch5:power_local.ACQM
+    - ad1:ch6:power_remote.SCAN
+    - ad1:ch6:power_remote.POWER
+    - ad1:ch6:power_remote.ACQM
+    - ad1:ch6:amp_phase.SCAN
+    - ad1:ch6:amp_phase.ACQM
+    - ad1:ch6:amp_phase.PHASE_REMOTE
+    - ad1:ch6:amp_derivative.SCAN
+    - ad1:ch6:amp_derivative.ACQM
+    - ad1:ch6:phase_derivative.SCAN
+    - ad1:ch6:phase_derivative.ACQM
+    - ad1:ch6:power_local.SCAN
+    - ad1:ch6:power_local.ACQM
+    - ad1:ch7:power_remote.SCAN
+    - ad1:ch7:power_remote.POWER
+    - ad1:ch7:power_remote.ACQM
+    - ad1:ch7:amp_phase.SCAN
+    - ad1:ch7:amp_phase.ACQM
+    - ad1:ch7:amp_phase.PHASE_REMOTE
+    - ad1:ch7:amp_derivative.SCAN
+    - ad1:ch7:amp_derivative.ACQM
+    - ad1:ch7:phase_derivative.SCAN
+    - ad1:ch7:phase_derivative.ACQM
+    - ad1:ch7:power_local.SCAN
+    - ad1:ch7:power_local.ACQM
+    - ad1:ch8:power_remote.SCAN
+    - ad1:ch8:power_remote.POWER
+    - ad1:ch8:power_remote.ACQM
+    - ad1:ch8:amp_phase.SCAN
+    - ad1:ch8:amp_phase.ACQM
+    - ad1:ch8:amp_phase.PHASE_REMOTE
+    - ad1:ch8:amp_derivative.SCAN
+    - ad1:ch8:amp_derivative.ACQM
+    - ad1:ch8:phase_derivative.SCAN
+    - ad1:ch8:phase_derivative.ACQM
+    - ad1:ch8:power_local.SCAN
+    - ad1:ch8:power_local.ACQM
+  HRF:
+    - SYSMDE
+    - FAULT
+    - SYSST
+    - COUNTDOWN
+    - HVPS:VS:R
+    - HVPS:ALM:LO:R
+    - HVPS:ALM:HI:R
+    - HVPS:V
+    - HVPS:I
+    - HEAT:V
+    - HEAT:I
+    - RESET:V
+    - RESET:I
+    - ION:V
+    - ION:I
+    - SUP:T
+    - SUP:P
+    - RET:T
+    - RET:P
+    - BDY:FR
+    - COL:FR
+    - SOL:FR
+    - TNK:FR
+    - CR:T
+    - BR:T
+    - SOL:1:V
+    - SOL:1:I
+    - SOL:2:V
+    - SOL:2:I
+    - SOL:3:V
+    - SOL:3:I
+    - F1DSTR.VALA
+    - F2DSTR.VALA
+    - F3DSTR.VALA
+    - F4DSTR.VALA
+    - F5DSTR.VALA
+    - F6DSTR.VALA
+    - F7DSTR.VALA
+    - F8DSTR.VALA
+    - F9DSTR.VALA
+    - F10DSTR.VALA
+    - F11DSTR.VALA
+    - F12DSTR.VALA
+    - F13DSTR.VALA
+    - F14DSTR.VALA
+    - F15DSTR.VALA
+    - F16DSTR.VALA
+    - F17DSTR.VALA
+    - F18DSTR.VALA
+    - F19DSTR.VALA
+    - F20DSTR.VALA
+    - F1STR.VALA
+    - F2STR.VALA
+    - F3STR.VALA
+    - F4STR.VALA
+    - F5STR.VALA
+    - F6STR.VALA
+    - F7STR.VALA
+    - F8STR.VALA
+    - F9STR.VALA
+    - F10STR.VALA
+    - F11STR.VALA
+    - F12STR.VALA
+    - F13STR.VALA
+    - F14STR.VALA
+    - F15STR.VALA
+    - F16STR.VALA
+    - F17STR.VALA
+    - F18STR.VALA
+    - F19STR.VALA
+    - F20STR.VALA
+  RFHOLD:
+    - OpMode
+  LSR:
+    - 'On'
+    - 'Off'
+    - Sta
+    - Cmi
+  VALV:
+    - 'On'
+    - 'Off'
+    - Sta
+  PROTE:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTCH:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTCL:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTG:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTT:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTVH:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTVL:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  PROTL01:
+    - 'On'
+    - 'Off'
+    - 'Rst'
+    - 'Sta'
+    - 'Cmi'
+  4C-PM:
+    - H:MREL
+    - V:MREL
+    - H:POS
+    - V:POS
+  PICO:
+    - POSBTN
 classPVNames:
   MAG:
     - RILK
@@ -458,10 +790,267 @@ classPVNames:
     - V_POS
     - H_MREL_RBV
     - V_MREL_RBV
+  PID:
+    - AVG_PHASE
+    - FORWARD_PHASE_WEIGHT
+    - PROBE_PHASE_WEIGHT
+    - SCAN
+    - PID_OVAL
+    - FORWARD_PHASE_WRAPPED
+    - PROBE_PHASE_WRAPPED
+  LLRF:
+    - AMP_FF
+    - TRIG_SOURCE
+    - AMP_SP
+    - MAX_AMP_SP
+    - PHI_FF
+    - PHI_SP
+    - RF_OUTPUT
+    - FF_PHASE_LOCK_STATE
+    - FF_AMP_LOCK_STATE
+    - TIME_VECTOR
+    - PULSE_OFFSET
+    - LLRF_PULSE_DURATION
+    - INTERLOCK
+    - PULSE_SHAPE
+    - PULSE_SHAPE_APPLY
+    - CH1_INTERLOCK_STATUS
+    - CH1_INTERLOCK_ENABLE
+    - CH1_INTERLOCK_U
+    - CH1_INTERLOCK_P
+    - CH1_INTERLOCK_PDBM
+    - CH2_INTERLOCK_STATUS
+    - CH2_INTERLOCK_ENABLE
+    - CH2_INTERLOCK_U
+    - CH2_INTERLOCK_P
+    - CH2_INTERLOCK_PDBM
+    - CH3_INTERLOCK_STATUS
+    - CH3_INTERLOCK_ENABLE
+    - CH3_INTERLOCK_U
+    - CH3_INTERLOCK_P
+    - CH3_INTERLOCK_PDBM
+    - CH4_INTERLOCK_STATUS
+    - CH4_INTERLOCK_ENABLE
+    - CH4_INTERLOCK_U
+    - CH4_INTERLOCK_P
+    - CH4_INTERLOCK_PDBM
+    - CH5_INTERLOCK_STATUS
+    - CH5_INTERLOCK_ENABLE
+    - CH5_INTERLOCK_U
+    - CH5_INTERLOCK_P
+    - CH5_INTERLOCK_PDBM
+    - CH6_INTERLOCK_STATUS
+    - CH6_INTERLOCK_ENABLE
+    - CH6_INTERLOCK_U
+    - CH6_INTERLOCK_P
+    - CH6_INTERLOCK_PDBM
+    - CH7_INTERLOCK_STATUS
+    - CH7_INTERLOCK_ENABLE
+    - CH7_INTERLOCK_U
+    - CH7_INTERLOCK_P
+    - CH7_INTERLOCK_PDBM
+    - CH8_INTERLOCK_STATUS
+    - CH8_INTERLOCK_ENABLE
+    - CH8_INTERLOCK_U
+    - CH8_INTERLOCK_P
+    - CH8_INTERLOCK_PDBM
+    - LLRF_TRACES
+    - LLRF_TRACES_SCAN
+    - LLRF_TRACES_ACQM
+    - CH1_PWR_REM_SCAN
+    - CH1_PWR_REM
+    - CH1_PWR_REM_ACQM
+    - CH1_PHASE_REM_SCAN
+    - CH1_PHASE_REM_ACQM
+    - CH1_PHASE_REM
+    - CH1_AMP_DER_SCAN
+    - CH1_AMP_DER_ACQM
+    - CH1_PHASE_DER_SCAN
+    - CH1_PHASE_DER_ACQM
+    - CH1_PWR_LOC_SCAN
+    - CH1_PWR_LOC_ACQM
+    - CH2_PWR_REM_SCAN
+    - CH2_PWR_REM
+    - CH2_PWR_REM_ACQM
+    - CH2_PHASE_REM_SCAN
+    - CH2_PHASE_REM_ACQM
+    - CH2_PHASE_REM
+    - CH2_AMP_DER_SCAN
+    - CH2_AMP_DER_ACQM
+    - CH2_PHASE_DER_SCAN
+    - CH2_PHASE_DER_ACQM
+    - CH2_PWR_LOC_SCAN
+    - CH2_PWR_LOC_ACQM
+    - CH3_PWR_REM_SCAN
+    - CH3_PWR_REM
+    - CH3_PWR_REM_ACQM
+    - CH3_PHASE_REM_SCAN
+    - CH3_PHASE_REM_ACQM
+    - CH3_PHASE_REM
+    - CH3_AMP_DER_SCAN
+    - CH3_AMP_DER_ACQM
+    - CH3_PHASE_DER_SCAN
+    - CH3_PHASE_DER_ACQM
+    - CH3_PWR_LOC_SCAN
+    - CH3_PWR_LOC_ACQM
+    - CH4_PWR_REM_SCAN
+    - CH4_PWR_REM
+    - CH4_PWR_REM_ACQM
+    - CH4_PHASE_REM_SCAN
+    - CH4_PHASE_REM_ACQM
+    - CH4_PHASE_REM
+    - CH4_AMP_DER_SCAN
+    - CH4_AMP_DER_ACQM
+    - CH4_PHASE_DER_SCAN
+    - CH4_PHASE_DER_ACQM
+    - CH4_PWR_LOC_SCAN
+    - CH4_PWR_LOC_ACQM
+    - CH5_PWR_REM_SCAN
+    - CH5_PWR_REM
+    - CH5_PWR_REM_ACQM
+    - CH5_PHASE_REM_SCAN
+    - CH5_PHASE_REM_ACQM
+    - CH5_PHASE_REM
+    - CH5_AMP_DER_SCAN
+    - CH5_AMP_DER_ACQM
+    - CH5_PHASE_DER_SCAN
+    - CH5_PHASE_DER_ACQM
+    - CH5_PWR_LOC_SCAN
+    - CH5_PWR_LOC_ACQM
+    - CH6_PWR_REM_SCAN
+    - CH6_PWR_REM
+    - CH6_PWR_REM_ACQM
+    - CH6_PHASE_REM_SCAN
+    - CH6_PHASE_REM_ACQM
+    - CH6_PHASE_REM
+    - CH6_AMP_DER_SCAN
+    - CH6_AMP_DER_ACQM
+    - CH6_PHASE_DER_SCAN
+    - CH6_PHASE_DER_ACQM
+    - CH6_PWR_LOC_SCAN
+    - CH6_PWR_LOC_ACQM
+    - CH7_PWR_REM_SCAN
+    - CH7_PWR_REM
+    - CH7_PWR_REM_ACQM
+    - CH7_PHASE_REM_SCAN
+    - CH7_PHASE_REM_ACQM
+    - CH7_PHASE_REM
+    - CH7_AMP_DER_SCAN
+    - CH7_AMP_DER_ACQM
+    - CH7_PHASE_DER_SCAN
+    - CH7_PHASE_DER_ACQM
+    - CH7_PWR_LOC_SCAN
+    - CH7_PWR_LOC_ACQM
+    - CH8_PWR_REM_SCAN
+    - CH8_PWR_REM
+    - CH8_PWR_REM_ACQM
+    - CH8_PHASE_REM_SCAN
+    - CH8_PHASE_REM_ACQM
+    - CH8_PHASE_REM
+    - CH8_AMP_DER_SCAN
+    - CH8_AMP_DER_ACQM
+    - CH8_PHASE_DER_SCAN
+    - CH8_PHASE_DER_ACQM
+    - CH8_PWR_LOC_SCAN
+    - CH8_PWR_LOC_ACQM
+  RFModulator:
+    - SYSTEM_STATE_PUT
+    - HOLD_RF_ON
+    - L01_FAULT
+    - SYSTEM_STATE_READ
+    - L01_MOD_WARMUPT
+    - HVPS_VOLTAGE_SET_READ
+    - HVPS_VOLTAGE_LOW_ALARM_SET_READ
+    - HVPS_VOLTAGE_HI_ALARM_SET_READ
+    - HVPS_VOLTAGE_READ
+    - HVPS_CURRENT_READ
+    - HEATER_VOLTAGE
+    - HEATER_CURRENT
+    - RESET_VOLTAGE
+    - RESET_CURRENT
+    - ION_PUMP_VOLTAGE
+    - ION_PUMP_CURRENT
+    - SUPPLY_TEMP
+    - SUPPLY_PRESSURE
+    - RETURN_TEMP
+    - RETURN_PRESSURE
+    - BODY_FLOW_RATE
+    - COLLECTOR_FLOW_RATE
+    - SOLENOID_FLOW_RATE
+    - TANK_FLOW_RATE
+    - COLLECTOR_RETURN_RATE
+    - BODY_RETURN_TEMPERATURE
+    - SOLENOID_1_VOLTAGE
+    - SOLENOID_2_VOLTAGE
+    - SOLENOID_3_VOLTAGE
+    - SOLENOID_1_CURRENT
+    - SOLENOID_2_CURRENT
+    - SOLENOID_3_CURRENT
+    - ERROR_WORD_1
+    - ERROR_WORD_2
+    - ERROR_WORD_3
+    - ERROR_WORD_4
+    - ERROR_WORD_5
+    - ERROR_WORD_6
+    - ERROR_WORD_7
+    - ERROR_WORD_8
+    - ERROR_WORD_9
+    - ERROR_WORD_10
+    - ERROR_WORD_11
+    - ERROR_WORD_12
+    - ERROR_WORD_13
+    - ERROR_WORD_14
+    - ERROR_WORD_15
+    - ERROR_WORD_16
+    - ERROR_WORD_17
+    - ERROR_WORD_18
+    - ERROR_WORD_19
+    - ERROR_WORD_20
+    - ERROR_DESC_1
+    - ERROR_DESC_2
+    - ERROR_DESC_3
+    - ERROR_DESC_4
+    - ERROR_DESC_5
+    - ERROR_DESC_6
+    - ERROR_DESC_7
+    - ERROR_DESC_8
+    - ERROR_DESC_9
+    - ERROR_DESC_10
+    - ERROR_DESC_11
+    - ERROR_DESC_12
+    - ERROR_DESC_13
+    - ERROR_DESC_14
+    - ERROR_DESC_15
+    - ERROR_DESC_16
+    - ERROR_DESC_17
+    - ERROR_DESC_18
+    - ERROR_DESC_19
+    - ERROR_DESC_20
+  Shutter:
+    - Open
+    - Close
+    - State
+    - Cmi
+  Valve:
+    - Open
+    - Close
+    - Sta
+  RFProtection:
+    - 'ON'
+    - 'OFF'
+    - 'RESET'
+    - 'Sta'
+    - 'Cmi'
+    - Rst
+  RFHeartbeat:
+    - KEEP_ALIVE
 elementTypes:
     DIPOLE: Dipole
     QUADRUPOLE: Quadrupole
     SEXTUPOLE: Sextupole
+    HORIZONTAL_CORRECTOR: Horizontal_Corrector
+    VERTICAL_CORRECTOR: Vertical_Corrector
+    SOLENOID: Solenoid
     BPM: BPM
     Camera: Camera
     Screen: Screen
@@ -471,6 +1060,13 @@ elementTypes:
     LaserHWP: LaserHalfWavePlate
     LaserMirror: LaserMirror
     Lighting: Lighting
+    LinacPID: PID
+    LLRF: LLRF
+    RFModulator: RFModulator
+    Shutter: Shutter
+    Valve: Valve
+    RFProtection: RFProtection
+    RFHeartbeat: RFHeartbeat
 PVTypes:
     Magnet: MagnetPV
     BPM: BPMPV
@@ -482,3 +1078,10 @@ PVTypes:
     LaserHWP: LaserHWPPV
     LaserMirror: LaserMirrorPV
     Lighting: LightingPV
+    LinacPID: PIDPV
+    LLRF: LLRFPV
+    RFModulator: RFModulatorPV
+    Shutter: ShutterPV
+    Valve: ValvePV
+    RFProtection: RFProtectionPV
+    RFHeartbeat: RFHeartbeatPV

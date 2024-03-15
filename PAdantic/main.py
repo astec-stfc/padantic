@@ -1,17 +1,51 @@
 import yaml
+# Stop replacing keywords with Booleans
+from yaml.constructor import Constructor
+
+def add_bool(self, node):
+    return self.construct_scalar(node)
+
+Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
+
+import glob
 from typing import get_origin
 from pydantic import BaseModel
-from models.PV import (MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV, LaserMirrorPV,LightingPV,
+from models.PV import (MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV, LaserMirrorPV,
+                       LightingPV, PIDPV, LLRFPV, RFModulatorPV, ShutterPV, ValvePV, RFProtectionPV, RFHeartbeatPV,
                        PV, elementTypes, PVTypes,
                        )
-from models.element import (Element, Dipole, Quadrupole, Sextupole, BPM, Camera, Screen,
-                           ChargeDiagnostic, VacuumGuage, LaserEnergyMeter, LaserHalfWavePlate,
-                           LaserMirror, Lighting
-                           )
+from models.element import *
+
+class ReplacePc():
+    def __init__(self, filename):
+        self.fn = filename
+        self.buffer = ''
+
+    def __enter__(self):
+        self.fh = open(self.fn, 'r')
+        return self
+
+    def __exit__(self, _type, _value, _tb):
+        self.fh.close()
+
+    def read(self, size):
+        eof = False
+        while self.fn is not None and not eof and len(self.buffer) < size:
+            line = self.fh.readline()
+            if line == '':
+                eof = True
+            self.buffer += line.replace('\t', ' ')
+        if len(self.buffer) > size:
+            chunk = self.buffer[:size]
+            self.buffer = self.buffer[size:]
+        else:
+            chunk = self.buffer
+            self.buffer = ''
+        return chunk
 
 def read_CATAP_YAML(filename):
     ''' read a CATAP YAML file and convert to a pydantic model. '''
-    with open(filename, 'r') as stream:
+    with ReplacePc(filename) as stream:
         data = yaml.load(stream, Loader=yaml.Loader)
     # for k in data['controls_information']['pv_record_map'].keys():
     #     print('    - '+k)
@@ -23,31 +57,44 @@ def read_CATAP_YAML(filename):
     else:
         felem = globals()[elementTypes[data['properties']['hardware_type']]]
 
-    # print({k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
+    # print(data['controls_information']['pv_record_map'].items())
     elemPV = fpv(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
 
     fields = data['properties']
     fields.update(**{k:v.annotation.from_CATAP(data['properties']) for k,v in felem.model_fields.items() if k != 'controls' and hasattr(v.annotation, 'from_CATAP')})
     fields['controls'] = elemPV
+    # print(felem)
     return felem(**fields)
 
 files = [
-    r'YAML\CLA-S02-MAG-QUAD-01.yml',
-    r'YAML\\CLA-C2V-DIA-BPM-01.yaml',
-    r'YAML\CLA-S01-DIA-CAM-01.yaml',
-    r'YAML\CLA-S01-DIA-SCR-01.yaml',
-    r'YAML\CLA-S01-DIA-WCM-01.yaml',
-    r'YAML\CLA-S02-DIA-FCUP-01.yaml',
-    r'YAML\EBT-INJ-VAC-IMG-02.yaml',
-    r'YAML\CLA-LAS-DIA-EM-06.yaml',
-    r'YAML\EBT-LAS-OPT-HWP-2.yaml',
-    r'YAML\EBT-LAS-OPT-PM-11.yml',
-    r'YAML\ALL-LIGHTS.yaml',
+    # r'YAML\CLA-S02-MAG-QUAD-01.yml',
+    # r'YAML\\CLA-C2V-DIA-BPM-01.yaml',
+    # r'YAML\CLA-S01-DIA-CAM-01.yaml',
+    # r'YAML\CLA-S01-DIA-SCR-01.yaml',
+    # r'YAML\CLA-S01-DIA-WCM-01.yaml',
+    # r'YAML\CLA-S02-DIA-FCUP-01.yaml',
+    # r'YAML\EBT-INJ-VAC-IMG-02.yaml',
+    # r'YAML\CLA-LAS-DIA-EM-06.yaml',
+    # r'YAML\EBT-LAS-OPT-HWP-2.yaml',
+    # r'YAML\EBT-LAS-OPT-PM-11.yml',
+    # r'YAML\ALL-LIGHTS.yaml',
+    # r'YAML\CLA-L01-LRF-CTRL-01.yaml',
+    # r'YAML\gun.yaml',
+    # r'YAML\L01Modulator.yaml',
+    # r'YAML\EBT-INJ-LSR-SHUT-02.yaml',
+    # r'YAML\CLA-S01-VAC-VALV-01.yaml',
+    # r'YAML\CLA-L01-RF-PROTE-01.yaml',
 ]
+
+files = glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yaml', recursive=True)
+files += glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yml', recursive=True)
 
 if __name__ == "__main__":
     for f in files:
-        elem = read_CATAP_YAML(f)
+            print(f)
+        # try:
+            elem = read_CATAP_YAML(f)
         # elem.physical.error.position.x = 1
-        print(elem.no_controls)
-        print('\n')
+            print('\n')
+        # except:
+        #     print(f)

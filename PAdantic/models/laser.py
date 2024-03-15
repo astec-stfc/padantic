@@ -22,8 +22,8 @@ class LaserMirrorElement(IgnoreExtra):
     ''' Laser info model. '''
     step_max: float = Field()
     sense: LaserMirrorSense
-    vertical_channel: int
-    horizontal_channel:int
+    vertical_channel: int | None = None
+    horizontal_channel: int | None = None
 
     @classmethod
     def from_CATAP(cls: Type[T], fields: dict) -> T:

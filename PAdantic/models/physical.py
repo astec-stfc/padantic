@@ -68,6 +68,8 @@ class PhysicalElement(IgnoreExtra):
                 return Position(x=v[0], y=v[1], z=v[2])
             elif len(v) == 2:
                 return Position(x=v[0], y=0, z=v[1])
+        elif isinstance(v, (Position)):
+            return v
         else:
             raise ValueError('middle should be a number or a list of floats')
 
@@ -79,6 +81,8 @@ class PhysicalElement(IgnoreExtra):
         elif isinstance(v, (list, tuple)):
             if len(v) == 3:
                 return Rotation(phi=v[0], psi=v[1], theta=v[2])
+        elif isinstance(v, (Rotation)):
+            return v
         else:
             raise ValueError('middle should be a number or a list of floats')
 
