@@ -1,7 +1,7 @@
-from pydantic import Field, field_validator, create_model, BaseModel
+from pydantic import Field, field_validator, create_model
 from typing import List, Type, Any
 
-from .baseModels import IgnoreExtra, T
+from .baseModels import IgnoreExtra, T, YAMLBaseModel
 
 class PIDPhaseRange(IgnoreExtra):
     min: float|int
@@ -77,11 +77,11 @@ llrffieldnames = ['klystron_forward', 'klystron_reverse', 'cavity_forward','cavi
 llrftimingsCATAPnames = ['kf', 'kr', 'cf','cr', 'cp']
 cavitynames = ['LRRG', 'HRRG', 'L01', 'CALIBRATION']
 
-class LLRFChannelIndex(BaseModel):
+class LLRFChannelIndex(YAMLBaseModel):
     power: int
     phase: int
 
-class LLRFChannelsBase(BaseModel):
+class LLRFChannelsBase(YAMLBaseModel):
     labels: List[str] = []
 
     @classmethod
@@ -103,7 +103,7 @@ class LLRFChannelsBase(BaseModel):
     def phases(self):
         pass
 
-class LLRFTiming(BaseModel):
+class LLRFTiming(YAMLBaseModel):
     start: float|int
     end: float|int
 

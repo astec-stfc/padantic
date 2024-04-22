@@ -5,11 +5,11 @@ from .baseModels import IgnoreExtra
 
 class DegaussablElement(IgnoreExtra):
     ''' Degauss info model. '''
-    degauss_tolerance: float = Field(default=0.5)
-    degauss_values: List[float] = Field(default=[])
-    degauss_steps: int = Field(alias='num_degauss_steps', default=11)
+    tolerance: float = Field(default=0.5, alias='degauss_tolerance')
+    values: List[float] = Field(default=[], alias='degauss_values')
+    steps: int = Field(default=11, alias='num_degauss_steps')
 
-    @field_validator('degauss_values', mode='before')
+    @field_validator('values', mode='before')
     @classmethod
     def validate_degauss_values(cls, v: str|List) -> list:
         if isinstance(v, str):

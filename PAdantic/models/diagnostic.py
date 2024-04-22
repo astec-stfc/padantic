@@ -6,16 +6,16 @@ class DiagnosticElement(IgnoreExtra): ...
 
 class BPM_Diagnostic(DiagnosticElement):
     ''' BPM Diagnostic model. '''
-    type: str = Field(alias='bpm_type')
+    type: str = Field(alias='bpm_type', default='Stripline')
     settle_time: NonNegativeFloat = Field(alias='bpm_set_max_wait_time', default=0.5)
-    attenuation1_calibration: NonNegativeInt = Field(alias='att1cal')
-    attenuation2_calibration: NonNegativeInt = Field(alias='att2cal')
-    voltage1_calibration: NonNegativeFloat = Field(alias='v1cal')
-    voltage2_calibration: NonNegativeFloat = Field(alias='v2cal')
-    charge_calibration: NonNegativeFloat = Field(alias='qcal')
-    mn: float
-    xn: float
-    yn: float
+    attenuation1_calibration: NonNegativeInt | None = Field(alias='att1cal', default=12)
+    attenuation2_calibration: NonNegativeInt | None = Field(alias='att2cal', default=12)
+    voltage1_calibration: NonNegativeFloat | None = Field(alias='v1cal', default=1)
+    voltage2_calibration: NonNegativeFloat | None = Field(alias='v2cal', default=1)
+    charge_calibration: NonNegativeFloat | None = Field(alias='qcal', default=70)
+    mn: float | None = 15
+    xn: float | None = 0
+    yn: float | None = 0
 
 class Camera_Pixel_Results_Indices(IgnoreExtra):
     x: int = Field(default=0, alias='X_POS')
@@ -91,8 +91,8 @@ class Camera_Diagnostic(DiagnosticElement):
 
 class Screen_Diagnostic(DiagnosticElement):
     ''' Camera Diagnostic model. '''
-    type: str = Field(alias='screen_type')
-    has_camera: bool
+    type: str = Field(alias='screen_type', default='CLARA_HV_MOVER')
+    has_camera: bool = True
     camera_name: str = ''
     devices: str|list|DeviceList = DeviceList()
 

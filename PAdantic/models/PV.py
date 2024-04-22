@@ -1,8 +1,8 @@
-from pydantic import BaseModel, model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model
+from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model
 from typing import Dict, Any, List
 import yaml
 
-from .baseModels import T
+from .baseModels import T, YAMLBaseModel
 
 # Load PV definitions
 with open('PV_Values.yaml','r') as stream:
@@ -10,7 +10,7 @@ with open('PV_Values.yaml','r') as stream:
     for k,v in data.items():
         globals()[k] = v
 
-class PVSet(BaseModel):
+class PVSet(YAMLBaseModel):
     ''' Base PV model. '''
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
@@ -82,6 +82,8 @@ class PV(PVSet):
     @field_validator('record', mode='before')
     @classmethod
     def validate_record(cls, v: str, info: ValidationInfo) -> str:
+        if v == None or v == '':
+            return v
         if 'typename' in info.data:
             typename = info.data['typename']
         else:
@@ -155,7 +157,7 @@ class PV(PVSet):
     def ser_model(self) -> str:
         return self.__str__()
 
-class ElementPV(BaseModel):
+class ElementPV(YAMLBaseModel):
     model_config = ConfigDict(validate_assignment=True)
 
     def __str__(self) -> str:
@@ -174,7 +176,9 @@ class ElementPV(BaseModel):
                     pv = PV.fromString(name + ':' + v.json_schema_extra['postfixdefault'])
                     d[k] = pv
                     break
-                except:
+                except Exception as e:
+                    # print('Exception', e)
+                    # print(name, k, v.json_schema_extra['postfixdefault'])
                     pass
         return cls(**d)
 

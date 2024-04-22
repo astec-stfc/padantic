@@ -1,4 +1,4 @@
-from pydantic import field_validator, confloat, Field, NonNegativeFloat
+from pydantic import field_validator, confloat, Field, NonNegativeFloat, AliasChoices
 from typing import List
 
 from ._functions import _rotation_matrix
@@ -7,15 +7,15 @@ from .baseModels import IgnoreExtra, NumpyVectorModel
 
 class Position(NumpyVectorModel):
     ''' Position model. '''
-    x: confloat(ge=-1,le=1)  = 0.
-    y: confloat(ge=-1,le=1)  = 0.
-    z: confloat(ge=0,le=100) = 0.
+    x: float = 0.
+    y: float = 0.
+    z: float = 0.
 
 class Rotation(NumpyVectorModel):
     ''' Rotation model. '''
-    phi:    confloat(ge=0,le=6.29)   = 0.
-    psi:    confloat(ge=0,le=6.29)   = 0.
-    theta:  confloat(ge=0,le=6.29)   = 0.
+    phi:    confloat(ge=-3.14,le=3.14)   = 0.
+    psi:    confloat(ge=-3.14,le=3.14)   = 0.
+    theta:  confloat(ge=-3.14,le=3.14)   = 0.
 
 class ElementError(IgnoreExtra):
     ''' Position/Rotation error model. '''
@@ -41,7 +41,7 @@ class ElementSurvey(ElementError): ...
 
 class PhysicalElement(IgnoreExtra):
     ''' Physical info model. '''
-    middle: Position = Field(alias='position', default=0)
+    middle: Position = Field(alias=AliasChoices('position', 'centre'), default=0)
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     error: ElementError = ElementError()

@@ -1,5 +1,7 @@
-import yaml
-# Stop replacing keywords with Booleans
+import os
+import pandas
+from copy import copy
+
 from yaml.constructor import Constructor
 
 def add_bool(self, node):
@@ -7,109 +9,24 @@ def add_bool(self, node):
 
 Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
 
-import glob
-from typing import get_origin
-from pydantic import BaseModel
-from models.PV import (MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV, LaserMirrorPV,
-                       LightingPV, PIDPV, LLRFPV, RFModulatorPV, ShutterPV, ValvePV, RFProtectionPV, RFHeartbeatPV,
-                       PV, elementTypes, PVTypes,
-                       )
-from models.element import *
-
-class ReplacePc():
-    def __init__(self, filename):
-        self.fn = filename
-        self.buffer = ''
-
-    def __enter__(self):
-        self.fh = open(self.fn, 'r')
-        return self
-
-    def __exit__(self, _type, _value, _tb):
-        self.fh.close()
-
-    def read(self, size):
-        eof = False
-        while self.fn is not None and not eof and len(self.buffer) < size:
-            line = self.fh.readline()
-            if line == '':
-                eof = True
-            self.buffer += line.replace('\t', ' ')
-        if len(self.buffer) > size:
-            chunk = self.buffer[:size]
-            self.buffer = self.buffer[size:]
-        else:
-            chunk = self.buffer
-            self.buffer = ''
-        return chunk
-
-def get_possible_pv_names(pvdict):
-    names = []
-    for pv in pvdict.values():
-        prefix, postfix = pv.split(':', 1)
-        names.append(prefix)
-    sortednames = [(i, names.count(i)) for i in set(names)]
-    sortednames.sort(reverse=True, key=lambda x: x[1])
-    return [n[0] for n in sortednames]
-
-def read_CATAP_YAML(filename):
-    ''' read a CATAP YAML file and convert to a pydantic model. '''
-    with ReplacePc(filename) as stream:
-        data = yaml.load(stream, Loader=yaml.Loader)
-    # for k in data['controls_information']['pv_record_map'].keys():
-    #     print('    - '+k)
-    # exit()
-    fpv = globals()[PVTypes[data['properties']['hardware_type']]]
-
-    if 'mag_type' in data['properties']:
-        felem = globals()[elementTypes[data['properties']['mag_type']]]
-    else:
-        felem = globals()[elementTypes[data['properties']['hardware_type']]]
-
-    # print(data['controls_information']['pv_record_map'].items())
-    if data['properties']['hardware_type'] == 'Camera':
-        names = get_possible_pv_names(data['controls_information']['pv_record_map'])
-        elemPV = fpv.with_defaults(*names)
-    else:
-        elemPV = fpv.with_defaults(data['properties']['name'])
-    elemPV.update(**{k: PV.fromString(v) for k, v in data['controls_information']['pv_record_map'].items()})
-
-    fields = data['properties']
-    fields.update(**{k:v.annotation.from_CATAP(data['properties']) for k,v in felem.model_fields.items() if k != 'controls' and hasattr(v.annotation, 'from_CATAP')})
-    fields['controls'] = elemPV
-    # print(felem)
-    return felem(**fields)
-
-files = [
-    # r'YAML\CLA-S02-MAG-QUAD-01.yml',
-    # r'YAML\\CLA-C2V-DIA-BPM-01.yaml',
-    r'YAML\CLA-S01-DIA-CAM-01.yaml',
-    # r'YAML\CLA-S01-DIA-SCR-01.yaml',
-    # r'YAML\CLA-S01-DIA-WCM-01.yaml',
-    # r'YAML\CLA-S02-DIA-FCUP-01.yaml',
-    # r'YAML\EBT-INJ-VAC-IMG-02.yaml',
-    # r'YAML\CLA-LAS-DIA-EM-06.yaml',
-    # r'YAML\EBT-LAS-OPT-HWP-2.yaml',
-    # r'YAML\EBT-LAS-OPT-PM-11.yml',
-    # r'YAML\ALL-LIGHTS.yaml',
-    # r'YAML\CLA-L01-LRF-CTRL-01.yaml',
-    # r'YAML\gun.yaml',
-    # r'YAML\L01Modulator.yaml',
-    # r'YAML\EBT-INJ-LSR-SHUT-02.yaml',
-    # r'YAML\CLA-S01-VAC-VALV-01.yaml',
-    # r'YAML\CLA-L01-RF-PROTE-01.yaml',
-]
-
-# files = glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yaml', recursive=True)
-# files += glob.glob('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yml', recursive=True)
+from typing import get_origin, Any, Dict
+from pydantic import BaseModel, RootModel
+from models.elementList import MachineModel
+from Importers.SimFrame_Loader import SF_files, read_SimFrame_YAML, get_SimFrame_PV
+from Importers.CATAP_Loader import element_to_CATAP
+from Exporters.YAML import export_as_yaml
 
 if __name__ == "__main__":
-    # print(MagnetPV.with_defaults('CLA-S02-MAG-QUAD-01'))
-    for f in files:
-            # print(f)
-        # try:
-            elem = read_CATAP_YAML(f)
-    #     # elem.physical.error.position.x = 1
-            print('\n',elem)
-    #     # except:
-    #     #     print(f)
+
+
+    machine = MachineModel(layout_file=os.path.abspath('./layouts.yaml'))
+
+    for f in SF_files:
+        elem = read_SimFrame_YAML(f)
+        machine.update({n: e for n,e in elem.items()})
+    # print(machine.lattices['SP3'])
+    # print(machine.elements_between(
+    #         start='CLA-S07-MAG-QUAD-01', end='CLA-SP3-DIA-SCR-02',
+    #         element_type='Screen'))
+    print(machine.get_element('CLA-S07-MAG-QUAD-01').manufacturer.model_dump(exclude_defaults=False))
+    # export_as_yaml('test.yaml', machine.get_element('CLA-S07-MAG-QUAD-01'))

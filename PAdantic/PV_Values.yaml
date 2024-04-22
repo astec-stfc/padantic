@@ -25,9 +25,13 @@ areaNames:
   - C10
   - LAS
   - INJ
+  - BA1
   - GUN
   - VCA
   - LRG1
+  - HRG1
+  - VBC
+  - FMS
 classtypeNames:
   MAG:
     - QUAD
@@ -37,9 +41,13 @@ classtypeNames:
     - HCOR
     - VCOR
     - SOL
+    - PMD
+  CAV:
+    - SOL
   DIA:
     - SCR
     - BPM
+    - CBPM
     - ICT
     - BAM
     - CAM
@@ -47,6 +55,7 @@ classtypeNames:
     - WCM
     - FCUP
     - EM
+    - YAG
   PS:
     - SHTR
   VAC:
@@ -81,6 +90,9 @@ classtypeNames:
     - PROTVH
     - PROTVL
     - PROTL01
+  GUN:
+    - CAV
+    - SOL
 classrecordNames:
   magnets:
     - RILK
@@ -98,10 +110,12 @@ classrecordNames:
     - K_VAL
     - Rst
   DIP: magnets
+  HVCOR: magnets
   HCOR: magnets
   VCOR: magnets
   QUAD: magnets
   SOL: magnets
+  SEXT: magnets
   BPM:
     - SA1
     - SA2
@@ -116,6 +130,8 @@ classrecordNames:
     - AWAK
     - RDY
     - DATA:B2V.VALA
+  CBPM: BPM
+  PMD: magnets
   CAM:
     -  ANA:SetX
     -  ANA:SetY
@@ -255,6 +271,8 @@ classrecordNames:
     - V:DEV_CENT
     - V:ACTPOS
     - V:EN
+    - KEEP_ALIVE
+  YAG: SCR
   WCM:
     - Q
   FCUP:
@@ -443,6 +461,13 @@ classrecordNames:
     - ad1:ch8:phase_derivative.ACQM
     - ad1:ch8:power_local.SCAN
     - ad1:ch8:power_local.ACQM
+    - AVG_PHASE
+    - FORWARD_PHASE_WEIGHT
+    - PROBE_PHASE_WEIGHT
+    - SCAN
+    - PID_OVAL
+    - FORWARD_PHASE_WRAPPED
+    - PROBE_PHASE_WRAPPED
   HRF:
     - SYSMDE
     - FAULT
@@ -526,6 +551,8 @@ classrecordNames:
     - 'On'
     - 'Off'
     - Sta
+    - Open
+    - Close
   PROTE:
     - 'On'
     - 'Off'
@@ -544,6 +571,7 @@ classrecordNames:
     - V:MREL
     - H:POS
     - V:POS
+    - POSBTN
   PICO:
     - POSBTN
 classPVNames:
@@ -681,8 +709,8 @@ classPVNames:
     - HDF_FileNumber_RBV: HDF:FileNumber_RBV
     - HDF_NumCapture_RBV: HDF:NumCapture_RBV
     - LED_Sta: Sta
-    - LED_Off: Off
-    - LED_On: On
+    - LED_Off: "Off"
+    - LED_On: "On"
   CS:
     - CAM_Active_Count
     - CAM_Active_Limit
@@ -704,34 +732,34 @@ classPVNames:
     - BA1_LIGHT_Off
     - BA1_LIGHT_Sta
   SCR:
-    - H_SDEV
-    - H_TRIGGER
-    - H_EX
-    - H_TGTPOS
-    - H_JOG
-    - H_JDIFF
-    - H_MOVING
-    - H_READY
-    - H_GET_DEV
-    - H_DEV_STATE
-    - H_MAX_POS
-    - H_DEV_CENT
-    - H_ACTPOS
-    - H_EN
-    - V_SDEV
-    - V_TRIGGER
-    - V_EX
-    - V_TGTPOS
-    - V_JOG
-    - V_JDIFF
-    - V_MOVING
-    - V_READY
-    - V_GET_DEV
-    - V_DEV_STATE
-    - V_MAX_POS
-    - V_DEV_CENT
-    - V_ACTPOS
-    - V_EN
+    - H_SDEV: H:SDEV
+    - H_TRIGGER: H:TRIGGER
+    - H_EX: H:EX
+    - H_TGTPOS: H:TGTPOS
+    - H_JOG: H:JOG
+    - H_JDIFF: H:JDIFF
+    - H_MOVING: H:MOVING
+    - H_READY: H:READY
+    - H_GET_DEV: H:GET_DEV
+    - H_DEV_STATE: H:DEV_STATE
+    - H_MAX_POS: H:MAX_POS
+    - H_DEV_CENT: H:DEV_CENT
+    - H_ACTPOS: H:ACTPOS
+    - H_EN: H:EN
+    - V_SDEV: V:SDEV
+    - V_TRIGGER: V:TRIGGER
+    - V_EX: V:EX
+    - V_TGTPOS: V:TGTPOS
+    - V_JOG: V:JOG
+    - V_JDIFF: V:JDIFF
+    - V_MOVING: V:MOVING
+    - V_READY: V:READY
+    - V_GET_DEV: V:GET_DEV
+    - V_DEV_STATE: V:DEV_STATE
+    - V_MAX_POS: V:MAX_POS
+    - V_DEV_CENT: V:DEV_CENT
+    - V_ACTPOS: V:ACTPOS
+    - V_EN: V:EN
   WCM:
     - Q
   FCUP:
@@ -740,21 +768,22 @@ classPVNames:
     - Sta
     - P
   EM:
-    - OVERRANGE
-    - RUNSP
-    - RANGESP
-    - ENERGYREADBACK
+    - OVERRANGE: OverRange_RB
+    - RUNSP: Run_SP
+    - RANGESP: Range_SP
+    - ENERGYREADBACK: E_RB
   HWP:
     - "ROT:MABS"
     - "ROT:RPOS"
     - ENABLE
   PICO:
-    - H_MREL
-    - V_MREL
-    - H_POS
-    - V_POS
-    - H_MREL_RBV
-    - V_MREL_RBV
+    - H_MREL: H:MREL
+    - V_MREL: V:MREL
+    - H_POS: H:POS
+    - V_POS: V:POS
+    - POSBTN: POSBTN
+#    - H_MREL_RBV: H:MREL:POS
+#    - V_MREL_RBV
   PID:
     - AVG_PHASE
     - FORWARD_PHASE_WEIGHT
@@ -1003,10 +1032,9 @@ classPVNames:
   RFProtection:
     - 'ON'
     - 'OFF'
-    - 'RESET'
+    - 'RESET': Rst
     - 'Sta'
     - 'Cmi'
-    - Rst
   RFHeartbeat:
     - KEEP_ALIVE
 elementTypes:
