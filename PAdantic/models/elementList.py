@@ -49,6 +49,12 @@ class BaseLatticeModel(YAMLBaseModel):
 class ElementList(YAMLBaseModel):
     elements: Dict[str, BaseModel|None]
 
+    def __str__(self):
+        return str([e.name for e in self.elements.values()])
+
+    def __getitem__(self, item: str) -> int:
+            return self.elements[item]
+
     def names(self):
         return [e.name for e in self.elements.values()]
 
@@ -70,7 +76,7 @@ class ElementList(YAMLBaseModel):
         try:
             return super().__getattr__(a)
         except Exception as e:
-            print(e)
+            # print(e)
             data = self._get_attributes_or_none(a)
             if all([isinstance(d, (BaseModel|None)) for d in data.values()]):
                 return ElementList(elements=data)
@@ -90,11 +96,15 @@ class SectionLattice(BaseLatticeModel):
             return ElementList(elements={e.name:e for e in elements})
         return elements
 
+    @property
     def names(self):
         return getattr(self, self._basename).names()
 
     def __str__(self):
-        return str(getattr(self, self._basename))
+        return str(getattr(self, self._basename).__str__())
+
+    def __getitem__(self, item: str) -> int:
+            return self.elements[item]
 
     def __getattr__(self, a):
         try:
@@ -113,7 +123,13 @@ class MachineLayout(BaseLatticeModel):
         return [e.name for e in getattr(self, self._basename).values()]
 
     def __str__(self):
-        return str({k: v.names() for k,v in getattr(self, self._basename).items()})
+        return str([k for k,v in getattr(self, self._basename).items()])
+
+    def __getattr__(self, item: str):
+        return getattr(self.sections, item)
+
+    def __getitem__(self, item: str) -> int:
+            return self.sections[item]
 
     def _get_all_elements(self) -> list:
         matrix = [v._get_all_elements() for v in self.sections.values()]
@@ -190,7 +206,7 @@ class MachineLayout(BaseLatticeModel):
         # filter the results to include only certain element types
         if isinstance(element_type, (str, list)):
             _types = [element_type] if isinstance(element_type, str) else element_type
-            result = [ele for ele in result if ele.hardware_type in _types]
+            result = [ele for ele in result if ele.hardware_class in _types]
 
         return self._get_element_names(result)
 

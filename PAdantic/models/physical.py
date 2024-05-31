@@ -19,8 +19,24 @@ class Rotation(NumpyVectorModel):
 
 class ElementError(IgnoreExtra):
     ''' Position/Rotation error model. '''
-    position: Position = Position(x=0,y=0,z=0)
-    rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
+    position: Position | List[float|int] = Position(x=0,y=0,z=0)
+    rotation: Rotation | List[float|int] = Rotation(theta=0, phi=0, psi=0)
+
+    @field_validator('position', mode='before')
+    @classmethod
+    def validate_middle(cls, v: Position|List) -> Position:
+        if isinstance(v, (list, tuple)) and len(v) == 3:
+                return Position(x=v[0], y=v[1], z=v[2])
+        else:
+            raise ValueError('position should be a number or a list of floats')
+
+    @field_validator('rotation', mode='before')
+    @classmethod
+    def validate_middle(cls, v: Rotation|List) -> Position:
+        if isinstance(v, (list, tuple)) and len(v) == 3:
+                return Rotation(theta=v[0], phi=v[1], psi=v[2])
+        else:
+            raise ValueError('rotation should be a number or a list of floats')
 
     def __str__(self):
         if any([getattr(self, k) != 0 for k in self.model_fields.keys()]):

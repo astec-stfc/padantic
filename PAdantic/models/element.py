@@ -1,3 +1,4 @@
+import os
 from typing import Type, List, Dict, Any
 from pydantic import field_validator, Field, BaseModel, RootModel
 
@@ -34,10 +35,12 @@ yaml.add_representer(flow_list, flow_list_rep)
 
 class _baseElement(IgnoreExtra):
     name: str
-    hardware_type: str
+    hardware_class: str
+    # type: str
+    hardware_type: str = ''
     machine_area: str
     virtual_name: str = ''
-    alias: str|list|Aliases = Field(alias='name_alias', default=None)
+    alias: str|list|Aliases|None = Field(alias='name_alias', default=None)
 
     @field_validator('name', mode='before')
     @classmethod
@@ -52,12 +55,14 @@ class _baseElement(IgnoreExtra):
 
     @field_validator('alias', mode='before')
     @classmethod
-    def validate_alias(cls, v: str|List) -> Aliases:
+    def validate_alias(cls, v: str|List|None) -> Aliases:
         # print(list(map(str.strip, v.split(','))))
         if isinstance(v, str):
             return Aliases(aliases=list(map(str.strip, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return Aliases(aliases=list(v))
+        elif v is None:
+            return Aliases(aliases=[])
         else:
             raise ValueError('alias should be a string or a list of strings')
 
@@ -90,6 +95,18 @@ class _baseElement(IgnoreExtra):
     def no_controls(self):
         return self.__class__.__name__+'('+' '.join([k+'='+getattr(self, k).__repr__() for k in self.model_fields.keys() if k != 'controls'])+')'
 
+    @property
+    def subdirectory(self):
+        return os.path.join(self.hardware_class, self.hardware_type)
+
+    @property
+    def YAML_filename(self):
+        return os.path.join(self.subdirectory, self.name + '.yaml')
+
+    @property
+    def hardware_info(self):
+        return {'class': self.hardware_class, 'type': self.hardware_type}
+
 class PhysicalElement(_baseElement):
     ''' Element with physical, degaussable, electrical, manufacturer, and controls items. '''
     physical: PhysicalElement
@@ -102,7 +119,7 @@ class PhysicalElement(_baseElement):
         return catap_dict
 
 class Element(PhysicalElement):
-    ''' Element with physical, degaussable, electrical, manufacturer, and controls items. '''
+    ''' Element with physical, electrical and manufacturer items. '''
     electrical: ElectricalElement
     manufacturer: ManufacturerElement
 
@@ -115,18 +132,19 @@ class Element(PhysicalElement):
         return catap_dict
 
 class Magnet(Element):
-    type: str = Field(alias='mag_type', default='')
+    ''' Element with physical, electrical, manufacturer, controls and degauss items. '''
+    # type: str = Field(alias='mag_type')
     controls: MagnetPV
     degauss : DegaussablElement
 
-    @field_validator('type', mode='before')
-    @classmethod
-    def validate_type(cls, v: str) -> str:
-        # print(list(map(str.strip, v.split(','))))
-        if isinstance(v, str):
-            return v.upper()
-        else:
-            raise ValueError('alias should be a string or a list of strings')
+    # @field_validator('type', mode='before')
+    # @classmethod
+    # def validate_type(cls, v: str) -> str:
+    #     # print(list(map(str.strip, v.split(','))))
+    #     if isinstance(v, str):
+    #         return v.upper()
+    #     else:
+    #         raise ValueError('alias should be a string or a list of strings')
 
     def to_CATAP(self):
         catap_dict = super().to_CATAP()
@@ -145,35 +163,45 @@ class Magnet(Element):
         })
         return catap_dict
 
+    # @property
+    # def subdirectory(self):
+    #     return os.path.join(self.hardware_type,self.type)
+
 class Dipole(Magnet):
     ''' Dipole element. '''
-    type: str = Field(alias='mag_type', default='DIPOLE', frozen=True)
+    hardware_type: str = Field(default='Dipole', frozen=True)
     magnetic: Dipole_Magnet
 
 class Quadrupole(Magnet):
     ''' Quadrupole element. '''
-    type: str = Field(alias='mag_type', default='QUADRUPOLE', frozen=True)
+    hardware_type: str = Field(default='Quadrupole', frozen=True)
     magnetic: Quadrupole_Magnet
 
 class Sextupole(Magnet):
     ''' Sextupole element. '''
-    type: str = Field(alias='mag_type', default='SEXTUPOLE', frozen=True)
+    hardware_type: str = Field(default='Sextupole', frozen=True)
     magnetic: Sextupole_Magnet
 
 class Corrector(Dipole):
-    type: str = Field(alias='mag_type', default='CORRECTOR', frozen=True)
+    ''' Corrector element. '''
+    hardware_type: str = Field(default='Corrector', frozen=True)
 
 class Horizontal_Corrector(Dipole):
-    type: str = Field(alias='mag_type', default='HORIZONTAL_CORRECTOR', frozen=True)
+    ''' Horizontal Corrector element. '''
+    hardware_type: str = Field(default='Horizontal_Corrector', frozen=True)
 
 class Vertical_Corrector(Dipole):
-    type: str = Field(alias='mag_type', default='VERTICAL_CORRECTOR', frozen=True)
+    ''' Vertical Corrector element. '''
+    hardware_type: str = Field(default='Vertical_Corrector', frozen=True)
 
 class Solenoid(Magnet):
-    type: str = Field(alias='mag_type', default='SOLENOID', frozen=True)
+    ''' Solenoid element. '''
+    hardware_type: str = Field(default='Solenoid', frozen=True)
     magnetic: Solenoid_Magnet
 
 class BPM(Element):
+    ''' BPM element. '''
+    hardware_type: str = Field(default='Stripline', frozen=True)
     diagnostic: BPM_Diagnostic
     controls: BPMPV
 
@@ -194,10 +222,14 @@ class BPM(Element):
         return catap_dict
 
 class Camera(PhysicalElement):
+    ''' Camera element. '''
+    hardware_type: str = Field(default='PCO', frozen=True)
     diagnostic: Camera_Diagnostic
     controls: CameraPV
 
 class Screen(PhysicalElement):
+    ''' Screen element. '''
+    hardware_type: str = Field(default='YAG', frozen=True)
     diagnostic: Screen_Diagnostic
     controls: ScreenPV
 
@@ -212,53 +244,79 @@ class Screen(PhysicalElement):
         return catap_dict
 
 class ChargeDiagnostic(PhysicalElement):
+    ''' Charge Diagnostic element. '''
+    hardware_type: str = Field(default='WCM', frozen=True)
     diagnostic: Charge_Diagnostic
     controls: ChargeDiagnosticPV
 
 class VacuumGuage(PhysicalElement):
+    ''' Vacuum Guage element. '''
+    hardware_type: str = Field(default='IMG', frozen=True)
     manufacturer: ManufacturerElement
     controls: VacuumGuagePV
 
 class LaserEnergyMeter(PhysicalElement):
+    ''' Laser Energy Meter element. '''
+    hardware_type: str = Field(default='Photodiode', frozen=True)
     laser: LaserEnergyMeterElement
     controls: LaserEnergyMeterPV
 
 class LaserHalfWavePlate(LaserEnergyMeter):
+    ''' Laser Half Wave Plate element. '''
+    hardware_type: str = Field(default='HWP', frozen=True)
     laser: LaserElement
     controls: LaserHWPPV
 
 class LaserMirror(LaserEnergyMeter):
+    ''' Laser Mirror element. '''
+    hardware_type: str = Field(default='Planar', frozen=True)
     laser: LaserMirrorElement
     controls: LaserMirrorPV
 
 class Lighting(_baseElement):
+    ''' Lighting element. '''
+    hardware_type: str = Field(default='LED', frozen=True)
     lights: LightingElement
     controls: LightingPV
 
 class PID(_baseElement):
+    ''' PID element. '''
+    hardware_type: str = Field(default='RF', frozen=True)
     PID: PIDElement
     controls: PIDPV
 
 class LLRF(_baseElement):
+    ''' LLRF element. '''
+    hardware_type: str = Field(default='Libera', frozen=True)
     LLRF: LLRFElement
     controls: LLRFPV
 
 class RFModulator(_baseElement):
+    ''' RFModulator element. '''
+    hardware_type: str = Field(default='Thales', frozen=True)
     modulator: RFModulatorElement
     controls: RFModulatorPV
 
 class RFProtection(_baseElement):
+    ''' RFProtection element. '''
+    hardware_type: str = Field(default='PROT', frozen=True)
     modulator: RFProtectionElement
     controls: RFProtectionPV
 
 class RFHeartbeat(_baseElement):
+    ''' RFHeartbeat element. '''
+    hardware_type: str = Field(default='RFHeartbeat', frozen=True)
     heartbeat: RFHeartbeatElement
     controls: RFHeartbeatPV
 
 class Shutter(PhysicalElement):
+    ''' Shutter element. '''
+    hardware_type: str = Field(default='Shutter', frozen=True)
     shutter: ShutterElement
     controls: ShutterPV
 
 class Valve(PhysicalElement):
+    ''' Valve element. '''
+    hardware_type: str = Field(default='Valve', frozen=True)
     valve: ValveElement
     controls: ValvePV

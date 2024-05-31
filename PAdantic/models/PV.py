@@ -1,4 +1,4 @@
-from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model
+from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model, model_validator
 from typing import Dict, Any, List
 import yaml
 
@@ -100,30 +100,28 @@ class PV(PVSet):
             raise ValueError('Invalid Record Name')
         return v
 
-    @classmethod
-    def fromString(cls, pv: str) -> T:
+    def split_string(self, pv):
         assert ':' in pv
         prefix, postfix = pv.split(':', 1)
         substr = prefix.split('-')
         if len(substr) == 5:
-            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': substr[3], 'index': substr[4], 'record': postfix})
-            model._PV_index = list(range(5))
+            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': substr[3], 'index': substr[4], 'record': postfix}, list(range(5))
         elif len(substr) == 4:
-            model = cls.model_validate({'machine': substr[0], 'area': None, 'classname': substr[1],
-                             'typename': substr[2], 'index': substr[3], 'record': postfix})
-            model._PV_index = [0,2,3,4]
+            return {'machine': substr[0], 'area': None, 'classname': substr[1],
+                             'typename': substr[2], 'index': substr[3], 'record': postfix}, [0,2,3,4]
         elif len(substr) == 3:
-            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': None, 'index': None, 'record': postfix})
-            model._PV_index = [0,1,2]
+            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': None, 'index': None, 'record': postfix}, [0,1,2]
         elif len(substr) == 7:
-            # print(substr[-1])
-            # print({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-            #                  'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix})
-            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix})
-            model._PV_index = list(range(5))
+            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix}, list(range(5))
+
+    @classmethod
+    def fromString(cls, pv: str) -> T:
+        d, i = self.split_string(pv)
+        model = cls.model_validate(d)
+        model._PV_index = i
         return model
 
     @property

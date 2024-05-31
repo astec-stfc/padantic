@@ -12,24 +12,24 @@ from models.element import *
 
 class SimFrame_Conversion(BaseModel):
     typeclass: Any
-    hardware_type: str
+    hardware_class: str
 
 SimFrame_Elements = {
-    'quadrupole': SimFrame_Conversion(typeclass=Quadrupole, hardware_type='Magnet'),
-    'dipole': SimFrame_Conversion(typeclass=Dipole, hardware_type='Magnet'),
-    'sextupole': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    'solenoid': SimFrame_Conversion(typeclass=Solenoid, hardware_type='Magnet'),
-    # 'marker': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    # 'aperture': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    'beam_position_monitor': SimFrame_Conversion(typeclass=BPM, hardware_type='BPM'),
-    'screen': SimFrame_Conversion(typeclass=Screen, hardware_type='Screen'),
-    # 'rf_deflecting_cavity': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    'kicker': SimFrame_Conversion(typeclass=Corrector, hardware_type='Magnet'),
-    'hkicker': SimFrame_Conversion(typeclass=Horizontal_Corrector, hardware_type='Magnet'),
-    'vkicker': SimFrame_Conversion(typeclass=Vertical_Corrector, hardware_type='Magnet'),
-    # 'monitor': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    # 'longitudinal_wakefield': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
-    # 'cavity': SimFrame_Conversion(typeclass=Sextupole, hardware_type='Magnet'),
+    'quadrupole': SimFrame_Conversion(typeclass=Quadrupole, hardware_class='Magnet'),
+    'dipole': SimFrame_Conversion(typeclass=Dipole, hardware_class='Magnet'),
+    'sextupole': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    'solenoid': SimFrame_Conversion(typeclass=Solenoid, hardware_class='Magnet'),
+    # 'marker': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    # 'aperture': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    'beam_position_monitor': SimFrame_Conversion(typeclass=BPM, hardware_class='BPM'),
+    'screen': SimFrame_Conversion(typeclass=Screen, hardware_class='Screen'),
+    # 'rf_deflecting_cavity': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    'kicker': SimFrame_Conversion(typeclass=Corrector, hardware_class='Magnet'),
+    'hkicker': SimFrame_Conversion(typeclass=Horizontal_Corrector, hardware_class='Magnet'),
+    'vkicker': SimFrame_Conversion(typeclass=Vertical_Corrector, hardware_class='Magnet'),
+    # 'monitor': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    # 'longitudinal_wakefield': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
+    # 'cavity': SimFrame_Conversion(typeclass=Sextupole, hardware_class='Magnet'),
 }
 
 def get_SimFrame_YAML_filename(original, replacement):
@@ -48,7 +48,7 @@ def interpret_SimFrame_Element(name, elem):
         try:
             # print('type',elem['type'],'found')
             felem = SimFrame_Elements[elem['type']].typeclass
-            fpv = globals()[PVTypes[SimFrame_Elements[elem['type']].hardware_type]]
+            fpv = globals()[PVTypes[SimFrame_Elements[elem['type']].hardware_class]]
             elemPV = fpv.with_defaults(name)
 
             fields = elem
@@ -57,14 +57,14 @@ def interpret_SimFrame_Element(name, elem):
             fields['controls'] = elemPV
             fields.update(**{k:v.annotation.from_CATAP(elem) for k,v in felem.model_fields.items() if hasattr(v.annotation, 'from_CATAP')})
             elemmodel = felem(**fields)
-            if SimFrame_Elements[elem['type']].hardware_type == 'Magnet':
+            if SimFrame_Elements[elem['type']].hardware_class == 'Magnet':
                 elemmodel = add_magnet_table_parameters(name, elemmodel, get_SimFrame_PV(name))
             return elemmodel
         except Exception as e:
             print('Error', name, e)
 
 def read_SimFrame_YAML(filename):
-    print('File:',filename)
+    # print('File:',filename)
     elemlist = {}
     with open(filename, 'r') as stream:
         data = yaml.load(stream, Loader=yaml.Loader)
@@ -88,9 +88,9 @@ def read_SimFrame_YAML(filename):
                 velem['mag_type'] = 'VERTICAL_CORRECTOR'
                 vname = name.replace('HVCOR', 'VCOR')
                 elemmodel = interpret_SimFrame_Element(hname, helem)
-                elemlist.update({name: elemmodel})
+                elemlist.update({hname: elemmodel})
                 elemmodel = interpret_SimFrame_Element(vname, velem)
-                elemlist.update({name: elemmodel})
+                elemlist.update({vname: elemmodel})
             else:
                 elemmodel = interpret_SimFrame_Element(name, elem)
                 elemlist.update({name: elemmodel})
