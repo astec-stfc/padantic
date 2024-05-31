@@ -1,0 +1,63 @@
+alias: null
+class_name: Horizontal_Corrector
+controls:
+  GETSETI: CLA-FEH-MAG-HCOR-06:GETSETI
+  ILK_RESET: CLA-FEH-MAG-HCOR-06:Rst
+  INT_STR: CLA-FEH-MAG-HCOR-06:INT_STR
+  INT_STR_MM: CLA-FEH-MAG-HCOR-06:INT_STR_MM
+  K_ANG: CLA-FEH-MAG-HCOR-06:K_ANG
+  K_DIP_P: CLA-FEH-MAG-HCOR-06:K_DIP_P
+  K_MRAD: CLA-FEH-MAG-HCOR-06:K_MRAD
+  K_SET_P: CLA-FEH-MAG-HCOR-06:K_SET_P
+  K_VAL: CLA-FEH-MAG-HCOR-06:K_VAL
+  READI: CLA-FEH-MAG-HCOR-06:READI
+  RILK: CLA-FEH-MAG-HCOR-06:RILK
+  RPOWER: CLA-FEH-MAG-HCOR-06:RPOWER
+  SETI: CLA-FEH-MAG-HCOR-06:SETI
+  SPOWER: CLA-FEH-MAG-HCOR-06:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [9.98, -9.98, 6.0, -6.0, 4.0, -4.0, 2.0, -2.0, 1.0, -1.0, 0.0]
+electrical:
+  maxI: 0
+  minI: -0.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: Horizontal_Corrector
+machine_area: FEH
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.0
+  linear_saturation_coefficients:
+    I0: 0.0
+    I_max: 0.0
+    L: 0.0
+    a: 0.0
+    d: 0.0
+    f: 0.0
+    m: 0.0
+  multipoles: {}
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: Magnet
+  manufacturer: Corrector Type 8Q
+  serial_number: QW4-03
+name: CLA-FEH-MAG-HCOR-06
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.0
+  middle: [3.6807505, 0.0, 72.3985]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

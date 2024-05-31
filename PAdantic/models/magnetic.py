@@ -40,7 +40,7 @@ class Multipoles(MultipolesData):
 
 class FieldIntegral(BaseModel):
     ''' Field integral coefficients model. '''
-    coefficients: List[float] = [0]
+    coefficients: List[float|int] = [0]
 
     def currentToK(self, current: float, energy: float) -> float:
         sign = numpy.copysign(1, current)
@@ -122,11 +122,13 @@ class MagneticElement(IgnoreExtra):
 
     @field_validator('field_integral_coefficients', mode='before')
     @classmethod
-    def validate_field_integral_coefficients(cls, v: str|List) -> FieldIntegral:
+    def validate_field_integral_coefficients(cls, v: str|List|dict) -> FieldIntegral:
         if isinstance(v, str):
             return FieldIntegral(coefficients=list(map(float, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return FieldIntegral(coefficients=list(v))
+        elif isinstance(v, (dict)):
+            return FieldIntegral(**v)
         elif isinstance(v, (FieldIntegral)):
             return v
         else:
@@ -217,6 +219,8 @@ class Solenoid_Magnet(IgnoreExtra):
             return FieldIntegral(coefficients=list(map(float, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return FieldIntegral(coefficients=list(v))
+        elif isinstance(v, (dict)):
+            return FieldIntegral(**v)
         elif isinstance(v, (FieldIntegral)):
             return v
         else:

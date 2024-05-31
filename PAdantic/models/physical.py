@@ -24,7 +24,7 @@ class ElementError(IgnoreExtra):
 
     @field_validator('position', mode='before')
     @classmethod
-    def validate_middle(cls, v: Position|List) -> Position:
+    def validate_position(cls, v: Position|List) -> Position:
         if isinstance(v, (list, tuple)) and len(v) == 3:
                 return Position(x=v[0], y=v[1], z=v[2])
         else:
@@ -32,7 +32,7 @@ class ElementError(IgnoreExtra):
 
     @field_validator('rotation', mode='before')
     @classmethod
-    def validate_middle(cls, v: Rotation|List) -> Position:
+    def validate_rotation(cls, v: Rotation|List) -> Position:
         if isinstance(v, (list, tuple)) and len(v) == 3:
                 return Rotation(theta=v[0], phi=v[1], psi=v[2])
         else:

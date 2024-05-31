@@ -1,0 +1,53 @@
+alias: null
+class_name: Screen
+controls:
+  H_ACTPOS: CLA-FEA-DIA-SCR-04:H:ACTPOS
+  H_DEV_CENT: CLA-FEA-DIA-SCR-04:H:DEV_CENT
+  H_DEV_STATE: CLA-FEA-DIA-SCR-04:H:DEV_STATE
+  H_EN: CLA-FEA-DIA-SCR-04:H:EN
+  H_EX: CLA-FEA-DIA-SCR-04:H:EX
+  H_GET_DEV: CLA-FEA-DIA-SCR-04:H:GET_DEV
+  H_JDIFF: CLA-FEA-DIA-SCR-04:H:JDIFF
+  H_JOG: CLA-FEA-DIA-SCR-04:H:JOG
+  H_MAX_POS: CLA-FEA-DIA-SCR-04:H:MAX_POS
+  H_MOVING: CLA-FEA-DIA-SCR-04:H:MOVING
+  H_READY: CLA-FEA-DIA-SCR-04:H:READY
+  H_SDEV: CLA-FEA-DIA-SCR-04:H:SDEV
+  H_TGTPOS: CLA-FEA-DIA-SCR-04:H:TGTPOS
+  H_TRIGGER: CLA-FEA-DIA-SCR-04:H:TRIGGER
+  V_ACTPOS: CLA-FEA-DIA-SCR-04:V:ACTPOS
+  V_DEV_CENT: CLA-FEA-DIA-SCR-04:V:DEV_CENT
+  V_DEV_STATE: CLA-FEA-DIA-SCR-04:V:DEV_STATE
+  V_EN: CLA-FEA-DIA-SCR-04:V:EN
+  V_EX: CLA-FEA-DIA-SCR-04:V:EX
+  V_GET_DEV: CLA-FEA-DIA-SCR-04:V:GET_DEV
+  V_JDIFF: CLA-FEA-DIA-SCR-04:V:JDIFF
+  V_JOG: CLA-FEA-DIA-SCR-04:V:JOG
+  V_MAX_POS: CLA-FEA-DIA-SCR-04:V:MAX_POS
+  V_MOVING: CLA-FEA-DIA-SCR-04:V:MOVING
+  V_READY: CLA-FEA-DIA-SCR-04:V:READY
+  V_SDEV: CLA-FEA-DIA-SCR-04:V:SDEV
+  V_TGTPOS: CLA-FEA-DIA-SCR-04:V:TGTPOS
+  V_TRIGGER: CLA-FEA-DIA-SCR-04:V:TRIGGER
+diagnostic:
+  camera_name: ''
+  devices:
+    devices: []
+  has_camera: true
+  type: CTR
+hardware_class: Screen
+hardware_type: YAG
+machine_area: FEA
+name: CLA-FEA-DIA-SCR-04
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.2
+  middle: [3.680751, 0.0, 61.208709]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

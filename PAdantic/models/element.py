@@ -45,10 +45,9 @@ class _baseElement(IgnoreExtra):
     @field_validator('name', mode='before')
     @classmethod
     def validate_name(cls, v: str) -> str:
-        # print(list(map(str.strip, v.split(','))))
         assert isinstance(v, str)
         try:
-            PV.fromString(str(v)+':')
+            PV(pv_string=str(v)+':')
         except:
             raise ValueError('name is not a valid element name')
         return v

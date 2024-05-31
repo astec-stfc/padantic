@@ -1,0 +1,53 @@
+alias: null
+class_name: Screen
+controls:
+  H_ACTPOS: CLA-S02-DIA-SCR-03:H:ACTPOS
+  H_DEV_CENT: CLA-S02-DIA-SCR-03:H:DEV_CENT
+  H_DEV_STATE: CLA-S02-DIA-SCR-03:H:DEV_STATE
+  H_EN: CLA-S02-DIA-SCR-03:H:EN
+  H_EX: CLA-S02-DIA-SCR-03:H:EX
+  H_GET_DEV: CLA-S02-DIA-SCR-03:H:GET_DEV
+  H_JDIFF: CLA-S02-DIA-SCR-03:H:JDIFF
+  H_JOG: CLA-S02-DIA-SCR-03:H:JOG
+  H_MAX_POS: CLA-S02-DIA-SCR-03:H:MAX_POS
+  H_MOVING: CLA-S02-DIA-SCR-03:H:MOVING
+  H_READY: CLA-S02-DIA-SCR-03:H:READY
+  H_SDEV: CLA-S02-DIA-SCR-03:H:SDEV
+  H_TGTPOS: CLA-S02-DIA-SCR-03:H:TGTPOS
+  H_TRIGGER: CLA-S02-DIA-SCR-03:H:TRIGGER
+  V_ACTPOS: CLA-S02-DIA-SCR-03:V:ACTPOS
+  V_DEV_CENT: CLA-S02-DIA-SCR-03:V:DEV_CENT
+  V_DEV_STATE: CLA-S02-DIA-SCR-03:V:DEV_STATE
+  V_EN: CLA-S02-DIA-SCR-03:V:EN
+  V_EX: CLA-S02-DIA-SCR-03:V:EX
+  V_GET_DEV: CLA-S02-DIA-SCR-03:V:GET_DEV
+  V_JDIFF: CLA-S02-DIA-SCR-03:V:JDIFF
+  V_JOG: CLA-S02-DIA-SCR-03:V:JOG
+  V_MAX_POS: CLA-S02-DIA-SCR-03:V:MAX_POS
+  V_MOVING: CLA-S02-DIA-SCR-03:V:MOVING
+  V_READY: CLA-S02-DIA-SCR-03:V:READY
+  V_SDEV: CLA-S02-DIA-SCR-03:V:SDEV
+  V_TGTPOS: CLA-S02-DIA-SCR-03:V:TGTPOS
+  V_TRIGGER: CLA-S02-DIA-SCR-03:V:TRIGGER
+diagnostic:
+  camera_name: ''
+  devices:
+    devices: []
+  has_camera: true
+  type: screen
+hardware_class: Screen
+hardware_type: YAG
+machine_area: S02
+name: CLA-S02-DIA-SCR-03
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.0
+  middle: [0.0, 0.0, 6.5846]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

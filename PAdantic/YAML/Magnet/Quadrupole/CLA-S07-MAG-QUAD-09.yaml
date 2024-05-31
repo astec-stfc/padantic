@@ -1,0 +1,68 @@
+alias: null
+class_name: Quadrupole
+controls:
+  GETSETI: CLA-S07-MAG-QUAD-09:GETSETI
+  ILK_RESET: CLA-S07-MAG-QUAD-09:Rst
+  INT_STR: CLA-S07-MAG-QUAD-09:INT_STR
+  INT_STR_MM: CLA-S07-MAG-QUAD-09:INT_STR_MM
+  K_ANG: CLA-S07-MAG-QUAD-09:K_ANG
+  K_DIP_P: CLA-S07-MAG-QUAD-09:K_DIP_P
+  K_MRAD: CLA-S07-MAG-QUAD-09:K_MRAD
+  K_SET_P: CLA-S07-MAG-QUAD-09:K_SET_P
+  K_VAL: CLA-S07-MAG-QUAD-09:K_VAL
+  READI: CLA-S07-MAG-QUAD-09:READI
+  RILK: CLA-S07-MAG-QUAD-09:RILK
+  RPOWER: CLA-S07-MAG-QUAD-09:RPOWER
+  SETI: CLA-S07-MAG-QUAD-09:SETI
+  SPOWER: CLA-S07-MAG-QUAD-09:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [93.81, -93.81, 56.4, -56.4, 37.6, -37.6, 18.8, -18.8, 9.4, -9.4, 0.0]
+electrical:
+  maxI: 94
+  minI: -94.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: Quadrupole
+machine_area: S07
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.162
+  linear_saturation_coefficients:
+    I0: 797.7876633756864
+    I_max: 32.69100529320059
+    L: 177.46849133094705
+    a: -2.1622586213792814e-05
+    d: 13.738914606712326
+    f: 0.0
+    m: 0.033086736902546626
+  multipoles:
+    K1L:
+      normal: 0.393205
+      order: 1
+      radius: 0.0
+      skew: 0.0
+  order: 1
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: Magnet
+  manufacturer: Quadrupole Type 3
+  serial_number: '16619'
+name: CLA-S07-MAG-QUAD-09
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.162
+  middle: [0.0, 0.0, 47.3368]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

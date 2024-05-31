@@ -32,4 +32,4 @@ if __name__ == "__main__":
     # print([e.YAML_filename for e in machine.elements.values()])
     # print(machine.get_element('CLA-S07-MAG-QUAD-01').subdirectory)
     # print(export_machine(machine))
-    print(read_YAML_File(YAML_files[0]))
+    print([read_YAML_File(y) for y in YAML_files])

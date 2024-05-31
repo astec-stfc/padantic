@@ -1,0 +1,63 @@
+alias: null
+class_name: Solenoid
+controls:
+  GETSETI: EBT-HRG1-MAG-SOL-01:GETSETI
+  ILK_RESET: EBT-HRG1-MAG-SOL-01:Rst
+  INT_STR: EBT-HRG1-MAG-SOL-01:INT_STR
+  INT_STR_MM: EBT-HRG1-MAG-SOL-01:INT_STR_MM
+  K_ANG: EBT-HRG1-MAG-SOL-01:K_ANG
+  K_DIP_P: EBT-HRG1-MAG-SOL-01:K_DIP_P
+  K_MRAD: EBT-HRG1-MAG-SOL-01:K_MRAD
+  K_SET_P: EBT-HRG1-MAG-SOL-01:K_SET_P
+  K_VAL: EBT-HRG1-MAG-SOL-01:K_VAL
+  READI: EBT-HRG1-MAG-SOL-01:READI
+  RILK: EBT-HRG1-MAG-SOL-01:RILK
+  RPOWER: EBT-HRG1-MAG-SOL-01:RPOWER
+  SETI: EBT-HRG1-MAG-SOL-01:SETI
+  SPOWER: EBT-HRG1-MAG-SOL-01:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: []
+electrical:
+  maxI: 0
+  minI: 0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: Solenoid
+machine_area: HRG1
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  fields:
+    S0L: 0.1104
+  length: 0.32
+  linear_saturation_coefficients:
+    I0: 0
+    I_max: 0
+    L: 0
+    a: 0
+    d: 0
+    f: 0
+    m: 0
+  order: 0
+  random_fields: {}
+  settle_time: 45.0
+  systematic_fields: {}
+manufacturer:
+  hardware_class: Magnet
+  manufacturer: ''
+  serial_number: ''
+name: EBT-HRG1-MAG-SOL-01
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.32
+  middle: [0.0, 0.0, 0.16241]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

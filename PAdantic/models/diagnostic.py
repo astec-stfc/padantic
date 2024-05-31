@@ -103,6 +103,8 @@ class Screen_Diagnostic(DiagnosticElement):
             return DeviceList(devices=list(map(str.strip, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return DeviceList(devices=list(v))
+        elif isinstance(v, (dict)):
+            return DeviceList(**v)
         elif isinstance(v, (DeviceList)):
             return v
         else:

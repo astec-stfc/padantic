@@ -22,7 +22,8 @@ electrical:
   maxI: 95
   minI: -95.0
   read_tolerance: 0.1
-hardware_type: Magnet
+hardware_class: Magnet
+hardware_type: Quadrupole
 machine_area: S07
 magnetic:
   field_integral_coefficients:
@@ -48,9 +49,9 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_type: Magnet
+  hardware_class: Magnet
   manufacturer: Quadrupole Type QFA
-  serial_number: 8
+  serial_number: '8'
 name: CLA-S07-MAG-QUAD-01
 physical:
   error:
@@ -63,5 +64,4 @@ physical:
   survey:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
-type: QUADRUPOLE
 virtual_name: ''

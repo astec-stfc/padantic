@@ -1,4 +1,4 @@
-from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model, model_validator
+from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model, computed_field
 from typing import Dict, Any, List
 import yaml
 
@@ -20,6 +20,164 @@ class PVSet(YAMLBaseModel):
     ...
 
 class PV(PVSet):
+    pv_string: str
+    _pv_dict: dict
+    _PV_index: List[int]
+
+    @field_validator('pv_string', mode='before')
+    def fromString(cls, pv: str) -> T:
+        assert ':' in pv
+        prefix, postfix = pv.split(':', 1)
+        substr = prefix.split('-')
+        if len(substr) == 5:
+            cls._pv_dict ={'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': substr[3], 'index': substr[4], 'record': postfix}
+            cls._PV_index = list(range(5))
+        elif len(substr) == 4:
+            cls._pv_dict = {'machine': substr[0], 'area': None, 'classname': substr[1],
+                             'typename': substr[2], 'index': substr[3], 'record': postfix}
+            cls._PV_index = [0,2,3,4]
+        elif len(substr) == 3:
+            cls._pv_dict = {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': None, 'index': None, 'record': postfix}
+            cls._PV_index = [0,1,2]
+        elif len(substr) == 7:
+            cls._pv_dict = {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix}
+            cls._PV_index = list(range(5))
+        cls.validate_machine(cls)
+        cls.validate_area(cls)
+        cls.validate_class(cls)
+        cls.validate_type(cls)
+        cls.validate_index(cls)
+        cls.validate_record(cls)
+        return pv
+
+    @computed_field
+    def machine(self) -> str:
+        return self._pv_dict['machine']
+
+    def validate_machine(cls) -> str:
+        v = cls._pv_dict['machine']
+        if v.upper() not in map(str.upper, machineNames):
+            raise ValueError('Invalid Machine', v.upper())
+        return v.upper()
+
+    @computed_field
+    @property
+    def area(self) -> str:
+        return self._pv_dict['area']
+
+    def validate_area(cls) -> str:
+        v = cls._pv_dict['area']
+        if v == None:
+            return v
+        else:
+            if v.upper() not in map(str.upper, areaNames) and not v == '':
+                raise ValueError('Invalid Area')
+            return v.upper()
+
+    @computed_field
+    @property
+    def classname(self) -> str:
+        return self._pv_dict['classname']
+
+    def validate_class(cls) -> str:
+        v = cls._pv_dict['classname']
+        if v == None:
+            return v
+        else:
+            if v.upper() not in map(str.upper, classtypeNames.keys()):
+                raise ValueError('Invalid Class Name')
+            return v.upper()
+
+    @computed_field
+    @property
+    def typename(self) -> str:
+        return self._pv_dict['typename']
+
+    def validate_type(cls) -> str:
+        v = cls._pv_dict['typename']
+        if v == None:
+            return v
+        else:
+            classname = cls._pv_dict['classname']
+            if v.upper() not in map(str.upper, classtypeNames[classname]):
+                print('validate_type',classtypeNames[classname], v)
+                raise ValueError('Invalid Type Name')
+            return v.upper()
+
+    @computed_field
+    @property
+    def index(self) -> str:
+        return self._pv_dict['index']
+
+    def validate_index(cls) -> int:
+        v = cls._pv_dict['index']
+        if v == None:
+            return v
+        elif v.isdigit():
+            return int(v)
+        elif not isinstance(v, str):
+            raise ValueError(f'Invalid index {v}')
+        return v
+
+    @computed_field
+    @property
+    def record(self) -> str:
+        return self._pv_dict['record']
+
+    def validate_record(cls) -> str:
+        v = cls._pv_dict['record']
+        if v == None or v == '':
+            return v
+        if 'typename' in cls._pv_dict:
+            typename = cls._pv_dict['typename']
+        else:
+            raise ValueError('typename missing')
+        if typename in classrecordNames:
+            records = classrecordNames[typename]
+        else:
+            raise ValueError(f"Invalid Record typename {typename}")
+        if isinstance(classrecordNames[typename], str):
+            records = classrecordNames[classrecordNames[typename]]
+        # print(f'validate_record {typename}', records)
+        if v.upper() not in map(str.upper, records):
+            # print(f'validate_record {v}','    -',v)
+            raise ValueError('Invalid Record Name')
+        return v
+
+    @property
+    def _indexString(self) -> str:
+        if 4 in self._PV_index:
+            if isinstance(self.index, int):
+                return '-' + str(self.index).zfill(2)
+            else:
+                return '-' + str(self.index)
+
+    @property
+    def basename(self) -> str:
+        name = '-'.join([getattr(self, a) for a in [['machine', 'area', 'classname', 'typename'][i] for i in self._PV_index if i < 4]]) + self._indexString
+        return name
+
+    @property
+    def name(self) -> str:
+        return self.pv_string
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __int__(self) -> int:
+        return self.index
+
+    def __repr__(self):
+        return self.__str__()
+
+    @model_serializer
+    def ser_model(self) -> str:
+        return self.__str__()
+
+class PVOld(PVSet):
     ''' PV model. '''
     machine: str | None
     area: str | None
@@ -100,28 +258,30 @@ class PV(PVSet):
             raise ValueError('Invalid Record Name')
         return v
 
-    def split_string(self, pv):
+    @classmethod
+    def fromString(cls, pv: str) -> T:
         assert ':' in pv
         prefix, postfix = pv.split(':', 1)
         substr = prefix.split('-')
         if len(substr) == 5:
-            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': substr[3], 'index': substr[4], 'record': postfix}, list(range(5))
+            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': substr[3], 'index': substr[4], 'record': postfix})
+            model._PV_index = list(range(5))
         elif len(substr) == 4:
-            return {'machine': substr[0], 'area': None, 'classname': substr[1],
-                             'typename': substr[2], 'index': substr[3], 'record': postfix}, [0,2,3,4]
+            model = cls.model_validate({'machine': substr[0], 'area': None, 'classname': substr[1],
+                             'typename': substr[2], 'index': substr[3], 'record': postfix})
+            model._PV_index = [0,2,3,4]
         elif len(substr) == 3:
-            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': None, 'index': None, 'record': postfix}, [0,1,2]
+            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': None, 'index': None, 'record': postfix})
+            model._PV_index = [0,1,2]
         elif len(substr) == 7:
-            return {'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-                             'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix}, list(range(5))
-
-    @classmethod
-    def fromString(cls, pv: str) -> T:
-        d, i = self.split_string(pv)
-        model = cls.model_validate(d)
-        model._PV_index = i
+            # print(substr[-1])
+            # print({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+            #                  'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix})
+            model = cls.model_validate({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
+                             'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix})
+            model._PV_index = list(range(5))
         return model
 
     @property
@@ -157,6 +317,13 @@ class PV(PVSet):
 
 class ElementPV(YAMLBaseModel):
     model_config = ConfigDict(validate_assignment=True)
+
+    @field_validator('*', mode='before')
+    @classmethod
+    def validate_pv(cls, v: PV|str) -> PV:
+        if isinstance(v, str):
+            return PV(pv_string=v)
+        return v
 
     def __str__(self) -> str:
         return ', '.join([k + '=PV(\''+getattr(self, k).__str__()+'\')' for k in self.model_fields.keys() if getattr(self, k) is not None])

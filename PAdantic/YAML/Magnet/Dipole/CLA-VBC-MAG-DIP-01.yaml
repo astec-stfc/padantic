@@ -1,0 +1,63 @@
+alias: null
+class_name: Dipole
+controls:
+  GETSETI: CLA-VBC-MAG-DIP-01:GETSETI
+  ILK_RESET: CLA-VBC-MAG-DIP-01:Rst
+  INT_STR: CLA-VBC-MAG-DIP-01:INT_STR
+  INT_STR_MM: CLA-VBC-MAG-DIP-01:INT_STR_MM
+  K_ANG: CLA-VBC-MAG-DIP-01:K_ANG
+  K_DIP_P: CLA-VBC-MAG-DIP-01:K_DIP_P
+  K_MRAD: CLA-VBC-MAG-DIP-01:K_MRAD
+  K_SET_P: CLA-VBC-MAG-DIP-01:K_SET_P
+  K_VAL: CLA-VBC-MAG-DIP-01:K_VAL
+  READI: CLA-VBC-MAG-DIP-01:READI
+  RILK: CLA-VBC-MAG-DIP-01:RILK
+  RPOWER: CLA-VBC-MAG-DIP-01:RPOWER
+  SETI: CLA-VBC-MAG-DIP-01:SETI
+  SPOWER: CLA-VBC-MAG-DIP-01:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [149.7, -149.7, 90.0, -90.0, 60.0, -60.0, 30.0, -30.0, 15.0, -15.0, 0.0]
+electrical:
+  maxI: 150
+  minI: -150.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: Dipole
+machine_area: VBC
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.200981
+  linear_saturation_coefficients:
+    I0: 286.4265908551807
+    I_max: 123.70403990282664
+    L: 231.56
+    a: -0.0024438048474122167
+    d: 158.653165690361
+    f: 0.0
+    m: 0.7581763345214154
+  multipoles: {}
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: Magnet
+  manufacturer: Dipole Type 3
+  serial_number: '5'
+name: CLA-VBC-MAG-DIP-01
+physical:
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.200981
+  middle: [0.0, 0.0, 26.165835]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+virtual_name: ''

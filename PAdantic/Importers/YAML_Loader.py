@@ -25,7 +25,7 @@ def read_YAML_File(filename):
     elemlist = {}
     with open(filename, 'r') as stream:
         data = yaml.load(stream, Loader=yaml.Loader)
-    print(data)
+    # print(data)
     return interpret_YAML_Element(data)
 
 YAML_files = glob.glob(r'C:\Users\jkj62.CLRC\Documents\GitHub\PAdantic\PAdantic\YAML\**\*.yaml', recursive=True)
