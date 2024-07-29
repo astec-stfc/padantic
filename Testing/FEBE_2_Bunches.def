@@ -1,0 +1,42 @@
+generator:
+  default: clara_400_3ps
+files:
+  injector400:
+    code: ASTRA
+    charge:
+      cathode: True
+      space_charge_mode: 2D
+      mirror_charge: True
+    input:
+      particle_definition: 'initial_distribution'
+    output:
+      zstart: 0
+      end_element: CLA-S02-SIM-APER-01
+  FEBE:
+    code: elegant
+    charge:
+      cathode: False
+      space_charge_mode: 3D
+    output:
+      start_element: CLA-S02-SIM-APER-01
+      end_element: CLA-FED-SIM-DUMP-01-START
+groups:
+  bunch_compressor:
+    type: chicane
+    elements: [CLA-VBC-MAG-DIP-01, CLA-VBC-MAG-DIP-02, CLA-VBC-MAG-DIP-03, CLA-VBC-MAG-DIP-04]
+  FODO_F:
+    type: element_group
+    elements: [CLA-FEA-MAG-QUAD-01, CLA-FEA-MAG-QUAD-03, CLA-FEA-MAG-QUAD-05, CLA-FEA-MAG-QUAD-07, CLA-FEA-MAG-QUAD-09, CLA-FEA-MAG-QUAD-11]
+  FODO_D:
+    type: element_group
+    elements: [CLA-FEA-MAG-QUAD-02, CLA-FEA-MAG-QUAD-04, CLA-FEA-MAG-QUAD-06, CLA-FEA-MAG-QUAD-08, CLA-FEA-MAG-QUAD-10, CLA-FEA-MAG-QUAD-12]
+  ARC_R56:
+    type: r56_group
+    elements: [FODO_F, FODO_D]
+    ratios: [1.5924900169720815 - 2.38 * (r56 - 0.007714832782173741), -1.1063900117914343 - 2.2 * (r56 - 0.007714832782173741)]
+    keys: [k1l, k1l]
+elements:
+  layout_file: Machines/CLARA/layouts.yaml
+  section_file: Machines/CLARA/sections.yaml
+  yaml_dir: Machines/CLARA/YAML
+  lattice: CLARA

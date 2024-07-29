@@ -36,7 +36,7 @@ def convert_numpy_types(v):
 class YAMLBaseModel(BaseModel):
     ''' Base Model that ignores extra fields. '''
 
-    def yaml_dump(self):
+    def yaml_dump(self) -> dict:
         return convert_numpy_types(self.model_dump())
 
 class IgnoreExtra(YAMLBaseModel):
@@ -63,7 +63,7 @@ class IgnoreExtra(YAMLBaseModel):
         return cls(**fields)
 
     def update(self, **kwargs):
-        [v.annotation.update(elem) for k,v in self.model_fields.items() if hasattr(v.annotation, 'update')]
+        [v.annotation.update(k) for k,v in self.model_fields.items() if hasattr(v.annotation, 'update')]
         self.__dict__.update(kwargs)
 
 class NumpyModel(YAMLBaseModel):
@@ -90,7 +90,7 @@ class NumpyModel(YAMLBaseModel):
         return cls(**dict(zip(list(cls.model_fields.keys()), values)))
 
     def update(self, **kwargs):
-        [v.annotation.update(elem) for k,v in self.model_fields.items() if hasattr(v.annotation, 'update')]
+        [v.annotation.update(v) for k,v in self.model_fields.items() if hasattr(v.annotation, 'update')]
         self.__dict__.update(kwargs)
 
 class NumpyVectorModel(NumpyModel):

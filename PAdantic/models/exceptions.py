@@ -1,0 +1,2 @@
+class LatticeError(Exception):
+    pass

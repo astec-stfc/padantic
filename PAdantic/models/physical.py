@@ -1,9 +1,10 @@
+import numpy as np
 from pydantic import field_validator, confloat, Field, NonNegativeFloat, AliasChoices
-from typing import List
+from typing import List, Type
 
 from ._functions import _rotation_matrix
 
-from .baseModels import IgnoreExtra, NumpyVectorModel
+from .baseModels import IgnoreExtra, NumpyVectorModel, T
 
 class Position(NumpyVectorModel):
     ''' Position model. '''
@@ -11,11 +12,59 @@ class Position(NumpyVectorModel):
     y: float = 0.
     z: float = 0.
 
+    def __add__(self, other: Type[T]) -> T:
+        return Position(x=(self.x+other.x), y=(self.y+other.y), z=(self.z+other.z))
+
+    def __radd__(self, other: Type[T]) -> T:
+        return self.__add__(other)
+
+    def __sub__(self, other: Type[T]) -> T:
+        return Position(x=(self.x-other.x), y=(self.y-other.y), z=(self.z-other.z))
+
+    def __rsub__(self, other: Type[T]) -> T:
+        return Position(x=(other.x-self.x), y=(other.y-self.y), z=(other.z-self.z))
+
+    def dot(self, other: List|Type[T]) -> float:
+        if isinstance(other, (set, tuple, list)):
+            other = Position.from_list(other)
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
+    def vector_angle(self, other: List|Type[T], direction: List) -> float:
+        if isinstance(other, (set, tuple, list)):
+            other = Position.from_list(other)
+        return (self - other).dot(direction)
+
+    def length(self) -> float:
+        return np.sqrt([self.x * self.x + self.y * self.y + self.z * self.z])
+
 class Rotation(NumpyVectorModel):
     ''' Rotation model. '''
     phi:    confloat(ge=-3.14,le=3.14)   = 0.
     psi:    confloat(ge=-3.14,le=3.14)   = 0.
     theta:  confloat(ge=-3.14,le=3.14)   = 0.
+
+    def __add__(self, other: Type[T]) -> T:
+        return Rotation(phi=(self.phi+other.phi), psi=(self.psi+other.psi), theta=(self.theta+other.theta))
+
+    def __radd__(self, other: Type[T]) -> T:
+        return self.__add__(other)
+
+    def __sub__(self, other: Type[T]) -> T:
+        return Rotation(phi=(self.phi-other.phi), psi=(self.psi-other.psi), theta=(self.theta-other.theta))
+
+    def __rsub__(self, other: Type[T]) -> T:
+        return Rotation(phi=(other.phi-self.phi), psi=(other.psi-self.psi), theta=(other.theta-self.theta))
+
+    def __abs__(self):
+        return Rotation(phi=abs(self.phi), psi=abs(self.psi), theta=abs(self.theta))
+
+    def __gt__(self, value: int|float|List|Type[T]):
+        if isinstance(value, (int, float)):
+            return any([self.phi>value, self.psi>value, self.theta>value])
+        elif isinstance(value, (list|set|tuple)):
+            return [self.phi, self.psi, self.theta] > value
+        elif isinstance(value, Rotation):
+            return any([self.phi > value.phi, self.psi > value.psi, self.theta > value.theta])
 
 class ElementError(IgnoreExtra):
     ''' Position/Rotation error model. '''
@@ -58,6 +107,7 @@ class ElementSurvey(ElementError): ...
 class PhysicalElement(IgnoreExtra):
     ''' Physical info model. '''
     middle: Position = Field(alias=AliasChoices('position', 'centre'), default=0)
+    datum: Position = Field(default=0)
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     error: ElementError = ElementError()
@@ -74,7 +124,16 @@ class PhysicalElement(IgnoreExtra):
     def __repr__(self):
         return self.__class__.__name__+'('+self.__str__()+')'
 
-    @field_validator('middle', mode='before')
+    # def __add__(self, other: PhysicalElement) -> [Position, Rotation]:
+    #     pass
+    #
+    # def __radd__(self, other: PhysicalElement) ->  -> [Position, Rotation]:
+    #     pass
+    #
+    # def __sub__ (self, other: PhysicalElement) ->  -> [Position, Rotation]:
+    #     pass
+
+    @field_validator('middle', 'datum', mode='before')
     @classmethod
     def validate_middle(cls, v: float|int|List) -> Position:
         if isinstance(v, (float, int)):
@@ -102,7 +161,6 @@ class PhysicalElement(IgnoreExtra):
         else:
             raise ValueError('middle should be a number or a list of floats')
 
-
     @property
     def rotation_matrix(self) -> List[int|float]:
         return _rotation_matrix(self.rotation.theta + self.global_rotation.theta)
@@ -111,7 +169,7 @@ class PhysicalElement(IgnoreExtra):
         return np.dot(np.array(vec), self.rotation_matrix)
 
     @property
-    def start(self) -> List[int|float]:
+    def start(self) -> Position:
         middle = np.array(self.middle.array)
         sx = 0
         sy = 0
@@ -121,7 +179,7 @@ class PhysicalElement(IgnoreExtra):
         return Position.from_list(start)
 
     @property
-    def end(self) -> List[int|float]:
+    def end(self) -> Position:
         ex = (self.length * (1 - np.cos(self.angle))) / self.angle if hasattr(self, 'angle') and abs(self.angle) > 1e-9 else 0
         ey = 0
         ez = (self.length * (np.sin(self.angle))) / self.angle if hasattr(self, 'angle') and abs(self.angle) > 1e-9 else self.length

@@ -4,7 +4,6 @@ import pandas
 magnet_table_filename = r"\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\CLARA Magnet Table v6.xlsx"
 magnet_table = pandas.read_excel(magnet_table_filename, sheet_name='Table', skiprows=2, index_col=(2,3,5,6), dtype={'serial number': 'str'}).fillna(0)
 
-
 def create_degauss_values(maxI):
     if maxI < 10.0:
         maxI = 10.0
@@ -12,7 +11,7 @@ def create_degauss_values(maxI):
 
 def add_magnet_table_parameters(n, e, magnetPV):
     try:
-        magnet = (magnetPV.machine, magnetPV.area.replace('HRG1','GUN'), magnetPV.typename, magnetPV.index)
+        magnet = (magnetPV.machine, magnetPV.area.replace('HRG1','GUN'), magnetPV.typename, int(magnetPV.index))
         table = magnet_table.loc[magnet, ['slope [units/A]', 'max current [A]', 'f [units/A³]',
                                                   'a [units/A²]', 'I0 [A]', 'd [units]', 'magnetic length [mm]',
                                                   'current [A]', 'magnet type', 'serial number']]
@@ -25,5 +24,5 @@ def add_magnet_table_parameters(n, e, magnetPV):
         e.electrical.minI = -1.0*ceil(I_degauss)
     except Exception as exc:
         print('Magnet missing from magnet table!', magnet)
-        print(exc)
+        # print(exc)
     return e

@@ -32,7 +32,13 @@ areaNames:
   - HRG1
   - VBC
   - FMS
-classtypeNames:
+  - MU1
+  - MU2
+  - FMB1
+  - FMB2
+  - FEC1
+  - FEC2
+classTypes:
   MAG:
     - QUAD
     - DIP
@@ -56,6 +62,11 @@ classtypeNames:
     - FCUP
     - EM
     - YAG
+    - ECOL
+    - RCOL
+    - EOM
+    - TDC
+    - CDR
   PS:
     - SHTR
   VAC:
@@ -70,6 +81,7 @@ classtypeNames:
     - HWP
     - PICO
     - 4C-PM
+    - MIRROR
   SRV:
     - LIGHT
   LRF:
@@ -93,7 +105,20 @@ classtypeNames:
   GUN:
     - CAV
     - SOL
-classrecordNames:
+  SIM:
+    - MARK
+    - START
+    - END
+    - APER
+    - FOCUS
+    - MIDDLE
+    - WAKE
+  DCP:
+    - SCR
+    - EM
+  LIN:
+    - CAV
+classPVRecords:
   magnets:
     - RILK
     - SETI
@@ -127,6 +152,34 @@ classrecordNames:
     - RD2
     - X
     - Y
+    - AWAK
+    - RDY
+    - DATA:B2V.VALA
+  BAM:
+    - SA1
+    - SA2
+    - SD1
+    - SD2
+    - RA1
+    - RA2
+    - RD1
+    - RD2
+    - AWAK
+    - RDY
+    - DATA:B2V.VALA
+  BLM:
+    - AWAK
+    - RDY
+  CDR: BLM
+  EOM:
+    - SA1
+    - SA2
+    - SD1
+    - SD2
+    - RA1
+    - RA2
+    - RD1
+    - RD2
     - AWAK
     - RDY
     - DATA:B2V.VALA
@@ -274,6 +327,8 @@ classrecordNames:
     - KEEP_ALIVE
   YAG: SCR
   WCM:
+    - Q
+  ICT:
     - Q
   FCUP:
     - Q
@@ -574,6 +629,13 @@ classrecordNames:
     - POSBTN
   PICO:
     - POSBTN
+  LIN:
+    - CAV
+  SHTR:
+    - STATE
+    - OPEN
+    - CLOSE
+    - CMI
 classPVNames:
   MAG:
     - RILK
@@ -604,6 +666,21 @@ classPVNames:
     - AWAK
     - RDY
     - DATA: DATA:B2V.VALA
+  BAM:
+    - SA1
+    - SA2
+    - SD1
+    - SD2
+    - RA1
+    - RA2
+    - RD1
+    - RD2
+    - AWAK
+    - RDY
+    - DATA: DATA:B2V.VALA
+  BLM:
+    - AWAK
+    - RDY
   CAM:
     - ROIandMask_SetX: ANA:SetX
     - ROIandMask_SetY: ANA:SetY
@@ -761,6 +838,8 @@ classPVNames:
     - V_ACTPOS: V:ACTPOS
     - V_EN: V:EN
   WCM:
+    - Q
+  ICT:
     - Q
   FCUP:
     - Q
@@ -1045,6 +1124,8 @@ elementTypes:
     VERTICAL_CORRECTOR: Vertical_Corrector
     SOLENOID: Solenoid
     BPM: BPM
+    BAM: BAM
+    BLM: BLM
     Camera: Camera
     Screen: Screen
     Charge: ChargeDiagnostic
@@ -1063,6 +1144,8 @@ elementTypes:
 PVTypes:
     Magnet: MagnetPV
     BPM: BPMPV
+    BAM: BAMPV
+    BLM: BLMPV
     Camera: CameraPV
     Screen: ScreenPV
     Charge: ChargeDiagnosticPV

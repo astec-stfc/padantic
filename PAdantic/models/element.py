@@ -1,22 +1,35 @@
 import os
 from typing import Type, List, Dict, Any
+import numpy as np
+import vg
 from pydantic import field_validator, Field, BaseModel, RootModel
 
-from models.baseModels import T, Aliases, IgnoreExtra
-from models.PV import (PV, MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV,
+from .baseModels import T, Aliases, IgnoreExtra
+from .PV import (PV, MagnetPV, BPMPV, BAMPV, BLMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV,
                        LaserMirrorPV, LightingPV,  PIDPV, LLRFPV, RFModulatorPV, ShutterPV, ValvePV, RFProtectionPV, RFHeartbeatPV)
-from models.manufacturer import ManufacturerElement
-from models.electrical import ElectricalElement
-from models.degauss import DegaussablElement
-from models.physical import PhysicalElement
-from models.magnetic import Dipole_Magnet, Quadrupole_Magnet, Sextupole_Magnet, Solenoid_Magnet
-from models.diagnostic import BPM_Diagnostic, Camera_Diagnostic, Screen_Diagnostic, Charge_Diagnostic
-from models.laser import LaserElement, LaserEnergyMeterElement, LaserMirrorElement
-from models.lighting import LightingElement
-from models.RF import PIDElement, LLRFElement, RFModulatorElement, RFProtectionElement, RFHeartbeatElement
-from models.shutter import ShutterElement, ValveElement
+from .manufacturer import ManufacturerElement
+from .electrical import ElectricalElement
+from .degauss import DegaussablElement
+from .physical import PhysicalElement, Rotation, Position
+from .magnetic import Dipole_Magnet, Quadrupole_Magnet, Sextupole_Magnet, Solenoid_Magnet
+from .diagnostic import BPM_Diagnostic, BAM_Diagnostic, BLM_Diagnostic, Camera_Diagnostic, Screen_Diagnostic, Charge_Diagnostic
+from .laser import LaserElement, LaserEnergyMeterElement, LaserMirrorElement
+from .lighting import LightingElement
+from .RF import PIDElement, LLRFElement, RFModulatorElement, RFProtectionElement, RFHeartbeatElement, RFCavityElement, RFDeflectingCavityElement, WakefieldElement
+from .shutter import ShutterElement, ValveElement
+from .simulation import ApertureElement, RFCavitySimulationElement, WakefieldSimulationElement
 import yaml
+from collections.abc import MutableMapping
 
+def flatten(dictionary, parent_key='', separator='_'):
+    items = []
+    for key, value in dictionary.items():
+        new_key = parent_key + separator + key if parent_key else key
+        if isinstance(value, MutableMapping):
+            items.extend(flatten(value, new_key, separator=separator).items())
+        else:
+            items.append((new_key, value))
+    return dict(items)
 
 class string_with_quotes(str):
     pass
@@ -41,6 +54,7 @@ class _baseElement(IgnoreExtra):
     machine_area: str
     virtual_name: str = ''
     alias: str|list|Aliases|None = Field(alias='name_alias', default=None)
+    subelement: bool = False
 
     @field_validator('name', mode='before')
     @classmethod
@@ -60,6 +74,8 @@ class _baseElement(IgnoreExtra):
             return Aliases(aliases=list(map(str.strip, v.split(','))))
         elif isinstance(v, (list, tuple)):
             return Aliases(aliases=list(v))
+        elif isinstance(v, (dict)):
+            return Aliases(aliases=v['aliases'])
         elif v is None:
             return Aliases(aliases=[])
         else:
@@ -106,6 +122,9 @@ class _baseElement(IgnoreExtra):
     def hardware_info(self):
         return {'class': self.hardware_class, 'type': self.hardware_type}
 
+    def flat(self):
+        return flatten(self.model_dump(), parent_key='', separator='_')
+
 class PhysicalElement(_baseElement):
     ''' Element with physical, degaussable, electrical, manufacturer, and controls items. '''
     physical: PhysicalElement
@@ -116,6 +135,18 @@ class PhysicalElement(_baseElement):
             'position': list(self.physical.middle)[2],
         })
         return catap_dict
+
+    @property
+    def bend_angle(self):
+        return Rotation.from_list([0,0,0])
+
+    @property
+    def start_angle(self):
+        return self.physical.rotation + self.physical.global_rotation
+
+    @property
+    def end_angle(self):
+        return self.start_angle
 
 class Element(PhysicalElement):
     ''' Element with physical, electrical and manufacturer items. '''
@@ -135,6 +166,15 @@ class Magnet(Element):
     # type: str = Field(alias='mag_type')
     controls: MagnetPV
     degauss : DegaussablElement
+    magnetic: None = None
+
+    @property
+    def bend_angle(self):
+        return Rotation.from_list([0,0,self.magnetic.angle])
+
+    @property
+    def end_angle(self):
+        return self.start_angle + self.bend_angle
 
     # @field_validator('type', mode='before')
     # @classmethod
@@ -198,7 +238,7 @@ class Solenoid(Magnet):
     hardware_type: str = Field(default='Solenoid', frozen=True)
     magnetic: Solenoid_Magnet
 
-class BPM(Element):
+class BPM(PhysicalElement):
     ''' BPM element. '''
     hardware_type: str = Field(default='Stripline', frozen=True)
     diagnostic: BPM_Diagnostic
@@ -219,6 +259,18 @@ class BPM(Element):
             'yn': self.diagnostic.yn,
         })
         return catap_dict
+
+class BAM(PhysicalElement):
+    ''' BAM element. '''
+    hardware_type: str = Field(default='DESY', frozen=True)
+    diagnostic: BAM_Diagnostic
+    controls: BAMPV
+
+class BLM(PhysicalElement):
+    ''' BLM element. '''
+    hardware_type: str = Field(default='CDR', frozen=True)
+    diagnostic: BLM_Diagnostic
+    controls: BLMPV
 
 class Camera(PhysicalElement):
     ''' Camera element. '''
@@ -290,6 +342,24 @@ class LLRF(_baseElement):
     LLRF: LLRFElement
     controls: LLRFPV
 
+class RFCavity(PhysicalElement):
+    ''' RFCavity element. '''
+    hardware_type: str = Field(default='Linac', frozen=True)
+    cavity: RFCavityElement
+    simulation: RFCavitySimulationElement
+
+class Wakefield(PhysicalElement):
+    ''' Collimator element. '''
+    hardware_type: str = Field(default='Wakefield', frozen=True)
+    cavity: WakefieldElement
+    simulation: WakefieldSimulationElement
+
+class RFDeflectingCavity(PhysicalElement):
+    ''' RFCavity element. '''
+    hardware_type: str = Field(default='TDC', frozen=True)
+    cavity: RFDeflectingCavityElement
+    simulation: RFCavitySimulationElement
+
 class RFModulator(_baseElement):
     ''' RFModulator element. '''
     hardware_type: str = Field(default='Thales', frozen=True)
@@ -319,3 +389,16 @@ class Valve(PhysicalElement):
     hardware_type: str = Field(default='Valve', frozen=True)
     valve: ValveElement
     controls: ValvePV
+
+class Marker(PhysicalElement):
+    ''' Marker element. '''
+    hardware_type: str = Field(default='Marker', frozen=True)
+
+class Aperture(PhysicalElement):
+    ''' Aperture element. '''
+    hardware_type: str = Field(default='Aperture', frozen=True)
+    aperture: ApertureElement
+
+class Collimator(Aperture):
+    ''' Collimator element. '''
+    hardware_type: str = Field(default='Collimator', frozen=True)

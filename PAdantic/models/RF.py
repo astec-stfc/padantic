@@ -3,6 +3,31 @@ from typing import List, Type, Any
 
 from .baseModels import IgnoreExtra, T, YAMLBaseModel
 
+class RFCavityElement(IgnoreExtra):
+    structure_Type: str = 'TravellingWave'
+    attenuation_constant: float = 0
+    cell_length: float = 0.0333333333333333
+    coupling_cell_length: float|None = None
+    design_gamma: float|None = None
+    design_power: float = 25000000
+    frequency: float = 2998500000.0
+    n_cells: int|float
+    crest: float = 0
+    phase: float
+    shunt_impedance: float|None = None
+
+class WakefieldElement(IgnoreExtra):
+    cell_length: float = 0.0333333333333333
+    n_cells: int|float = 1
+
+class RFDeflectingCavityElement(IgnoreExtra):
+    coupling_cell_length: float|None = None
+    design_gamma: float|None = None
+    design_power: float = 25000000
+    frequency: float = 2998500000.0
+    crest: float = 0
+    phase: float = 90
+
 class PIDPhaseRange(IgnoreExtra):
     min: float|int
     max: float|int

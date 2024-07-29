@@ -3,11 +3,11 @@ from math import copysign, ceil
 from yaml import load
 from Importers.MySafeLoader import MySafeLoader
 
-from models.PV import (MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV, LaserMirrorPV,
+from PAdantic.models.PV import (MagnetPV, BPMPV, CameraPV, ScreenPV, ChargeDiagnosticPV, VacuumGuagePV, LaserEnergyMeterPV, LaserHWPPV, LaserMirrorPV,
                        LightingPV, PIDPV, LLRFPV, RFModulatorPV, ShutterPV, ValvePV, RFProtectionPV, RFHeartbeatPV,
                        PV, elementTypes, PVTypes,
                        )
-from models.element import *
+from PAdantic.models.element import *
 
 class ReplacePc():
     def __init__(self, filename):

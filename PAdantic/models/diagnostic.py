@@ -17,6 +17,14 @@ class BPM_Diagnostic(DiagnosticElement):
     xn: float | None = 0
     yn: float | None = 0
 
+class BAM_Diagnostic(DiagnosticElement):
+    ''' BPM Diagnostic model. '''
+    type: str = Field(alias='bam_type', default='DESY')
+
+class BLM_Diagnostic(DiagnosticElement):
+    ''' BLM Diagnostic model. '''
+    type: str = Field(alias='blm_type', default='CDR')
+
 class Camera_Pixel_Results_Indices(IgnoreExtra):
     x: int = Field(default=0, alias='X_POS')
     y: int = Field(default=1, alias='Y_POS')

@@ -1,11 +1,14 @@
+import time
 import os
 from copy import copy
 from typing import Type, List, Dict, Any
+import numpy as np
 from pydantic import field_validator, Field, BaseModel, ValidationInfo, PrivateAttr
-from models._functions import read_yaml
 
-from models.element import _baseElement
-from models.baseModels import YAMLBaseModel
+from ._functions import read_yaml, merge_two_dicts
+from .element import _baseElement
+from .baseModels import YAMLBaseModel
+from .exceptions import *
 
 class BaseLatticeModel(YAMLBaseModel):
     name: str
@@ -86,25 +89,42 @@ class ElementList(YAMLBaseModel):
         return list(self.elements.values())
 
 class SectionLattice(BaseLatticeModel):
+    order: List[str]
     elements: ElementList
+    # other_elements: ElementList = ElementList(elements={})
     _basename: str = 'elements'
 
     @field_validator('elements', mode='before')
     @classmethod
     def validate_elements(cls, elements: List[_baseElement]|ElementList, info: ValidationInfo) -> ElementList:
         if isinstance(elements, list):
-            return ElementList(elements={e.name:e for e in elements})
+            elemdict = {e.name: e for e in elements}
+            # print([e for e in info.data['order'] if e not in elemdict.keys()])
+            return ElementList(elements={e:elemdict[e] for e in info.data['order'] if e in elemdict.keys()})
+        assert isinstance(elements, ElementList)
         return elements
+    #
+    # @field_validator('other_elements', mode='before')
+    # @classmethod
+    # def validate_other_elements(cls, elements: List[_baseElement]|ElementList, info: ValidationInfo) -> ElementList:
+    #     if isinstance(elements, list):
+    #         elemdict = {e.name: e for e in elements}
+    #         return ElementList(elements={e:elemdict[e] for e in info.data['order'] if e not in elemdict.keys()})
+    #     assert isinstance(elements, ElementList)
+    #     return elements
 
     @property
     def names(self):
-        return getattr(self, self._basename).names()
+        return self.elements.names()
 
     def __str__(self):
-        return str(getattr(self, self._basename).__str__())
+        # return str(getattr(self, self._basename).__str__())
+        return str(self.names)
 
-    def __getitem__(self, item: str) -> int:
-            return self.elements[item]
+    def __getitem__(self, item: str|int) -> BaseModel:
+        if isinstance(item, int):
+            return self.elements[self.names[item]]
+        return self.elements[item]
 
     def __getattr__(self, a):
         try:
@@ -113,17 +133,33 @@ class SectionLattice(BaseLatticeModel):
             return getattr(self.elements,a)
 
     def _get_all_elements(self) -> ElementList:
-        return self.elements.list()
+        return [self.elements[e] for e in self.order if e in self.elements.names()]
 
 class MachineLayout(BaseLatticeModel):
-    sections: Dict[str, SectionLattice]
+    sections: Dict[str, SectionLattice]# = Field(frozen=True)
     _basename: str = 'sections'
+
+    def model_post_init(self, __context):
+        matrix = [v._get_all_elements() for v in self.sections.values()]
+        all_elems = [item for row in matrix for item in row]
+        if len(all_elems) > 0:
+            all_elems_reversed = reversed(all_elems)
+            start_pos = all_elems[-1].physical.start
+            all_elem_corrected = []
+            for elem in all_elems_reversed:
+                vector = not elem.physical.end.vector_angle(start_pos, [0,0,-1]) < 0
+                if vector:
+                    all_elem_corrected += [elem]
+                    start_pos = elem.physical.start
+            self._all_elements = list(reversed(all_elem_corrected))
+        else:
+            self._all_elements = {}
 
     def names(self):
         return [e.name for e in getattr(self, self._basename).values()]
 
     def __str__(self):
-        return str([k for k,v in getattr(self, self._basename).items()])
+        return str([k for k,v in self.sections.items()])
 
     def __getattr__(self, item: str):
         return getattr(self.sections, item)
@@ -132,8 +168,7 @@ class MachineLayout(BaseLatticeModel):
             return self.sections[item]
 
     def _get_all_elements(self) -> list:
-        matrix = [v._get_all_elements() for v in self.sections.values()]
-        return [item for row in matrix for item in row]
+        return self._all_elements
 
     def _get_all_element_names(self) -> list:
         return [e.name for e in self._get_all_elements()]
@@ -149,7 +184,8 @@ class MachineLayout(BaseLatticeModel):
             index = self._get_all_element_names().index(name)
             return self._get_all_elements()[index]
         else:
-            raise LatticeError('Element %s does not exist in the accelerator lattice' % name)
+            return None
+            # raise LatticeError('Element {elementname} does not exist in the accelerator lattice {latticeelements}'.format(elementname=name, latticeelements=self._get_all_element_names()))
 
     def _get_element_names(self, lattice: list) -> list:
         '''
@@ -170,9 +206,14 @@ class MachineLayout(BaseLatticeModel):
         # fetch the index of the element
         ele_obj = self.get_element(name)
         try:
-            return self._get_all_element_names().index(ele_obj.name)
+            return self._get_all_element_names().index(name)
         except ValueError:
-            raise LatticeError('Element %s does not exist anywhere in beam path "%s"' % (name))
+        #     return None
+            raise LatticeError('Element {elementname} does not exist anywhere in beam path {latticeelements}'.format(elementname=name, latticeelements=self._get_all_element_names()))
+
+    @property
+    def elements(self):
+        return self._get_all_element_names()
 
     def elements_between(
             self, end: str=None, start: str=None,
@@ -211,22 +252,39 @@ class MachineLayout(BaseLatticeModel):
         return self._get_element_names(result)
 
 class MachineModel(YAMLBaseModel):
+    layout_file: str
+    section_file: str
     elements: Dict[str, _baseElement] = {}
-    layout_file: str = 'layouts.yaml'
-
-    @field_validator('elements', mode='before')
-    @classmethod
-    def validate_elements(cls, elements: dict, info: ValidationInfo) -> str:
-        cls._build_layouts(cls, elements)
-        return elements
+    sections: Dict[str, SectionLattice] = {}
+    lattices: Dict[str, MachineLayout] = {}
 
     @field_validator('layout_file', mode='before')
     @classmethod
     def validate_layout_file(cls, v: str) -> str:
-        assert os.path.isfile(v)
-        config = read_yaml(v)
-        cls._layouts = config.layouts
-        return v
+        if os.path.isfile(v):
+            return v
+        elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + '/../' + v)):
+            return os.path.abspath(os.path.dirname(__file__) + '/../' + v)
+        else:
+            raise ValueError(f'Directory {v} does not exist')
+
+    @field_validator('section_file', mode='before')
+    @classmethod
+    def validate_section_file(cls, v: str) -> str:
+        if os.path.isfile(v):
+            return v
+        elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + '/../' + v)):
+            return os.path.abspath(os.path.dirname(__file__) + '/../' + v)
+        else:
+            raise ValueError(f'Directory {v} does not exist')
+
+    def model_post_init(self, __context):
+        config = read_yaml(self.layout_file)
+        self._layouts = config.layouts
+        config = read_yaml(self.section_file)
+        self._section_definitions = config.sections
+        if len(self.elements) > 0:
+            self._build_layouts(self.elements)
 
     def __add__(self, other) -> dict:
         copy = self.elements.copy()
@@ -245,13 +303,11 @@ class MachineModel(YAMLBaseModel):
         return str(list(self.elements.keys()))
 
     def append(self, values: dict) -> None:
-        super().__init__(layout_file=self.layout_file, elements=self + values)
+        self.elements = merge_two_dicts(values, self.elements)
+        self._build_layouts(self.elements)
 
     def update(self, values: dict) -> None:
-        super().__init__(layout_file=self.layout_file, elements=self + values)
-
-    def __getattr__(self, item: str):
-        return getattr(self.elements, item)
+        return self.append(values)
 
     def __getitem__(self, item: str) -> int:
             return self.elements[item]
@@ -262,16 +318,18 @@ class MachineModel(YAMLBaseModel):
     def _build_layouts(self, elements: dict) -> None:
         '''build lists defining the lattice elements along each possible beam path'''
         # build dictionary with a lattice for each beam path
-        self.sections = {}
-        self.lattices = {}
         for path, areas in self._layouts.items():
 
             for _area in areas:
                 # collect list of elements from this machine area
                 new_elements = [x for x in elements.values() if (x.machine_area == _area)]
-                self.sections[_area] = SectionLattice(name=_area, elements=new_elements)
+                if _area in self._section_definitions:
+                    self.sections[_area] = SectionLattice(name=_area, elements=new_elements, order=self._section_definitions[_area])
+                else:
+                    print('MachineModel', '_build_layouts', _area, 'missing')
+                    # exit()
                 # add the new elements to the lattice
-            self.lattices[path] = MachineLayout(name=path, sections={_area: self.sections[_area] for _area in areas})
+            self.lattices[path] = MachineLayout(name=path, sections={_area: self.sections[_area] for _area in areas if _area in self.sections})
 
     def get_element(self, name: str) -> _baseElement:
         '''
@@ -283,7 +341,8 @@ class MachineModel(YAMLBaseModel):
         if name in self.elements:
             return self.elements[name]
         else:
-            raise LatticeError('Element %s does not exist in the accelerator lattice' % name)
+            # print('Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}'.format(name, self.elements.keys()))
+            raise LatticeError('Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}'.format(elementname=name, latticeelements=self.elements.keys()))
 
     def elements_between(
             self, end: str=None, start: str=None,
@@ -309,9 +368,9 @@ class MachineModel(YAMLBaseModel):
         start_obj = self.get_element(start)
         end_obj = self.get_element(end)
 
-         # determine machine area at the end of the path
+        # determine machine area at the end of the path
         path_to_end = end_obj.machine_area if (end_obj.machine_area in self.lattices) else 'CLARA'
         full_path = self.lattices[path_to_end]
-
+        # print('full_path', full_path['S05'])
         return full_path.elements_between(end=end, start=start,
-                element_type=element_type)
+            element_type=element_type)

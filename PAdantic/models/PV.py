@@ -1,3 +1,4 @@
+import os
 from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model, computed_field
 from typing import Dict, Any, List
 import yaml
@@ -5,7 +6,7 @@ import yaml
 from .baseModels import T, YAMLBaseModel
 
 # Load PV definitions
-with open('PV_Values.yaml','r') as stream:
+with open(os.path.abspath(os.path.dirname(__file__)) + '/../PV_Values.yaml','r') as stream:
     data = yaml.load(stream, Loader=yaml.Loader)
     for k,v in data.items():
         globals()[k] = v
@@ -60,6 +61,7 @@ class PV(PVSet):
     def validate_machine(cls) -> str:
         v = cls._pv_dict['machine']
         if v.upper() not in map(str.upper, machineNames):
+            print('PV - Validate Machine Error:', machineNames, v)
             raise ValueError('Invalid Machine', v.upper())
         return v.upper()
 
@@ -74,6 +76,7 @@ class PV(PVSet):
             return v
         else:
             if v.upper() not in map(str.upper, areaNames) and not v == '':
+                print('PV - Validate Area Error:', areaNames, v)
                 raise ValueError('Invalid Area')
             return v.upper()
 
@@ -87,7 +90,8 @@ class PV(PVSet):
         if v == None:
             return v
         else:
-            if v.upper() not in map(str.upper, classtypeNames.keys()):
+            if v.upper() not in map(str.upper, classTypes.keys()):
+                print('PV - Validate Class Error:', classTypes.keys(), v)
                 raise ValueError('Invalid Class Name')
             return v.upper()
 
@@ -97,13 +101,14 @@ class PV(PVSet):
         return self._pv_dict['typename']
 
     def validate_type(cls) -> str:
+        ''' Confirm that `typename` is in the valid types for class `classname` '''
         v = cls._pv_dict['typename']
         if v == None:
             return v
         else:
             classname = cls._pv_dict['classname']
-            if v.upper() not in map(str.upper, classtypeNames[classname]):
-                print('validate_type',classtypeNames[classname], v)
+            if v.upper() not in map(str.upper, classTypes[classname]):
+                print('PV - Validate Type Error:', classTypes[classname], v)
                 raise ValueError('Invalid Type Name')
             return v.upper()
 
@@ -128,6 +133,7 @@ class PV(PVSet):
         return self._pv_dict['record']
 
     def validate_record(cls) -> str:
+        ''' Confirm that `record` is in the valid PV record names for class `classname` and type `typename` '''
         v = cls._pv_dict['record']
         if v == None or v == '':
             return v
@@ -135,16 +141,17 @@ class PV(PVSet):
             typename = cls._pv_dict['typename']
         else:
             raise ValueError('typename missing')
-        if typename in classrecordNames:
-            records = classrecordNames[typename]
+        if typename in classPVRecords:
+            records = classPVRecords[typename]
         else:
-            raise ValueError(f"Invalid Record typename {typename}")
-        if isinstance(classrecordNames[typename], str):
-            records = classrecordNames[classrecordNames[typename]]
+            raise ValueError(f"Invalid Record typename {typename} [{cls._pv_dict}]")
+        if isinstance(classPVRecords[typename], str):
+            # If we are referencing another record class!
+            records = classPVRecords[classPVRecords[typename]]
         # print(f'validate_record {typename}', records)
         if v.upper() not in map(str.upper, records):
             # print(f'validate_record {v}','    -',v)
-            raise ValueError('Invalid Record Name')
+            raise ValueError(f'Invalid Record Name {v.upper()} [{records}]')
         return v
 
     @property
@@ -191,6 +198,7 @@ class PVOld(PVSet):
     @classmethod
     def validate_machine(cls, v: str) -> str:
         if v.upper() not in map(str.upper, machineNames):
+            print('PV - Validate Machine Error:', machineNames, v)
             raise ValueError('Invalid Machine', v.upper())
         return v.upper()
 
@@ -201,6 +209,7 @@ class PVOld(PVSet):
             return v
         else:
             if v.upper() not in map(str.upper, areaNames) and not v == '':
+                print('PV - Validate Area Error:', areaNames, v)
                 raise ValueError('Invalid Area')
             return v.upper()
 
@@ -211,6 +220,7 @@ class PVOld(PVSet):
             return v
         else:
             if v.upper() not in map(str.upper, classtypeNames.keys()):
+                print('PV - Validate Class Error:', classtypeNames.keys(), v)
                 raise ValueError('Invalid Class Name')
             return v.upper()
 
@@ -222,7 +232,7 @@ class PVOld(PVSet):
         else:
             classname = info.data['classname']
             if v.upper() not in map(str.upper, classtypeNames[classname]):
-                print('validate_type',classtypeNames[classname], v)
+                print('PV - Validate Type Error:',classtypeNames[classname], v)
                 raise ValueError('Invalid Type Name')
             return v.upper()
 
@@ -343,8 +353,8 @@ class ElementPV(YAMLBaseModel):
                     break
                 except Exception as e:
                     # print('Exception', e)
-                    # print(name, k, v.json_schema_extra['postfixdefault'])
-                    pass
+                    print(name, k, v.json_schema_extra['postfixdefault'])
+                    raise e
         return cls(**d)
 
     def update(self, **new_data):
@@ -354,9 +364,12 @@ class ElementPV(YAMLBaseModel):
 PVMappings = {
     'MAG': 'Magnet',
     'BPM': 'BPM',
+    'BAM': 'BAM',
+    'BLM': 'BLM',
     'CAM': 'Camera',
     'SCR': 'Screen',
     'WCM': 'ChargeDiagnostic',
+    'ICT': 'ChargeDiagnostic',
     'FCUP': 'ChargeDiagnostic',
     'IMG': 'VacuumGuage',
     'EM': 'LaserEnergyMeter',

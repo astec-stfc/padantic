@@ -16,6 +16,20 @@ MultipolesData = create_model('Multipoles', **multipoles)
 class Multipoles(MultipolesData):
     ''' Magnetic multipoles model. '''
 
+    @field_validator('*', mode='before')
+    def validate_Multipole(cls, v: List|dict) -> Multipole:
+        if isinstance(v, (list, tuple)):
+            if len(v) == 2:
+                return Multipole(order=v[0], normal=v[1])
+            elif len(v) == 4:
+                return Multipole(order=v[0], normal=v[1], skew=v[2], radius=v[3])
+        elif isinstance(v, (dict)):
+            return Multipole(**v)
+        elif isinstance(v, (Multipole)):
+            return v
+        else:
+            raise ValueError('Multipole should be a dict or a list of floats')
+
     def __str__(self):
         return ' '.join(['K'+str(i)+'L=Multipole('+getattr(self, 'K'+str(i)+'L').__str__()+')' for i in range(0,13) if abs(getattr(self, 'K'+str(i)+'L').normal) > 0 or abs(getattr(self, 'K'+str(i)+'L').skew) > 0])
 
@@ -110,7 +124,10 @@ class MagneticElement(IgnoreExtra):
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)
-        self.kl = data['kl'] if 'kl' in data else 0
+        if 'kl' in data:
+            self.kl = data['kl']
+        if 'angle' in data and self.order == 0:
+            self.kl = data['angle']
         if self.skew:
             setattr(self.multipoles, 'K'+str(self.order)+'L', Multipole(skew=self.kl, order=self.order))
         else:
@@ -148,7 +165,9 @@ class MagneticElement(IgnoreExtra):
         return self.KnL(self.order)
     @kl.setter
     def kl(self, kl: float = 0) -> None:
-        setattr(self.multipoles, 'K'+str(self.order)+'L', Multipole(normal=kl, order=self.order))
+        # print('kl called!', getattr(self.multipoles, 'K'+str(self.order)+'L'))
+        setattr(getattr(self.multipoles, 'K'+str(self.order)+'L'), 'normal', kl)
+        setattr(getattr(self.multipoles, 'K'+str(self.order)+'L'), 'order', self.order)
 
     @property
     def angle(self) -> float:
