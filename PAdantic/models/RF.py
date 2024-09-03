@@ -14,7 +14,7 @@ class RFCavityElement(IgnoreExtra):
     n_cells: Union[int, float]
     crest: float = 0
     phase: float
-    shunt_impedance: float|None = None
+    shunt_impedance: Union[float, None] = None
 
 class WakefieldElement(IgnoreExtra):
     cell_length: float = 0.0333333333333333

@@ -68,7 +68,7 @@ class _baseElement(IgnoreExtra):
 
     @field_validator('alias', mode='before')
     @classmethod
-    def validate_alias(cls, v: str|List|None) -> Aliases:
+    def validate_alias(cls, v: Union[str, List, None]) -> Aliases:
         # print(list(map(str.strip, v.split(','))))
         if isinstance(v, str):
             return Aliases(aliases=list(map(str.strip, v.split(','))))
