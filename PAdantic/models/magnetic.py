@@ -1,5 +1,5 @@
 from pydantic import BaseModel, model_serializer, Field, field_validator, NonNegativeInt, create_model, NonNegativeFloat, AliasChoices
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 
 from .baseModels import IgnoreExtra, T
 
@@ -17,7 +17,7 @@ class Multipoles(MultipolesData):
     ''' Magnetic multipoles model. '''
 
     @field_validator('*', mode='before')
-    def validate_Multipole(cls, v: List|dict) -> Multipole:
+    def validate_Multipole(cls, v: Union[List, dict]) -> Multipole:
         if isinstance(v, (list, tuple)):
             if len(v) == 2:
                 return Multipole(order=v[0], normal=v[1])
@@ -40,10 +40,10 @@ class Multipoles(MultipolesData):
     def ser_model(self) -> Dict[str, Any]:
         return {k: getattr(self,k) for k in self.model_fields.keys() if abs(getattr(self, k).normal) > 0 or abs(getattr(self, k).skew) > 0}
 
-    def normal(self, order: int) -> int|float:
+    def normal(self, order: int) -> Union[int, float]:
         return getattr(self, 'K'+str(order)+'L').normal
 
-    def skew(self, order: int) -> int|float:
+    def skew(self, order: int) -> Union[int, float]:
         return getattr(self, 'K'+str(order)+'L').skew
 
     def __eq__(self, other) -> bool:
@@ -54,7 +54,7 @@ class Multipoles(MultipolesData):
 
 class FieldIntegral(BaseModel):
     ''' Field integral coefficients model. '''
-    coefficients: List[float|int] = [0]
+    coefficients: List[Union[int, float]] = [0]
 
     def currentToK(self, current: float, energy: float) -> float:
         sign = numpy.copysign(1, current)
@@ -78,7 +78,7 @@ class LinearSaturationFit(BaseModel):
     L: NonNegativeFloat = 0
 
     @classmethod
-    def from_string(cls, v: str|List) -> T:
+    def from_string(cls, v: Union[str, List]) -> T:
         if isinstance(v, str):
             coeff_list = list(map(float, v.strip().split(',')))
             assert len(coeff_list) == len(cls.model_fields.keys())
@@ -89,7 +89,7 @@ class LinearSaturationFit(BaseModel):
         else:
             raise ValueError('LinearSaturationFit should be a string or a list of floats')
 
-    def update_from_string(self, v: str|List) -> None:
+    def update_from_string(self, v: Union[str, List]) -> None:
         if isinstance(v, str):
             coeff_list = list(map(float, v.strip().split(',')))
             assert len(coeff_list) == len(self.model_fields.keys())
@@ -139,7 +139,7 @@ class MagneticElement(IgnoreExtra):
 
     @field_validator('field_integral_coefficients', mode='before')
     @classmethod
-    def validate_field_integral_coefficients(cls, v: str|List|dict) -> FieldIntegral:
+    def validate_field_integral_coefficients(cls, v: Union[str, List, dict]) -> FieldIntegral:
         if isinstance(v, str):
             return FieldIntegral(coefficients=list(map(float, v.split(','))))
         elif isinstance(v, (list, tuple)):
@@ -152,16 +152,16 @@ class MagneticElement(IgnoreExtra):
             raise ValueError('field_integral_coefficients should be a string or a list of floats')
 
     # @debug
-    def KnL(self, order: int = None) -> int|float:
+    def KnL(self, order: int = None) -> Union[int, float]:
         f = self.multipoles.skew if self.skew else self.multipoles.normal
         order = self.order if order is None else order
         return f(order) if order >= 0 else 0
 
-    def Kn(self, order: int = None) -> int|float:
+    def Kn(self, order: int = None) -> Union[int, float]:
         return self.knl(order) / self.length
 
     @property
-    def kl(self) -> int|float:
+    def kl(self) -> Union[int, float]:
         return self.KnL(self.order)
     @kl.setter
     def kl(self, kl: float = 0) -> None:
@@ -201,7 +201,7 @@ class SolenoidFields(solenoidFieldsData):
     def ser_model(self) -> Dict[str, Any]:
         return {k: getattr(self,k) for k in self.model_fields.keys() if abs(getattr(self, k)) > 0}
 
-    def normal(self, order: int) -> int|float:
+    def normal(self, order: int) -> Union[int, float]:
         return getattr(self, 'S'+str(order)+'L')
 
     def __eq__(self, other) -> bool:
@@ -233,7 +233,7 @@ class Solenoid_Magnet(IgnoreExtra):
 
     @field_validator('field_integral_coefficients', mode='before')
     @classmethod
-    def validate_field_integral_coefficients(cls, v: str|List) -> FieldIntegral:
+    def validate_field_integral_coefficients(cls, v: Union[str, List]) -> FieldIntegral:
         if isinstance(v, str):
             return FieldIntegral(coefficients=list(map(float, v.split(','))))
         elif isinstance(v, (list, tuple)):
@@ -246,7 +246,7 @@ class Solenoid_Magnet(IgnoreExtra):
             raise ValueError('field_integral_coefficients should be a string or a list of floats')
 
     @property
-    def ks(self) -> int|float:
+    def ks(self) -> Union[int, float]:
         return getattr(self.fields, 'S'+str(self.order)+'L')
     @ks.setter
     def ks(self, ks: float = 0) -> None:

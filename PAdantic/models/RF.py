@@ -1,5 +1,5 @@
 from pydantic import Field, field_validator, create_model
-from typing import List, Type, Any
+from typing import List, Type, Any, Union
 
 from .baseModels import IgnoreExtra, T, YAMLBaseModel
 
@@ -7,30 +7,30 @@ class RFCavityElement(IgnoreExtra):
     structure_Type: str = 'TravellingWave'
     attenuation_constant: float = 0
     cell_length: float = 0.0333333333333333
-    coupling_cell_length: float|None = None
-    design_gamma: float|None = None
+    coupling_cell_length: Union[float, None] = None
+    design_gamma: Union[float, None] = None
     design_power: float = 25000000
     frequency: float = 2998500000.0
-    n_cells: int|float
+    n_cells: Union[int, float]
     crest: float = 0
     phase: float
     shunt_impedance: float|None = None
 
 class WakefieldElement(IgnoreExtra):
     cell_length: float = 0.0333333333333333
-    n_cells: int|float = 1
+    n_cells: Union[int, float] = 1
 
 class RFDeflectingCavityElement(IgnoreExtra):
-    coupling_cell_length: float|None = None
-    design_gamma: float|None = None
+    coupling_cell_length: Union[float, None] = None
+    design_gamma: Union[float, None] = None
     design_power: float = 25000000
     frequency: float = 2998500000.0
     crest: float = 0
     phase: float = 90
 
 class PIDPhaseRange(IgnoreExtra):
-    min: float|int
-    max: float|int
+    min: Union[float, int]
+    max: Union[float, int]
 
     def __str__(self) -> str:
         return str([self.min, self.max])
@@ -49,12 +49,12 @@ class PIDElement(IgnoreExtra):
     probe_channel: int
     enable: str
     disable: str
-    phase_range: str|list|PIDPhaseRange
-    phase_weight_range: str|list|PIDWeightRange
+    phase_range: Union[str, list, PIDPhaseRange]
+    phase_weight_range: Union[str, list, PIDWeightRange]
 
     @field_validator('phase_range', mode='before')
     @classmethod
-    def validate_phase_range(cls, v: str|List) -> PIDPhaseRange:
+    def validate_phase_range(cls, v: Union[str, List]) -> PIDPhaseRange:
         if isinstance(v, str):
             # print('str')
             splitlist = list(map(str.strip, v.split(',')))
@@ -73,7 +73,7 @@ class PIDElement(IgnoreExtra):
 
     @field_validator('phase_weight_range', mode='before')
     @classmethod
-    def validate_phase_weight_range(cls, v: str|List) -> PIDWeightRange:
+    def validate_phase_weight_range(cls, v: Union[str, List]) -> PIDWeightRange:
         if isinstance(v, str):
             splitlist = list(map(str.strip, v.split(',')))
             assert len(splitlist) == 2
@@ -129,8 +129,8 @@ class LLRFChannelsBase(YAMLBaseModel):
         pass
 
 class LLRFTiming(YAMLBaseModel):
-    start: float|int
-    end: float|int
+    start: Union[float, int]
+    end: Union[float, int]
 
 fields = {i: (LLRFTiming, Field()) for i in llrffieldnames}
 LLRFTimingsBase = create_model('LLRFTimingsBase', **fields, __base__=IgnoreExtra)

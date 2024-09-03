@@ -1,6 +1,6 @@
 import os
 from pydantic import model_serializer, ConfigDict, field_validator, ValidationInfo, Field, create_model, computed_field
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 import yaml
 
 from .baseModels import T, YAMLBaseModel
@@ -186,11 +186,11 @@ class PV(PVSet):
 
 class PVOld(PVSet):
     ''' PV model. '''
-    machine: str | None
-    area: str | None
-    classname: str | None
-    typename: str | None
-    index: int | str | None
+    machine: Union[str, None]
+    area: Union[str, None]
+    classname: Union[str, None]
+    typename: Union[str, None]
+    index: Union[int, str, None]
     record: str
     _PV_index: List[int]
 
@@ -330,7 +330,7 @@ class ElementPV(YAMLBaseModel):
 
     @field_validator('*', mode='before')
     @classmethod
-    def validate_pv(cls, v: PV|str) -> PV:
+    def validate_pv(cls, v: Union[PV, str]) -> PV:
         if isinstance(v, str):
             return PV(pv_string=v)
         return v

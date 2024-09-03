@@ -1,5 +1,5 @@
 from pydantic import Field, field_validator
-from typing import List, Type
+from typing import List, Type, Union
 
 from .baseModels import IgnoreExtra, T
 
@@ -9,7 +9,7 @@ class ShutterElement(IgnoreExtra):
 
     @field_validator('interlocks', mode='before')
     @classmethod
-    def validate_interlocks(cls, v: str|List) -> List[str]:
+    def validate_interlocks(cls, v: Union[str, List]) -> List[str]:
         if isinstance(v, str):
             return list(map(str.strip, v.split(',')))
         elif isinstance(v, (list, tuple)):

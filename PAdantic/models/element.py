@@ -1,5 +1,5 @@
 import os
-from typing import Type, List, Dict, Any
+from typing import Type, List, Dict, Any, Union
 import numpy as np
 import vg
 from pydantic import field_validator, Field, BaseModel, RootModel
@@ -53,7 +53,7 @@ class _baseElement(IgnoreExtra):
     hardware_type: str = ''
     machine_area: str
     virtual_name: str = ''
-    alias: str|list|Aliases|None = Field(alias='name_alias', default=None)
+    alias: Union[str, list, Aliases, None] = Field(alias='name_alias', default=None)
     subelement: bool = False
 
     @field_validator('name', mode='before')

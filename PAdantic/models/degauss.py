@@ -1,5 +1,5 @@
 from pydantic import Field, field_validator
-from typing import List
+from typing import List, Union
 
 from .baseModels import IgnoreExtra
 
@@ -11,7 +11,7 @@ class DegaussablElement(IgnoreExtra):
 
     @field_validator('values', mode='before')
     @classmethod
-    def validate_degauss_values(cls, v: str|List) -> list:
+    def validate_degauss_values(cls, v: Union[str,List]) -> list:
         if isinstance(v, str):
             return list(map(float, v.split(',')))
         elif isinstance(v, (list, tuple)):

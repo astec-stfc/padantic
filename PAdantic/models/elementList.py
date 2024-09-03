@@ -1,7 +1,7 @@
 import time
 import os
 from copy import copy
-from typing import Type, List, Dict, Any
+from typing import Type, List, Dict, Any, Union
 import numpy as np
 from pydantic import field_validator, Field, BaseModel, ValidationInfo, PrivateAttr
 
@@ -50,7 +50,7 @@ class BaseLatticeModel(YAMLBaseModel):
         return self.__str__()
 
 class ElementList(YAMLBaseModel):
-    elements: Dict[str, BaseModel|None]
+    elements: Dict[str, Union[BaseModel, None]]
 
     def __str__(self):
         return str([e.name for e in self.elements.values()])
@@ -61,7 +61,7 @@ class ElementList(YAMLBaseModel):
     def names(self):
         return [e.name for e in self.elements.values()]
 
-    def index(self, element: str|BaseModel):
+    def index(self, element: Union[str, BaseModel]):
         if isinstance(element, str):
             return list(self.elements.keys()).index(element)
         return list(self.elements.values()).index(element)
@@ -81,7 +81,7 @@ class ElementList(YAMLBaseModel):
         except Exception as e:
             # print(e)
             data = self._get_attributes_or_none(a)
-            if all([isinstance(d, (BaseModel|None)) for d in data.values()]):
+            if all([isinstance(d, (Union[BaseModel, None])) for d in data.values()]):
                 return ElementList(elements=data)
             return data
 
@@ -96,7 +96,7 @@ class SectionLattice(BaseLatticeModel):
 
     @field_validator('elements', mode='before')
     @classmethod
-    def validate_elements(cls, elements: List[_baseElement]|ElementList, info: ValidationInfo) -> ElementList:
+    def validate_elements(cls, elements: Union[List[_baseElement], ElementList], info: ValidationInfo) -> ElementList:
         if isinstance(elements, list):
             elemdict = {e.name: e for e in elements}
             # print([e for e in info.data['order'] if e not in elemdict.keys()])
@@ -106,7 +106,7 @@ class SectionLattice(BaseLatticeModel):
     #
     # @field_validator('other_elements', mode='before')
     # @classmethod
-    # def validate_other_elements(cls, elements: List[_baseElement]|ElementList, info: ValidationInfo) -> ElementList:
+    # def validate_other_elements(cls, elements: Union[List[_baseElement], ElementList], info: ValidationInfo) -> ElementList:
     #     if isinstance(elements, list):
     #         elemdict = {e.name: e for e in elements}
     #         return ElementList(elements={e:elemdict[e] for e in info.data['order'] if e not in elemdict.keys()})
@@ -121,7 +121,7 @@ class SectionLattice(BaseLatticeModel):
         # return str(getattr(self, self._basename).__str__())
         return str(self.names)
 
-    def __getitem__(self, item: str|int) -> BaseModel:
+    def __getitem__(self, item: Union[str, int]) -> BaseModel:
         if isinstance(item, int):
             return self.elements[self.names[item]]
         return self.elements[item]
@@ -217,7 +217,7 @@ class MachineLayout(BaseLatticeModel):
 
     def elements_between(
             self, end: str=None, start: str=None,
-            element_type: str|list=None) -> List[str]:
+            element_type: Union[str, list, None] = None) -> List[str]:
         '''
         Returns a list of all lattice elements (of a specified type) between
         any two points along the accelerator. Elements are ordered according
@@ -345,8 +345,8 @@ class MachineModel(YAMLBaseModel):
             raise LatticeError('Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}'.format(elementname=name, latticeelements=self.elements.keys()))
 
     def elements_between(
-            self, end: str=None, start: str=None,
-            element_type: str|list=None) -> List[str]:
+            self, end: str = None, start: str = None,
+            element_type: Union[str, list, None] = None) -> List[str]:
         '''
         Returns a list of all lattice elements (of a specified type) between
         any two points along the accelerator. Elements are ordered according

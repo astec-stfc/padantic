@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from ..models.elementList import MachineModel
 import numpy as np
 
-def export_as_yaml(filename: str | None, ele: BaseModel = BaseModel) -> None:
+def export_as_yaml(filename: Union[str, None], ele: BaseModel = BaseModel) -> None:
     if filename is not None:
         with open(filename,"w") as yaml_file:
             yaml.default_flow_style=True

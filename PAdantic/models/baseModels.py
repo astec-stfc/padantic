@@ -1,5 +1,5 @@
 from pydantic import BaseModel, model_serializer, ConfigDict
-from typing import TypeVar, Dict, Any, Type, List
+from typing import TypeVar, Dict, Any, Type, List, Union
 import yaml
 import numpy as np
 
@@ -80,12 +80,12 @@ class NumpyModel(YAMLBaseModel):
         return np.array([getattr(self, a) for a in self.model_fields.keys()])
 
     @classmethod
-    def from_list(cls: Type[T], vec: List[float | int]) -> T:
+    def from_list(cls: Type[T], vec: List[Union[float, int]]) -> T:
         assert len(vec) == len(cls.model_fields)
         return cls(**dict(zip(list(cls.model_fields.keys()), vec)))
 
     @classmethod
-    def from_values(cls: Type[T], *values: float | int) -> T:
+    def from_values(cls: Type[T], *values: Union[float, int]) -> T:
         assert len(values) == len(cls.model_fields)
         return cls(**dict(zip(list(cls.model_fields.keys()), values)))
 

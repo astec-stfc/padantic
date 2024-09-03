@@ -1,6 +1,6 @@
 import numpy as np
 from pydantic import field_validator, confloat, Field, NonNegativeFloat, AliasChoices
-from typing import List, Type
+from typing import List, Type, Union
 
 from ._functions import _rotation_matrix
 
@@ -24,12 +24,12 @@ class Position(NumpyVectorModel):
     def __rsub__(self, other: Type[T]) -> T:
         return Position(x=(other.x-self.x), y=(other.y-self.y), z=(other.z-self.z))
 
-    def dot(self, other: List|Type[T]) -> float:
+    def dot(self, other: Union[List, Type[T]]) -> float:
         if isinstance(other, (set, tuple, list)):
             other = Position.from_list(other)
         return self.x * other.x + self.y * other.y + self.z * other.z
 
-    def vector_angle(self, other: List|Type[T], direction: List) -> float:
+    def vector_angle(self, other: Union[List, Type[T]], direction: List) -> float:
         if isinstance(other, (set, tuple, list)):
             other = Position.from_list(other)
         return (self - other).dot(direction)
@@ -58,22 +58,22 @@ class Rotation(NumpyVectorModel):
     def __abs__(self):
         return Rotation(phi=abs(self.phi), psi=abs(self.psi), theta=abs(self.theta))
 
-    def __gt__(self, value: int|float|List|Type[T]):
+    def __gt__(self, value: Union[int, float, List, Type[T]]):
         if isinstance(value, (int, float)):
             return any([self.phi>value, self.psi>value, self.theta>value])
-        elif isinstance(value, (list|set|tuple)):
+        elif isinstance(value, (Union[list, set, tuple])):
             return [self.phi, self.psi, self.theta] > value
         elif isinstance(value, Rotation):
             return any([self.phi > value.phi, self.psi > value.psi, self.theta > value.theta])
 
 class ElementError(IgnoreExtra):
     ''' Position/Rotation error model. '''
-    position: Position | List[float|int] = Position(x=0,y=0,z=0)
-    rotation: Rotation | List[float|int] = Rotation(theta=0, phi=0, psi=0)
+    position: Union[Position, List[Union[float, int]]] = Position(x=0,y=0,z=0)
+    rotation: Union[Rotation, List[Union[float, int]]] = Rotation(theta=0, phi=0, psi=0)
 
     @field_validator('position', mode='before')
     @classmethod
-    def validate_position(cls, v: Position|List) -> Position:
+    def validate_position(cls, v: Union[Position, List]) -> Position:
         if isinstance(v, (list, tuple)) and len(v) == 3:
                 return Position(x=v[0], y=v[1], z=v[2])
         else:
@@ -81,7 +81,7 @@ class ElementError(IgnoreExtra):
 
     @field_validator('rotation', mode='before')
     @classmethod
-    def validate_rotation(cls, v: Rotation|List) -> Position:
+    def validate_rotation(cls, v: Union[Rotation, List]) -> Position:
         if isinstance(v, (list, tuple)) and len(v) == 3:
                 return Rotation(theta=v[0], phi=v[1], psi=v[2])
         else:
@@ -135,7 +135,7 @@ class PhysicalElement(IgnoreExtra):
 
     @field_validator('middle', 'datum', mode='before')
     @classmethod
-    def validate_middle(cls, v: float|int|List) -> Position:
+    def validate_middle(cls, v: Union[float, int, List]) -> Position:
         if isinstance(v, (float, int)):
             return Position(z=v)
         elif isinstance(v, (list, tuple)):
@@ -150,7 +150,7 @@ class PhysicalElement(IgnoreExtra):
 
     @field_validator('rotation', 'global_rotation', mode='before')
     @classmethod
-    def validate_rotation(cls, v: float|int|List) -> Rotation:
+    def validate_rotation(cls, v: Union[float, int, List]) -> Rotation:
         if isinstance(v, (float, int)):
             return Rotation(theta=v)
         elif isinstance(v, (list, tuple)):
@@ -162,10 +162,10 @@ class PhysicalElement(IgnoreExtra):
             raise ValueError('middle should be a number or a list of floats')
 
     @property
-    def rotation_matrix(self) -> List[int|float]:
+    def rotation_matrix(self) -> List[Union[int, float]]:
         return _rotation_matrix(self.rotation.theta + self.global_rotation.theta)
 
-    def rotated_position(self, vec: List[int|float] = [0,0,0]) -> List[int|float]:
+    def rotated_position(self, vec: List[Union[int, float]] = [0,0,0]) -> List[Union[int, float]]:
         return np.dot(np.array(vec), self.rotation_matrix)
 
     @property

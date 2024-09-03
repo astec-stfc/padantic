@@ -1,5 +1,5 @@
 from pydantic import Field, field_validator
-from typing import List, Type
+from typing import List, Type, Union
 
 from .baseModels import IgnoreExtra, T
 
@@ -22,8 +22,8 @@ class LaserMirrorElement(IgnoreExtra):
     ''' Laser info model. '''
     step_max: float = Field()
     sense: LaserMirrorSense
-    vertical_channel: int | None = None
-    horizontal_channel: int | None = None
+    vertical_channel: Union[int, None] = None
+    horizontal_channel: Union[int, None] = None
 
     @classmethod
     def from_CATAP(cls: Type[T], fields: dict) -> T:

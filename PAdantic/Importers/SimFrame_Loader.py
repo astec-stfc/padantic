@@ -13,7 +13,7 @@ from ..models.element import *
 class SimFrame_Conversion(BaseModel):
     typeclass: Any
     hardware_class: str
-    hardware_type: str|None = Field(validate_default=True, default=None)
+    hardware_type: Union[str, None] = Field(validate_default=True, default=None)
 
     @field_validator('hardware_type', mode='before')
     def check_type(cls, value: Any, info: ValidationInfo) -> str:
