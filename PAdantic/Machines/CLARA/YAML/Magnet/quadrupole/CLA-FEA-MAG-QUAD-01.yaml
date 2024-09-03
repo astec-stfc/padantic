@@ -1,0 +1,70 @@
+alias: null
+class_name: Quadrupole
+controls:
+  GETSETI: CLA-FEA-MAG-QUAD-01:GETSETI
+  ILK_RESET: CLA-FEA-MAG-QUAD-01:Rst
+  INT_STR: CLA-FEA-MAG-QUAD-01:INT_STR
+  INT_STR_MM: CLA-FEA-MAG-QUAD-01:INT_STR_MM
+  K_ANG: CLA-FEA-MAG-QUAD-01:K_ANG
+  K_DIP_P: CLA-FEA-MAG-QUAD-01:K_DIP_P
+  K_MRAD: CLA-FEA-MAG-QUAD-01:K_MRAD
+  K_SET_P: CLA-FEA-MAG-QUAD-01:K_SET_P
+  K_VAL: CLA-FEA-MAG-QUAD-01:K_VAL
+  READI: CLA-FEA-MAG-QUAD-01:READI
+  RILK: CLA-FEA-MAG-QUAD-01:RILK
+  RPOWER: CLA-FEA-MAG-QUAD-01:RPOWER
+  SETI: CLA-FEA-MAG-QUAD-01:SETI
+  SPOWER: CLA-FEA-MAG-QUAD-01:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [93.81, -93.81, 56.4, -56.4, 37.6, -37.6, 18.8, -18.8, 9.4, -9.4, 0.0]
+electrical:
+  maxI: 94
+  minI: -94.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: quadrupole
+machine_area: FEA
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.21
+  linear_saturation_coefficients:
+    I0: 550.8199834202657
+    I_max: 64.57186374532645
+    L: 150.0
+    a: -2.8658521040016382e-05
+    d: 8.554497582026904
+    f: 0.0
+    m: 0.02730793127612784
+  multipoles:
+    K1L:
+      normal: 1.59249
+      order: 1
+      radius: 0.0
+      skew: 0.0
+  order: 1
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: quadrupole
+  manufacturer: Quadrupole Type 3
+  serial_number: '19381'
+name: CLA-FEA-MAG-QUAD-01
+physical:
+  datum: [0.1960768, 0.0, 49.18471805]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, -0.2443460953]
+  length: 0.21
+  middle: [0.1960768, 0.0, 49.18471805]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

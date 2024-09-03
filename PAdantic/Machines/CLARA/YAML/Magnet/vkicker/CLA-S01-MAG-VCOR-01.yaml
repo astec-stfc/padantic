@@ -1,0 +1,65 @@
+alias: null
+class_name: Vertical_Corrector
+controls:
+  GETSETI: CLA-S01-MAG-VCOR-01:GETSETI
+  ILK_RESET: CLA-S01-MAG-VCOR-01:Rst
+  INT_STR: CLA-S01-MAG-VCOR-01:INT_STR
+  INT_STR_MM: CLA-S01-MAG-VCOR-01:INT_STR_MM
+  K_ANG: CLA-S01-MAG-VCOR-01:K_ANG
+  K_DIP_P: CLA-S01-MAG-VCOR-01:K_DIP_P
+  K_MRAD: CLA-S01-MAG-VCOR-01:K_MRAD
+  K_SET_P: CLA-S01-MAG-VCOR-01:K_SET_P
+  K_VAL: CLA-S01-MAG-VCOR-01:K_VAL
+  READI: CLA-S01-MAG-VCOR-01:READI
+  RILK: CLA-S01-MAG-VCOR-01:RILK
+  RPOWER: CLA-S01-MAG-VCOR-01:RPOWER
+  SETI: CLA-S01-MAG-VCOR-01:SETI
+  SPOWER: CLA-S01-MAG-VCOR-01:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [9.98, -9.98, 6.0, -6.0, 4.0, -4.0, 2.0, -2.0, 1.0, -1.0, 0.0]
+electrical:
+  maxI: 6
+  minI: -6.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: vkicker
+machine_area: S01
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.03
+  linear_saturation_coefficients:
+    I0: 0.0
+    I_max: 0.0
+    L: 128.65094998970264
+    a: 0.0
+    d: 0.0
+    f: 0.0
+    m: 0.02379756683809522
+  multipoles: {}
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: vkicker
+  manufacturer: Corrector Type 1
+  serial_number: '13258'
+name: CLA-S01-MAG-VCOR-01
+physical:
+  datum: [0.0, 0.0, 0.35]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.03
+  middle: [0.0, 0.0, 0.335]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

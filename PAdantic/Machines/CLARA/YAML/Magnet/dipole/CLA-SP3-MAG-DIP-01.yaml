@@ -1,0 +1,71 @@
+alias: null
+class_name: Dipole
+controls:
+  GETSETI: CLA-SP3-MAG-DIP-01:GETSETI
+  ILK_RESET: CLA-SP3-MAG-DIP-01:Rst
+  INT_STR: CLA-SP3-MAG-DIP-01:INT_STR
+  INT_STR_MM: CLA-SP3-MAG-DIP-01:INT_STR_MM
+  K_ANG: CLA-SP3-MAG-DIP-01:K_ANG
+  K_DIP_P: CLA-SP3-MAG-DIP-01:K_DIP_P
+  K_MRAD: CLA-SP3-MAG-DIP-01:K_MRAD
+  K_SET_P: CLA-SP3-MAG-DIP-01:K_SET_P
+  K_VAL: CLA-SP3-MAG-DIP-01:K_VAL
+  READI: CLA-SP3-MAG-DIP-01:READI
+  RILK: CLA-SP3-MAG-DIP-01:RILK
+  RPOWER: CLA-SP3-MAG-DIP-01:RPOWER
+  SETI: CLA-SP3-MAG-DIP-01:SETI
+  SPOWER: CLA-SP3-MAG-DIP-01:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [331.34, -331.34, 199.2, -199.2, 132.8, -132.8, 66.4, -66.4, 33.2, -33.2,
+    0.0]
+electrical:
+  maxI: 332
+  minI: -332.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: dipole
+machine_area: SP3
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.4
+  linear_saturation_coefficients:
+    I0: 596.1589358551605
+    I_max: 246.90388362886958
+    L: 400.0
+    a: -0.0020829194836779275
+    d: 598.7346914311352
+    f: 0.0
+    m: 1.3966746927879516
+  multipoles:
+    K0L:
+      normal: 0.523599
+      order: 0
+      radius: 0.0
+      skew: 0.0
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: dipole
+  manufacturer: Dipole Type 5
+  serial_number: 1822-21088-01
+name: CLA-SP3-MAG-DIP-01
+physical:
+  datum: [-0.102349, 0.0, 45.6697948]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.4
+  middle: [0.0, 0.0, 45.492521]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

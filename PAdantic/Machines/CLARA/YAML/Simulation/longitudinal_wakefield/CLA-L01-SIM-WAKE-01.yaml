@@ -1,0 +1,36 @@
+alias: null
+cavity:
+  cell_length: 0.0333333333333333
+  n_cells: 1
+class_name: Wakefield
+hardware_class: Simulation
+hardware_type: longitudinal_wakefield
+machine_area: L01
+name: CLA-L01-SIM-WAKE-01
+physical:
+  datum: [0.0, 0.0, 3.2269]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 2.03333
+  middle: [0.0, 0.0, 2.210235]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+simulation:
+  allow_long_beam: true
+  bunched_beam: false
+  change_momentum: true
+  factor: 1
+  field_amplitude: 0
+  field_definition: $master_lattice_location$Data_Files/SzSx5um10mm.dat
+  field_definition_gdf: null
+  field_definition_sdds: null
+  interpolate: true
+  scale_kick: 1.0
+  t_column: t
+  w_column: Ez
+subelement: true
+virtual_name: ''

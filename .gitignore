@@ -1,7 +1,8 @@
 # PAdantic
-Machines/
-*YAML*/
+# Machines/
 Output/
+testYAML/
+YAML_OLD/
 Basefiles/
 to_CATAP/
 

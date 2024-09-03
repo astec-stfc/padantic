@@ -1,0 +1,85 @@
+---
+# CLARA PHASE TWO
+# BEAM PATHS
+
+# Author: Mark Johnson (STFC DL ASTeC)
+# Date: 2024-01-12
+
+# This file defines the possible beam paths
+# for electrons moving along CLARA, defining
+# each path as a list of machine sections
+
+layouts:
+  # default layout, beam to FEBE
+  CLARA:
+    - 'HRG1'
+    - 'S01'
+    - 'L01'
+    - 'S02'
+    - 'L02'
+    - 'S03'
+    - 'L03'
+    - 'L03'
+    - 'S04'
+    - 'L4H'
+    - 'S05'
+    - 'VBC'
+    - 'S06'
+    - 'L04'
+    - 'S07'
+    - 'FEA'
+    - 'FEH'
+    - 'FED'
+
+  # beam to C2V, stopping short of SP1
+  C2V:
+    - 'HRG1'
+    - 'S01'
+    - 'L01'
+    - 'S02'
+    - 'C2V'
+
+  # beam to end of SP1 spectrometer
+  SP1:
+    - 'HRG1'
+    - 'S01'
+    - 'L01'
+    - 'S02'
+    - 'C2V'
+    - 'SP1'
+
+  # beam to end of SP2 spectrometer
+  SP2:
+    - 'HRG1'
+    - 'S01'
+    - 'L01'
+    - 'S02'
+    - 'L02'
+    - 'S03'
+    - 'L03'
+    - 'L03'
+    - 'S04'
+    - 'L4H'
+    - 'S05'
+    - 'VBC'
+    - 'S06'
+    - 'SP2'
+
+  # beam to end of SP3 spectrometer
+  SP3:
+    - 'HRG1'
+    - 'S01'
+    - 'L01'
+    - 'S02'
+    - 'L02'
+    - 'S03'
+    - 'L03'
+    - 'L03'
+    - 'S04'
+    - 'L4H'
+    - 'S05'
+    - 'VBC'
+    - 'S06'
+    - 'L04'
+    - 'S07'
+    - 'SP3'

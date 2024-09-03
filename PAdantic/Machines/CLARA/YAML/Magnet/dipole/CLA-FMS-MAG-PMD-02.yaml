@@ -1,0 +1,70 @@
+alias: null
+class_name: Dipole
+controls:
+  GETSETI: CLA-FMS-MAG-PMD-02:GETSETI
+  ILK_RESET: CLA-FMS-MAG-PMD-02:Rst
+  INT_STR: CLA-FMS-MAG-PMD-02:INT_STR
+  INT_STR_MM: CLA-FMS-MAG-PMD-02:INT_STR_MM
+  K_ANG: CLA-FMS-MAG-PMD-02:K_ANG
+  K_DIP_P: CLA-FMS-MAG-PMD-02:K_DIP_P
+  K_MRAD: CLA-FMS-MAG-PMD-02:K_MRAD
+  K_SET_P: CLA-FMS-MAG-PMD-02:K_SET_P
+  K_VAL: CLA-FMS-MAG-PMD-02:K_VAL
+  READI: CLA-FMS-MAG-PMD-02:READI
+  RILK: CLA-FMS-MAG-PMD-02:RILK
+  RPOWER: CLA-FMS-MAG-PMD-02:RPOWER
+  SETI: CLA-FMS-MAG-PMD-02:SETI
+  SPOWER: CLA-FMS-MAG-PMD-02:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: []
+electrical:
+  maxI: 0
+  minI: 0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_type: dipole
+machine_area: FMS
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.15
+  linear_saturation_coefficients:
+    I0: 0
+    I_max: 0
+    L: 0
+    a: 0
+    d: 0
+    f: 0
+    m: 0
+  multipoles:
+    K0L:
+      normal: 0.02
+      order: 0
+      radius: 0.0
+      skew: 0.0
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: dipole
+  manufacturer: ''
+  serial_number: ''
+name: CLA-FMS-MAG-PMD-02
+physical:
+  datum: [-0.00340595, 0.0, 55.33116751]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.009996]
+  length: 0.15
+  middle: [-0.00115651, 0.0, 55.25619875]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

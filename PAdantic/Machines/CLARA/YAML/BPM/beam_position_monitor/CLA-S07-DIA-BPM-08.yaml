@@ -1,0 +1,45 @@
+alias: null
+class_name: BPM
+controls:
+  AWAK: CLA-S07-DIA-BPM-08:AWAK
+  DATA: CLA-S07-DIA-BPM-08:DATA:B2V.VALA
+  RA1: CLA-S07-DIA-BPM-08:RA1
+  RA2: CLA-S07-DIA-BPM-08:RA2
+  RD1: CLA-S07-DIA-BPM-08:RD1
+  RD2: CLA-S07-DIA-BPM-08:RD2
+  RDY: CLA-S07-DIA-BPM-08:RDY
+  SA1: CLA-S07-DIA-BPM-08:SA1
+  SA2: CLA-S07-DIA-BPM-08:SA2
+  SD1: CLA-S07-DIA-BPM-08:SD1
+  SD2: CLA-S07-DIA-BPM-08:SD2
+  X: CLA-S07-DIA-BPM-08:X
+  Y: CLA-S07-DIA-BPM-08:Y
+diagnostic:
+  attenuation1_calibration: 12
+  attenuation2_calibration: 12
+  charge_calibration: 70
+  mn: 15
+  settle_time: 0.5
+  type: beam_position_monitor
+  voltage1_calibration: 1
+  voltage2_calibration: 1
+  xn: 0
+  yn: 0
+hardware_class: BPM
+hardware_type: beam_position_monitor
+machine_area: S07
+name: CLA-S07-DIA-BPM-08
+physical:
+  datum: [0.0, 0.0, 49.0578]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.21
+  middle: [0.0, 0.0, 48.9528]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

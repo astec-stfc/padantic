@@ -1,0 +1,25 @@
+alias: null
+class_name: BLM
+controls:
+  AWAK: CLA-S07-DIA-CDR-01:AWAK
+  RDY: CLA-S07-DIA-CDR-01:RDY
+diagnostic:
+  type: bunch_length_monitor
+hardware_class: BLM
+hardware_type: bunch_length_monitor
+machine_area: S07
+name: CLA-S07-DIA-CDR-01
+physical:
+  datum: [0.0, 0.0, 43.525]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.3
+  middle: [0.0, 0.0, 43.375]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

@@ -1,0 +1,45 @@
+alias: null
+class_name: BPM
+controls:
+  AWAK: CLA-FEH-DIA-BPM-03:AWAK
+  DATA: CLA-FEH-DIA-BPM-03:DATA:B2V.VALA
+  RA1: CLA-FEH-DIA-BPM-03:RA1
+  RA2: CLA-FEH-DIA-BPM-03:RA2
+  RD1: CLA-FEH-DIA-BPM-03:RD1
+  RD2: CLA-FEH-DIA-BPM-03:RD2
+  RDY: CLA-FEH-DIA-BPM-03:RDY
+  SA1: CLA-FEH-DIA-BPM-03:SA1
+  SA2: CLA-FEH-DIA-BPM-03:SA2
+  SD1: CLA-FEH-DIA-BPM-03:SD1
+  SD2: CLA-FEH-DIA-BPM-03:SD2
+  X: CLA-FEH-DIA-BPM-03:X
+  Y: CLA-FEH-DIA-BPM-03:Y
+diagnostic:
+  attenuation1_calibration: 12
+  attenuation2_calibration: 12
+  charge_calibration: 70
+  mn: 15
+  settle_time: 0.5
+  type: beam_position_monitor
+  voltage1_calibration: 1
+  voltage2_calibration: 1
+  xn: 0
+  yn: 0
+hardware_class: BPM
+hardware_type: beam_position_monitor
+machine_area: FEH
+name: CLA-FEH-DIA-BPM-03
+physical:
+  datum: [3.6807505, 0.0, 71.7953]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.059
+  middle: [3.6807505, 0.0, 71.7895]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''
