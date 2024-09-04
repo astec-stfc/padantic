@@ -22,5 +22,5 @@ setup(
         "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
-	package_data={'PAdantic': ['PV_Values.yaml']},
+    package_data={"PAdantic": ["PV_Values.yaml"]},
 )

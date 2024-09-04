@@ -13,11 +13,11 @@ if __name__ == "__main__":
     #     elem = read_SimFrame_YAML(f)
     #     SFmachine.update({n: e for n,e in elem.items()})
 
-    CATAPmachine = MachineModel(layout_file=os.path.abspath('./layouts.yaml'))
+    CATAPmachine = MachineModel(layout_file=os.path.abspath("./layouts.yaml"))
 
     for f in catap_files:
         elem = read_CATAP_YAML(f)
-        CATAPmachine.update({n: e for n,e in elem.items()})
+        CATAPmachine.update({n: e for n, e in elem.items()})
 
     # for n,e in {n:e for n,e in machine.elements.items() if not 'FMS' in n}.items():
     #     save_CATAP_file(n, e)

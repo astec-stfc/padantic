@@ -5,11 +5,14 @@ from ._functions import _rotation_matrix
 
 from .baseModels import IgnoreExtra, NumpyVectorModel
 
+
 class ApertureElement(IgnoreExtra):
-    ''' Physical info model. '''
+    """Physical info model."""
+
     horizontal_size: float = 1
     vertical_size: float = 1
-    shape: str = 'rectangular'
+    shape: str = "rectangular"
+
 
 class RFCavitySimulationElement(IgnoreExtra):
     field_amplitude: float = 0
@@ -23,16 +26,17 @@ class RFCavitySimulationElement(IgnoreExtra):
     wy_column: Union[str, None] = "W"
     wz_column: Union[str, None] = "W"
 
+
 class WakefieldSimulationElement(IgnoreExtra):
     allow_long_beam: bool = True
     bunched_beam: bool = False
     change_momentum: bool = True
     factor: float = 1
     field_amplitude: float = 0
-    field_definition: str = 'TWS_S-DL.dat'
+    field_definition: str = "TWS_S-DL.dat"
     field_definition_sdds: Union[str, None] = None
     field_definition_gdf: Union[str, None] = None
     interpolate: bool = True
     scale_kick: float = 1
-    t_column: str = Field(alias='tcolumn', default='t')
-    w_column: str = Field(alias='wcolumn', default='Ez')
+    t_column: str = Field(alias="tcolumn", default="t")
+    w_column: str = Field(alias="wcolumn", default="Ez")

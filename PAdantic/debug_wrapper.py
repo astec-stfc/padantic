@@ -1,8 +1,14 @@
 import logging
 import importlib
+
 importlib.reload(logging)
 
-logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.DEBUG, datefmt='%I:%M:%S')
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s: %(message)s",
+    level=logging.DEBUG,
+    datefmt="%I:%M:%S",
+)
+
 
 def debug(fn):
     def wrapper(*args, **kwargs):
@@ -12,4 +18,5 @@ def debug(fn):
         result = fn(*args, **kwargs)
         logging.debug(f"  returned {result}")
         return result
+
     return wrapper

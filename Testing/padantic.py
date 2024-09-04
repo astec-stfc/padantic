@@ -1,5 +1,6 @@
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 from PAdantic.PAdantic import PAdantic
 from PAdantic.Exporters.YAML import export_machine_combined_file
 
@@ -7,12 +8,18 @@ from PAdantic.Exporters.YAML import export_machine_combined_file
 # machine = PAdantic(layout_file='Machines/CLARA/layouts.yaml', section_file='Machines/CLARA/sections.yaml', yaml_dir='Machines/CLARA/YAML/')
 # print(export_machine_combined_file('../PAdantic/Machines/CLARA', machine))
 
-machine = PAdantic(layout_file='Machines/CLARA/layouts.yaml', section_file='Machines/CLARA/sections.yaml', yaml_dir='Machines/CLARA/summary.yaml')
+machine = PAdantic(
+    layout_file="Machines/CLARA/layouts.yaml",
+    section_file="Machines/CLARA/sections.yaml",
+    yaml_dir="Machines/CLARA/summary.yaml",
+)
 # print(list(machine.lattices['CLARA'].elements))
 # print(machine['CLA-S07-DIA-CDR-01'])
-print(machine.elements_between(
-        start='CLA-S05-MAG-QUAD-01', end='CLA-SP2-DIA-SCR-02',
-        element_type=None))
+print(
+    machine.elements_between(
+        start="CLA-S05-MAG-QUAD-01", end="CLA-SP2-DIA-SCR-02", element_type=None
+    )
+)
 
 # from PAdantic.Importers.SimFrame_Loader import SF_files, read_SimFrame_YAML, get_SimFrame_PV
 # from PAdantic.Exporters.YAML import export_as_yaml, export_machine

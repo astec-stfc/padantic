@@ -3,19 +3,22 @@ from typing import List, Type, Union
 
 from .baseModels import IgnoreExtra, T
 
-class ShutterElement(IgnoreExtra):
-    ''' Laser info model. '''
-    interlocks: List[str] = Field(alias='shutter_interlock_names', default=[])
 
-    @field_validator('interlocks', mode='before')
+class ShutterElement(IgnoreExtra):
+    """Laser info model."""
+
+    interlocks: List[str] = Field(alias="shutter_interlock_names", default=[])
+
+    @field_validator("interlocks", mode="before")
     @classmethod
     def validate_interlocks(cls, v: Union[str, List]) -> List[str]:
         if isinstance(v, str):
-            return list(map(str.strip, v.split(',')))
+            return list(map(str.strip, v.split(",")))
         elif isinstance(v, (list, tuple)):
             return v
         else:
-            raise ValueError('interlocks should be a string or a list of strings')
+            raise ValueError("interlocks should be a string or a list of strings")
+
 
 class ValveElement(IgnoreExtra):
-    ''' Laser info model. '''
+    """Laser info model."""
