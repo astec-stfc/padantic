@@ -3,7 +3,6 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/../'))
 from copy import copy
 import glob
-import pandas
 
 from yaml.constructor import Constructor
 
@@ -15,7 +14,7 @@ Constructor.add_constructor(u'tag:yaml.org,2002:bool', add_bool)
 from typing import get_origin, Any, Dict
 from pydantic import BaseModel, field_validator
 from .models.elementList import MachineModel
-from .Importers.YAML_Loader import read_YAML_File, YAML_files
+from .Importers.YAML_Loader import read_YAML_File
 
 class PAdantic(MachineModel):
     yaml_dir: str
