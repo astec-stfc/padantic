@@ -1,7 +1,8 @@
+import os
 from math import copysign, ceil
 import pandas
 
-magnet_table_filename = r"\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\CLARA Magnet Table v6.xlsx"
+magnet_table_filename = os.path.join(os.path.dirname(__file__), "CLARA Magnet Table v6.xlsx")
 magnet_table = pandas.read_excel(magnet_table_filename, sheet_name='Table', skiprows=2, index_col=(2,3,5,6), dtype={'serial number': 'str'}).fillna(0)
 
 def create_degauss_values(maxI):
