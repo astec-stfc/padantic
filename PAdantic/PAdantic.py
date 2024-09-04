@@ -27,21 +27,21 @@ class PAdantic(MachineModel):
     @classmethod
     def validate_yaml_dir(cls, v: str) -> str:
         if os.path.isfile(v):
-            print("yaml_dir is file", v)
+            # print("yaml_dir is file", v)
             return v
         elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
-            print(
-                "yaml_dir is file", os.path.abspath(os.path.dirname(__file__) + "/" + v)
-            )
+            # print(
+            #     "yaml_dir is file", os.path.abspath(os.path.dirname(__file__) + "/" + v)
+            # )
             return os.path.abspath(os.path.dirname(__file__) + "/" + v)
         elif os.path.isdir(v):
-            print("yaml_dir is directory", v)
+            # print("yaml_dir is directory", v)
             return v
         elif os.path.isdir(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
-            print(
-                "yaml_dir is directory",
-                os.path.abspath(os.path.dirname(__file__) + "/" + v),
-            )
+            # print(
+            #     "yaml_dir is directory",
+            #     os.path.abspath(os.path.dirname(__file__) + "/" + v),
+            # )
             return os.path.abspath(os.path.dirname(__file__) + "/" + v)
         else:
             raise ValueError(f"Directory {v} does not exist")
@@ -49,10 +49,10 @@ class PAdantic(MachineModel):
     def model_post_init(self, __context):
         super().model_post_init(__context)
         if os.path.isfile(self.yaml_dir):
-            print("Reading summary file", self.yaml_dir)
+            # print("Reading summary file", self.yaml_dir)
             yaml_elems = read_YAML_Combined_File(self.yaml_dir)
         elif os.path.isdir(self.yaml_dir):
-            print("Reading elements files", self.yaml_dir)
+            # print("Reading elements files", self.yaml_dir)
             YAML_files = glob.glob(
                 os.path.abspath(self.yaml_dir + "/**/*.yaml"), recursive=True
             )
