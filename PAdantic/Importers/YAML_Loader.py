@@ -19,7 +19,12 @@ def interpret_YAML_Element(elem):
         except Exception as e:
             print('Error', e)
 
-def read_YAML_File(filename):
+def read_YAML_Element_File(filename):
     with open(filename, 'r') as stream:
         data = yaml.load(stream, Loader=Loader)
     return interpret_YAML_Element(data)
+
+def read_YAML_Combined_File(filename):
+    with open(filename, 'r') as stream:
+        elements = yaml.load(stream, Loader=Loader)
+    return [interpret_YAML_Element(element) for element in elements.values()]
