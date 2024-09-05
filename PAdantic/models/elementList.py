@@ -219,12 +219,7 @@ class MachineLayout(BaseLatticeModel):
         try:
             return self._get_all_element_names().index(name)
         except ValueError:
-            #     return None
-            raise LatticeError(
-                "Element {elementname} does not exist anywhere in beam path {latticeelements}".format(
-                    elementname=name, latticeelements=self._get_all_element_names()
-                )
-            )
+            return None
 
     @property
     def elements(self):
@@ -373,18 +368,14 @@ class MachineModel(YAMLBaseModel):
         if name in self.elements:
             return self.elements[name]
         else:
-            # print('Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}'.format(name, self.elements.keys()))
-            raise LatticeError(
-                "Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}".format(
-                    elementname=name, latticeelements=self.elements.keys()
-                )
-            )
+            return None
 
     def elements_between(
         self,
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        lattice: Union[str, None] = "CLARA"
     ) -> List[str]:
         """
         Returns a list of all lattice elements (of a specified type) between
@@ -394,14 +385,15 @@ class MachineModel(YAMLBaseModel):
         :param str end: Name of the element defining the end of the search region
         :param str start: Name of the element defining the start of the search region
         :param str | list type: Type(s) of elements to include in the list
+        :param str: Name of lattice to assume if we don't specify start/end
         :returns: List containing the names of all elements between (and including) *start* and *end*
         """
         # replace blank start and/or end point
-        element_names = self.elements.keys()
+        element_names = list(self.elements.keys())
         if start is None:
-            start = element_names[0]
+            start = self.lattices[lattice].elements[0]
         if end is None:
-            end = element_names[-1]
+            end = self.lattices[lattice].elements[-1]
 
         # check the start and end elements are valid
         start_obj = self.get_element(start)
@@ -412,7 +404,7 @@ class MachineModel(YAMLBaseModel):
             end_obj.machine_area if (end_obj.machine_area in self.lattices) else "CLARA"
         )
         full_path = self.lattices[path_to_end]
-        # print('full_path', full_path['S05'])
+
         return full_path.elements_between(
             end=end, start=start, element_type=element_type
         )
