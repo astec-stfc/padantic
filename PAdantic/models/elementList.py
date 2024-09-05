@@ -396,23 +396,20 @@ class MachineModel(YAMLBaseModel):
         :param str | list type: Type(s) of elements to include in the list
         :returns: List containing the names of all elements between (and including) *start* and *end*
         """
-        # replace blank start and/or end point
-        element_names = self.elements.keys()
-        if start is None:
-            start = element_names[0]
+        # determine the beam path
+        default_path = "CLARA"
         if end is None:
-            end = element_names[-1]
+            path_obj = self.lattices[default_path]
+            end = path_obj.elements[-1]
+        else:
+            end_obj = self.get_element(end)
+            beam_path = end_obj.machine_area if (end_obj.machine_area in self.lattices) else default_path
+            path_obj = self.lattices[beam_path]
 
-        # check the start and end elements are valid
-        start_obj = self.get_element(start)
-        end_obj = self.get_element(end)
+        # find the start of the search area
+        if start is None:
+            start = path_obj.elements[0]
 
-        # determine machine area at the end of the path
-        path_to_end = (
-            end_obj.machine_area if (end_obj.machine_area in self.lattices) else "CLARA"
-        )
-        full_path = self.lattices[path_to_end]
-        # print('full_path', full_path['S05'])
-        return full_path.elements_between(
-            end=end, start=start, element_type=element_type
-        )
+        # return a list of elements along this beam path
+        elements = path_obj.elements_between(start=start, end=end, element_type=element_type)
+        return elements
