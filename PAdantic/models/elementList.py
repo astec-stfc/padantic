@@ -203,8 +203,7 @@ class MachineLayout(BaseLatticeModel):
             # fetch the index of the element
             return self._get_all_element_names().index(name)
         except ValueError:
-            message = "Element %s does not exist along the beam path" % name
-            raise LatticeError(message)
+            return None
 
     @property
     def elements(self):
@@ -355,14 +354,14 @@ class MachineModel(YAMLBaseModel):
         if name in self.elements:
             return self.elements[name]
         else:
-            message = "Element %s does not exist anywhere in the accelerator lattice" % name
-            raise LatticeError(message)
+            return None
 
     def elements_between(
         self,
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        lattice: Union[str, None] = "CLARA"
     ) -> List[str]:
         """
         Returns an ordered list of all lattice elements (of a specific type) between
