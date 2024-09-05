@@ -361,7 +361,6 @@ class MachineModel(YAMLBaseModel):
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
-        lattice: Union[str, None] = "CLARA"
     ) -> List[str]:
         """
         Returns an ordered list of all lattice elements (of a specific type) between
@@ -373,7 +372,7 @@ class MachineModel(YAMLBaseModel):
         :returns: List of all element names between *start* and *end* (inclusive)
         """
         # determine the beam path
-        default_path = "CLARA"
+        default_path = "CLARA" if not (hasattr(self,'_default_path') and self._default_path in self.lattices) else self._default_path
         if end is None:
             path_obj = self.lattices[default_path]
             end = path_obj.elements[-1]
