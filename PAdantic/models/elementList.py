@@ -262,10 +262,15 @@ class MachineLayout(BaseLatticeModel):
         last = self._lookup_index(end) + 1
         result = self._get_all_elements()[first:last]
 
-        # filter the results to include only certain element types
         if isinstance(element_type, (str, list)):
-            _types = [element_type] if isinstance(element_type, str) else element_type
-            result = [ele for ele in result if ele.hardware_class in _types]
+            # make list of valid types
+            if isinstance(element_type, str):
+                type_list = [element_type.lower()]
+            elif isinstance(element_type, list):
+                type_list = [_type.lower() for _type in element_type]
+
+            # apply search criteria
+            result = [ele for ele in result if (ele.hardware_class.lower() in type_list)]
 
         return self._get_element_names(result)
 
@@ -387,14 +392,13 @@ class MachineModel(YAMLBaseModel):
         element_type: Union[str, list, None] = None,
     ) -> List[str]:
         """
-        Returns a list of all lattice elements (of a specified type) between
-        any two points along the accelerator. Elements are ordered according
-        to their longitudinal position along the beam path.
+        Returns an ordered list of all lattice elements (of a specific type) between
+        any two points along the accelerator.
 
-        :param str end: Name of the element defining the end of the search region
-        :param str start: Name of the element defining the start of the search region
+        :param str end: Name of the last element. This element is used to determine the beam path.
+        :param str start: Name of the first element.
         :param str | list type: Type(s) of elements to include in the list
-        :returns: List containing the names of all elements between (and including) *start* and *end*
+        :returns: List of all element names between *start* and *end* (inclusive)
         """
         # determine the beam path
         default_path = "CLARA"
