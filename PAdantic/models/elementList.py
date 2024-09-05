@@ -1,14 +1,11 @@
-import time
 import os
-from copy import copy
-from typing import Type, List, Dict, Any, Union
-import numpy as np
-from pydantic import field_validator, Field, BaseModel, ValidationInfo, PrivateAttr
+from typing import List, Dict, Any, Union
+from pydantic import field_validator, BaseModel, ValidationInfo
 
 from ._functions import read_yaml, merge_two_dicts
 from .element import _baseElement
 from .baseModels import YAMLBaseModel
-from .exceptions import *
+from .exceptions import LatticeError
 
 
 class BaseLatticeModel(YAMLBaseModel):
@@ -80,8 +77,7 @@ class ElementList(YAMLBaseModel):
     def __getattr__(self, a):
         try:
             return super().__getattr__(a)
-        except Exception as e:
-            # print(e)
+        except Exception:
             data = self._get_attributes_or_none(a)
             if all([isinstance(d, (Union[BaseModel, None])) for d in data.values()]):
                 return ElementList(elements=data)
@@ -113,16 +109,6 @@ class SectionLattice(BaseLatticeModel):
         assert isinstance(elements, ElementList)
         return elements
 
-    #
-    # @field_validator('other_elements', mode='before')
-    # @classmethod
-    # def validate_other_elements(cls, elements: Union[List[_baseElement], ElementList], info: ValidationInfo) -> ElementList:
-    #     if isinstance(elements, list):
-    #         elemdict = {e.name: e for e in elements}
-    #         return ElementList(elements={e:elemdict[e] for e in info.data['order'] if e not in elemdict.keys()})
-    #     assert isinstance(elements, ElementList)
-    #     return elements
-
     @property
     def names(self):
         return self.elements.names()
@@ -139,7 +125,7 @@ class SectionLattice(BaseLatticeModel):
     def __getattr__(self, a):
         try:
             return super().__getattr__(a)
-        except:
+        except Exception:
             return getattr(self.elements, a)
 
     def _get_all_elements(self) -> ElementList:
@@ -196,7 +182,6 @@ class MachineLayout(BaseLatticeModel):
             return self._get_all_elements()[index]
         else:
             return None
-            # raise LatticeError('Element {elementname} does not exist in the accelerator lattice {latticeelements}'.format(elementname=name, latticeelements=self._get_all_element_names()))
 
     def _get_element_names(self, lattice: list) -> list:
         """
@@ -214,9 +199,8 @@ class MachineLayout(BaseLatticeModel):
         :param str name: Name of the element to search for
         :returns: List index of the item within that beam path, or *None* if that element does not exist
         """
-        # fetch the index of the element
-        ele_obj = self.get_element(name)
         try:
+            # fetch the index of the element
             return self._get_all_element_names().index(name)
         except ValueError:
             return None
@@ -248,19 +232,22 @@ class MachineLayout(BaseLatticeModel):
         if end is None:
             end = element_names[-1]
 
-        # check the start and end elements are valid
-        start_obj = self.get_element(start)
-        end_obj = self.get_element(end)
-
         # truncate the list between the start and end elements
         first = self._lookup_index(start)
         last = self._lookup_index(end) + 1
         result = self._get_all_elements()[first:last]
 
-        # filter the results to include only certain element types
         if isinstance(element_type, (str, list)):
-            _types = [element_type] if isinstance(element_type, str) else element_type
-            result = [ele for ele in result if ele.hardware_class in _types]
+            # make list of valid types
+            if isinstance(element_type, str):
+                type_list = [element_type.lower()]
+            elif isinstance(element_type, list):
+                type_list = [_type.lower() for _type in element_type]
+
+            # apply search criteria
+            result = [
+                ele for ele in result if (ele.hardware_class.lower() in type_list)
+            ]
 
         return self._get_element_names(result)
 
@@ -347,8 +334,7 @@ class MachineModel(YAMLBaseModel):
                     )
                 else:
                     print("MachineModel", "_build_layouts", _area, "missing")
-                    # exit()
-                # add the new elements to the lattice
+
             self.lattices[path] = MachineLayout(
                 name=path,
                 sections={
@@ -378,33 +364,34 @@ class MachineModel(YAMLBaseModel):
         lattice: Union[str, None] = "CLARA"
     ) -> List[str]:
         """
-        Returns a list of all lattice elements (of a specified type) between
-        any two points along the accelerator. Elements are ordered according
-        to their longitudinal position along the beam path.
+        Returns an ordered list of all lattice elements (of a specific type) between
+        any two points along the accelerator.
 
-        :param str end: Name of the element defining the end of the search region
-        :param str start: Name of the element defining the start of the search region
+        :param str end: Name of the last element. This element is used to determine the beam path.
+        :param str start: Name of the first element.
         :param str | list type: Type(s) of elements to include in the list
-        :param str: Name of lattice to assume if we don't specify start/end
-        :returns: List containing the names of all elements between (and including) *start* and *end*
+        :returns: List of all element names between *start* and *end* (inclusive)
         """
-        # replace blank start and/or end point
-        element_names = list(self.elements.keys())
-        if start is None:
-            start = self.lattices[lattice].elements[0]
+        # determine the beam path
+        default_path = "CLARA"
         if end is None:
-            end = self.lattices[lattice].elements[-1]
+            path_obj = self.lattices[default_path]
+            end = path_obj.elements[-1]
+        else:
+            end_obj = self.get_element(end)
+            beam_path = (
+                end_obj.machine_area
+                if (end_obj.machine_area in self.lattices)
+                else default_path
+            )
+            path_obj = self.lattices[beam_path]
 
-        # check the start and end elements are valid
-        start_obj = self.get_element(start)
-        end_obj = self.get_element(end)
+        # find the start of the search area
+        if start is None:
+            start = path_obj.elements[0]
 
-        # determine machine area at the end of the path
-        path_to_end = (
-            end_obj.machine_area if (end_obj.machine_area in self.lattices) else "CLARA"
+        # return a list of elements along this beam path
+        elements = path_obj.elements_between(
+            start=start, end=end, element_type=element_type
         )
-        full_path = self.lattices[path_to_end]
-
-        return full_path.elements_between(
-            end=end, start=start, element_type=element_type
-        )
+        return elements
