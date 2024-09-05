@@ -1,0 +1,6 @@
+munch==2.5.0
+numpy==2.1.1
+pandas==2.2.2
+pydantic==2.8.2
+PyYAML==6.0.2
+vg==2.0.0
