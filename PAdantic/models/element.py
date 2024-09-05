@@ -1,8 +1,6 @@
 import os
-from typing import Type, List, Dict, Any, Union
-import numpy as np
-import vg
-from pydantic import field_validator, Field, BaseModel, RootModel
+from typing import Type, List, Union
+from pydantic import field_validator, Field
 
 from .baseModels import T, Aliases, IgnoreExtra
 from .PV import (
@@ -30,7 +28,7 @@ from .PV import (
 from .manufacturer import ManufacturerElement
 from .electrical import ElectricalElement
 from .degauss import DegaussablElement
-from .physical import PhysicalElement, Rotation, Position
+from .physical import PhysicalElement, Rotation
 from .magnetic import (
     Dipole_Magnet,
     Quadrupole_Magnet,
@@ -133,9 +131,9 @@ class _baseElement(IgnoreExtra):
         else:
             raise ValueError("alias should be a string or a list of strings")
 
-    def escape_string_list(self, l):
-        if len(list(l)) > 0:
-            return string_with_quotes(",".join(map(str, list(l))))
+    def escape_string_list(self, escapes):
+        if len(list(escapes)) > 0:
+            return string_with_quotes(",".join(map(str, list(escapes))))
         return string_with_quotes("")
 
     @classmethod

@@ -1,14 +1,11 @@
-import time
 import os
-from copy import copy
-from typing import Type, List, Dict, Any, Union
-import numpy as np
-from pydantic import field_validator, Field, BaseModel, ValidationInfo, PrivateAttr
+from typing import List, Dict, Any, Union
+from pydantic import field_validator, BaseModel, ValidationInfo
 
 from ._functions import read_yaml, merge_two_dicts
 from .element import _baseElement
 from .baseModels import YAMLBaseModel
-from .exceptions import *
+from .exceptions import LatticeError
 
 
 class BaseLatticeModel(YAMLBaseModel):
@@ -80,8 +77,7 @@ class ElementList(YAMLBaseModel):
     def __getattr__(self, a):
         try:
             return super().__getattr__(a)
-        except Exception as e:
-            # print(e)
+        except Exception:
             data = self._get_attributes_or_none(a)
             if all([isinstance(d, (Union[BaseModel, None])) for d in data.values()]):
                 return ElementList(elements=data)
@@ -113,16 +109,6 @@ class SectionLattice(BaseLatticeModel):
         assert isinstance(elements, ElementList)
         return elements
 
-    #
-    # @field_validator('other_elements', mode='before')
-    # @classmethod
-    # def validate_other_elements(cls, elements: Union[List[_baseElement], ElementList], info: ValidationInfo) -> ElementList:
-    #     if isinstance(elements, list):
-    #         elemdict = {e.name: e for e in elements}
-    #         return ElementList(elements={e:elemdict[e] for e in info.data['order'] if e not in elemdict.keys()})
-    #     assert isinstance(elements, ElementList)
-    #     return elements
-
     @property
     def names(self):
         return self.elements.names()
@@ -139,7 +125,7 @@ class SectionLattice(BaseLatticeModel):
     def __getattr__(self, a):
         try:
             return super().__getattr__(a)
-        except:
+        except Exception:
             return getattr(self.elements, a)
 
     def _get_all_elements(self) -> ElementList:
@@ -196,7 +182,6 @@ class MachineLayout(BaseLatticeModel):
             return self._get_all_elements()[index]
         else:
             return None
-            # raise LatticeError('Element {elementname} does not exist in the accelerator lattice {latticeelements}'.format(elementname=name, latticeelements=self._get_all_element_names()))
 
     def _get_element_names(self, lattice: list) -> list:
         """
@@ -214,17 +199,12 @@ class MachineLayout(BaseLatticeModel):
         :param str name: Name of the element to search for
         :returns: List index of the item within that beam path, or *None* if that element does not exist
         """
-        # fetch the index of the element
-        ele_obj = self.get_element(name)
         try:
+            # fetch the index of the element
             return self._get_all_element_names().index(name)
         except ValueError:
-            #     return None
-            raise LatticeError(
-                "Element {elementname} does not exist anywhere in beam path {latticeelements}".format(
-                    elementname=name, latticeelements=self._get_all_element_names()
-                )
-            )
+            message = "Element %s does not exist along the beam path" % name
+            raise LatticeError(message)
 
     @property
     def elements(self):
@@ -253,10 +233,6 @@ class MachineLayout(BaseLatticeModel):
         if end is None:
             end = element_names[-1]
 
-        # check the start and end elements are valid
-        start_obj = self.get_element(start)
-        end_obj = self.get_element(end)
-
         # truncate the list between the start and end elements
         first = self._lookup_index(start)
         last = self._lookup_index(end) + 1
@@ -270,7 +246,9 @@ class MachineLayout(BaseLatticeModel):
                 type_list = [_type.lower() for _type in element_type]
 
             # apply search criteria
-            result = [ele for ele in result if (ele.hardware_class.lower() in type_list)]
+            result = [
+                ele for ele in result if (ele.hardware_class.lower() in type_list)
+            ]
 
         return self._get_element_names(result)
 
@@ -357,8 +335,7 @@ class MachineModel(YAMLBaseModel):
                     )
                 else:
                     print("MachineModel", "_build_layouts", _area, "missing")
-                    # exit()
-                # add the new elements to the lattice
+
             self.lattices[path] = MachineLayout(
                 name=path,
                 sections={
@@ -378,12 +355,8 @@ class MachineModel(YAMLBaseModel):
         if name in self.elements:
             return self.elements[name]
         else:
-            # print('Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}'.format(name, self.elements.keys()))
-            raise LatticeError(
-                "Element {elementname} does not exist anywhere in the accelerator lattice {latticeelements}".format(
-                    elementname=name, latticeelements=self.elements.keys()
-                )
-            )
+            message = "Element %s does not exist anywhere in the accelerator lattice" % name
+            raise LatticeError(message)
 
     def elements_between(
         self,
@@ -407,7 +380,11 @@ class MachineModel(YAMLBaseModel):
             end = path_obj.elements[-1]
         else:
             end_obj = self.get_element(end)
-            beam_path = end_obj.machine_area if (end_obj.machine_area in self.lattices) else default_path
+            beam_path = (
+                end_obj.machine_area
+                if (end_obj.machine_area in self.lattices)
+                else default_path
+            )
             path_obj = self.lattices[beam_path]
 
         # find the start of the search area
@@ -415,5 +392,7 @@ class MachineModel(YAMLBaseModel):
             start = path_obj.elements[0]
 
         # return a list of elements along this beam path
-        elements = path_obj.elements_between(start=start, end=end, element_type=element_type)
+        elements = path_obj.elements_between(
+            start=start, end=end, element_type=element_type
+        )
         return elements
