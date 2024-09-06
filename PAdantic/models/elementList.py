@@ -175,13 +175,14 @@ class MachineLayout(BaseLatticeModel):
         Return the LatticeElement object corresponding to a given machine element
 
         :param str name: Name of the element to look up
-        :returns: LatticeElement instance for that element, or *None* if that element does not exist
+        :returns: LatticeElement instance for that element
         """
         if name in self._get_all_element_names():
             index = self._get_all_element_names().index(name)
             return self._get_all_elements()[index]
         else:
-            return None
+            message = "Element %s does not exist along the beam path" % name
+            raise LatticeError(message)
 
     def _get_element_names(self, lattice: list) -> list:
         """
@@ -197,13 +198,14 @@ class MachineLayout(BaseLatticeModel):
         Look up the index of an element in a given lattice
 
         :param str name: Name of the element to search for
-        :returns: List index of the item within that beam path, or *None* if that element does not exist
+        :returns: List index of the item within that beam path
         """
         try:
             # fetch the index of the element
             return self._get_all_element_names().index(name)
         except ValueError:
-            return None
+            message = "Element %s does not exist along the beam path" % name
+            raise LatticeError(message)
 
     @property
     def elements(self):
@@ -282,6 +284,11 @@ class MachineModel(YAMLBaseModel):
     def model_post_init(self, __context):
         config = read_yaml(self.layout_file)
         self._layouts = config.layouts
+        try:
+            self._default_path = config.default_layout
+        except AttributeError:
+            message = 'Missing "default_layout" in %s ' % self.layout_file
+            raise Exception(message)
         config = read_yaml(self.section_file)
         self._section_definitions = config.sections
         if len(self.elements) > 0:
@@ -316,6 +323,16 @@ class MachineModel(YAMLBaseModel):
     def __setitem__(self, item: str, value: Any) -> None:
         super().__init__(elements=self + {item: value})
 
+    @property
+    def default_path(self) -> str:
+        return self._default_path
+
+    @default_path.setter
+    def default_path(self, path: str):
+        self._default_path = path
+
+    default_layout = default_path
+
     def _build_layouts(self, elements: dict) -> None:
         """build lists defining the lattice elements along each possible beam path"""
         # build dictionary with a lattice for each beam path
@@ -349,12 +366,15 @@ class MachineModel(YAMLBaseModel):
         Return the LatticeElement object corresponding to a given machine element
 
         :param str name: Name of the element to look up
-        :returns: LatticeElement instance for that element, or *None* if that element does not exist
+        :returns: LatticeElement instance for that element
         """
         if name in self.elements:
             return self.elements[name]
         else:
-            return None
+            message = (
+                "Element %s does not exist anywhere in the accelerator lattice" % name
+            )
+            raise LatticeError(message)
 
     def elements_between(
         self,
@@ -372,7 +392,11 @@ class MachineModel(YAMLBaseModel):
         :returns: List of all element names between *start* and *end* (inclusive)
         """
         # determine the beam path
-        default_path = "CLARA" if not (hasattr(self,'_default_path') and self._default_path in self.lattices) else self._default_path
+        if hasattr(self, "_default_path") and self._default_path in self.lattices:
+            default_path = self._default_path
+        else:
+            raise Exception('"default_layout" = %s is not defined' % self._default_path)
+
         if end is None:
             path_obj = self.lattices[default_path]
             end = path_obj.elements[-1]
