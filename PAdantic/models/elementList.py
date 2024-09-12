@@ -211,11 +211,34 @@ class MachineLayout(BaseLatticeModel):
     def elements(self):
         return self._get_all_element_names()
 
+    def _filter_element_list(self, result, filter, attrib):
+        if isinstance(filter, (str, list)):
+            # make list of valid types
+            if isinstance(filter, str):
+                filter_list = [filter.lower()]
+            elif isinstance(filter, list):
+                filter_list = [_type.lower() for _type in filter]
+            # apply search criteria
+            return [
+                ele for ele in result if (getattr(ele, attrib).lower() in filter_list)
+            ]
+        return result
+
+    def get_all_elements(
+        self,
+        element_type: Union[str, list, None] = None,
+        element_class: Union[str, list, None] = None,
+    ) -> List[str]:
+        return self.elements_between(
+            end=None, start=None, element_type=element_type, element_class=element_class
+        )
+
     def elements_between(
         self,
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        element_class: Union[str, list, None] = None,
     ) -> List[str]:
         """
         Returns a list of all lattice elements (of a specified type) between
@@ -239,17 +262,8 @@ class MachineLayout(BaseLatticeModel):
         last = self._lookup_index(end) + 1
         result = self._get_all_elements()[first:last]
 
-        if isinstance(element_type, (str, list)):
-            # make list of valid types
-            if isinstance(element_type, str):
-                type_list = [element_type.lower()]
-            elif isinstance(element_type, list):
-                type_list = [_type.lower() for _type in element_type]
-
-            # apply search criteria
-            result = [
-                ele for ele in result if (ele.hardware_class.lower() in type_list)
-            ]
+        result = self._filter_element_list(result, element_type, "hardware_type")
+        result = self._filter_element_list(result, element_class, "hardware_class")
 
         return self._get_element_names(result)
 
@@ -376,11 +390,21 @@ class MachineModel(YAMLBaseModel):
             )
             raise LatticeError(message)
 
+    def get_all_elements(
+        self,
+        element_type: Union[str, list, None] = None,
+        element_class: Union[str, list, None] = None,
+    ) -> List[str]:
+        return self.elements_between(
+            end=None, start=None, element_type=element_type, element_class=element_class
+        )
+
     def elements_between(
         self,
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        element_class: Union[str, list, None] = None,
     ) -> List[str]:
         """
         Returns an ordered list of all lattice elements (of a specific type) between
@@ -415,6 +439,6 @@ class MachineModel(YAMLBaseModel):
 
         # return a list of elements along this beam path
         elements = path_obj.elements_between(
-            start=start, end=end, element_type=element_type
+            start=start, end=end, element_type=element_type, element_class=element_class
         )
         return elements
