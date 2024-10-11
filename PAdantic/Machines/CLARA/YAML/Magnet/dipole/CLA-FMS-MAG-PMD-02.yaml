@@ -1,5 +1,4 @@
 alias: null
-class_name: Dipole
 controls:
   GETSETI: CLA-FMS-MAG-PMD-02:GETSETI
   ILK_RESET: CLA-FMS-MAG-PMD-02:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: 0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: dipole
+hardware_model: Generic
+hardware_type: Dipole
 machine_area: FMS
 magnetic:
   field_integral_coefficients:
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: dipole
+  hardware_class: Dipole
   manufacturer: ''
   serial_number: ''
 name: CLA-FMS-MAG-PMD-02

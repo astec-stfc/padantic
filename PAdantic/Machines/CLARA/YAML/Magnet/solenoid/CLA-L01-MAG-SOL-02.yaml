@@ -1,5 +1,4 @@
 alias: null
-class_name: Solenoid
 controls:
   GETSETI: CLA-L01-MAG-SOL-02:GETSETI
   ILK_RESET: CLA-L01-MAG-SOL-02:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: -200.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: solenoid
+hardware_model: Generic
+hardware_type: Solenoid
 machine_area: L01
 magnetic:
   field_integral_coefficients:
@@ -45,7 +45,7 @@ magnetic:
   settle_time: 45.0
   systematic_fields: {}
 manufacturer:
-  hardware_class: solenoid
+  hardware_class: Solenoid
   manufacturer: Linac Solenoid
   serial_number: '9'
 name: CLA-L01-MAG-SOL-02

@@ -1,5 +1,4 @@
 alias: null
-class_name: Quadrupole
 controls:
   GETSETI: CLA-S02-MAG-QUAD-04:GETSETI
   ILK_RESET: CLA-S02-MAG-QUAD-04:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: -53.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: quadrupole
+hardware_model: Generic
+hardware_type: Quadrupole
 machine_area: S02
 magnetic:
   field_integral_coefficients:
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: quadrupole
+  hardware_class: Quadrupole
   manufacturer: Quadrupole Type 1
   serial_number: '13252'
 name: CLA-S02-MAG-QUAD-04

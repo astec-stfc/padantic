@@ -1,0 +1,45 @@
+alias: null
+controls:
+  AWAK: CLA-S07-DIA-BPM-06:AWAK
+  DATA: CLA-S07-DIA-BPM-06:DATA:B2V.VALA
+  RA1: CLA-S07-DIA-BPM-06:RA1
+  RA2: CLA-S07-DIA-BPM-06:RA2
+  RD1: CLA-S07-DIA-BPM-06:RD1
+  RD2: CLA-S07-DIA-BPM-06:RD2
+  RDY: CLA-S07-DIA-BPM-06:RDY
+  SA1: CLA-S07-DIA-BPM-06:SA1
+  SA2: CLA-S07-DIA-BPM-06:SA2
+  SD1: CLA-S07-DIA-BPM-06:SD1
+  SD2: CLA-S07-DIA-BPM-06:SD2
+  X: CLA-S07-DIA-BPM-06:X
+  Y: CLA-S07-DIA-BPM-06:Y
+diagnostic:
+  attenuation1_calibration: 12
+  attenuation2_calibration: 12
+  charge_calibration: 70
+  mn: 15
+  settle_time: 0.5
+  type: beam_position_monitor
+  voltage1_calibration: 1
+  voltage2_calibration: 1
+  xn: 0
+  yn: 0
+hardware_class: Diagnostic
+hardware_model: Stripline
+hardware_type: BPM
+machine_area: S07
+name: CLA-S07-DIA-BPM-06
+physical:
+  datum: [0.0, 0.0, 46.297968]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.05
+  middle: [0.0, 0.0, 46.272968]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

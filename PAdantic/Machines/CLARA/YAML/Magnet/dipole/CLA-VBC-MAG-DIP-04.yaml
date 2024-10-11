@@ -1,5 +1,4 @@
 alias: null
-class_name: Dipole
 controls:
   GETSETI: CLA-VBC-MAG-DIP-04:GETSETI
   ILK_RESET: CLA-VBC-MAG-DIP-04:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: -150.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: dipole
+hardware_model: Generic
+hardware_type: Dipole
 machine_area: VBC
 magnetic:
   field_integral_coefficients:
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: dipole
+  hardware_class: Dipole
   manufacturer: Dipole Type 3
   serial_number: '3'
 name: CLA-VBC-MAG-DIP-04

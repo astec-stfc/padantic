@@ -99,8 +99,8 @@ yaml.add_representer(flow_list, flow_list_rep)
 class _baseElement(IgnoreExtra):
     name: str
     hardware_class: str
-    # type: str
-    hardware_type: str = ""
+    hardware_type: str
+    hardware_model: str = Field(default="Generic", frozen=True)
     machine_area: str
     virtual_name: str = ""
     alias: Union[str, list, Aliases, None] = Field(alias="name_alias", default=None)
@@ -112,7 +112,7 @@ class _baseElement(IgnoreExtra):
         assert isinstance(v, str)
         try:
             PV(pv_string=str(v) + ":")
-        except:
+        except Exception:
             raise ValueError("name is not a valid element name")
         return v
 
@@ -179,7 +179,11 @@ class _baseElement(IgnoreExtra):
 
     @property
     def subdirectory(self):
-        return os.path.join(self.hardware_class, self.hardware_type)
+        if self.__class__.__name__ == self.hardware_type:
+            return os.path.join(self.hardware_class, self.hardware_type)
+        return os.path.join(
+            self.hardware_class, self.__class__.__name__, self.hardware_type
+        )
 
     @property
     def YAML_filename(self):
@@ -240,7 +244,7 @@ class Element(PhysicalElement):
 class Magnet(Element):
     """Element with physical, electrical, manufacturer, controls and degauss items."""
 
-    # type: str = Field(alias='mag_type')
+    hardware_class: str = Field(default="Magnet", frozen=True)
     controls: MagnetPV
     degauss: DegaussablElement
     magnetic: None = None
@@ -336,10 +340,15 @@ class Solenoid(Magnet):
     magnetic: Solenoid_Magnet
 
 
-class BPM(PhysicalElement):
+class Diagnostic(PhysicalElement):
+    hardware_class: str = Field(default="Diagnostic", frozen=True)
+
+
+class BPM(Diagnostic):
     """BPM element."""
 
-    hardware_type: str = Field(default="Stripline", frozen=True)
+    hardware_type: str = Field(default="BPM", frozen=True)
+    hardware_model: str = Field(default="Stripline", frozen=True)
     diagnostic: BPM_Diagnostic
     controls: BPMPV
 
@@ -362,34 +371,38 @@ class BPM(PhysicalElement):
         return catap_dict
 
 
-class BAM(PhysicalElement):
+class BAM(Diagnostic):
     """BAM element."""
 
-    hardware_type: str = Field(default="DESY", frozen=True)
+    hardware_type: str = Field(default="BAM", frozen=True)
+    hardware_model: str = Field(default="DESY", frozen=True)
     diagnostic: BAM_Diagnostic
     controls: BAMPV
 
 
-class BLM(PhysicalElement):
+class BLM(Diagnostic):
     """BLM element."""
 
-    hardware_type: str = Field(default="CDR", frozen=True)
+    hardware_type: str = Field(default="BLM", frozen=True)
+    hardware_model: str = Field(default="CDR", frozen=True)
     diagnostic: BLM_Diagnostic
     controls: BLMPV
 
 
-class Camera(PhysicalElement):
+class Camera(Diagnostic):
     """Camera element."""
 
-    hardware_type: str = Field(default="PCO", frozen=True)
+    hardware_type: str = Field(default="Camera", frozen=True)
+    hardware_model: str = Field(default="PCO", frozen=True)
     diagnostic: Camera_Diagnostic
     controls: CameraPV
 
 
-class Screen(PhysicalElement):
+class Screen(Diagnostic):
     """Screen element."""
 
-    hardware_type: str = Field(default="YAG", frozen=True)
+    hardware_type: str = Field(default="Screen", frozen=True)
+    hardware_model: str = Field(default="YAG", frozen=True)
     diagnostic: Screen_Diagnostic
     controls: ScreenPV
 
@@ -406,18 +419,37 @@ class Screen(PhysicalElement):
         return catap_dict
 
 
-class ChargeDiagnostic(PhysicalElement):
+class ChargeDiagnostic(Diagnostic):
     """Charge Diagnostic element."""
 
-    hardware_type: str = Field(default="WCM", frozen=True)
+    hardware_type: str = Field(default="ChargeDiagnostic", frozen=True)
     diagnostic: Charge_Diagnostic
     controls: ChargeDiagnosticPV
+
+
+class WCM(ChargeDiagnostic):
+    """WCM Charge Diagnostic element."""
+
+    hardware_type: str = Field(default="WCM", frozen=True)
+
+
+class FCM(ChargeDiagnostic):
+    """FCM Charge Diagnostic element."""
+
+    hardware_type: str = Field(default="FCM", frozen=True)
+
+
+class ICT(ChargeDiagnostic):
+    """FCM Charge Diagnostic element."""
+
+    hardware_type: str = Field(default="ICT", frozen=True)
 
 
 class VacuumGuage(PhysicalElement):
     """Vacuum Guage element."""
 
-    hardware_type: str = Field(default="IMG", frozen=True)
+    hardware_type: str = Field(default="VacuumGuage", frozen=True)
+    hardware_model: str = Field(default="IMG", frozen=True)
     manufacturer: ManufacturerElement
     controls: VacuumGuagePV
 
@@ -425,7 +457,8 @@ class VacuumGuage(PhysicalElement):
 class LaserEnergyMeter(PhysicalElement):
     """Laser Energy Meter element."""
 
-    hardware_type: str = Field(default="Photodiode", frozen=True)
+    hardware_type: str = Field(default="LaserEnergyMeter", frozen=True)
+    hardware_model: str = Field(default="Gentec Photodiode", frozen=True)
     laser: LaserEnergyMeterElement
     controls: LaserEnergyMeterPV
 
@@ -433,7 +466,8 @@ class LaserEnergyMeter(PhysicalElement):
 class LaserHalfWavePlate(LaserEnergyMeter):
     """Laser Half Wave Plate element."""
 
-    hardware_type: str = Field(default="HWP", frozen=True)
+    hardware_type: str = Field(default="LaserHalfWavePlate", frozen=True)
+    hardware_model: str = Field(default="Newport", frozen=True)
     laser: LaserElement
     controls: LaserHWPPV
 
@@ -441,7 +475,8 @@ class LaserHalfWavePlate(LaserEnergyMeter):
 class LaserMirror(LaserEnergyMeter):
     """Laser Mirror element."""
 
-    hardware_type: str = Field(default="Planar", frozen=True)
+    hardware_type: str = Field(default="LaserMirror", frozen=True)
+    hardware_model: str = Field(default="Planar", frozen=True)
     laser: LaserMirrorElement
     controls: LaserMirrorPV
 
@@ -449,7 +484,8 @@ class LaserMirror(LaserEnergyMeter):
 class Lighting(_baseElement):
     """Lighting element."""
 
-    hardware_type: str = Field(default="LED", frozen=True)
+    hardware_type: str = Field(default="Lighting", frozen=True)
+    hardware_model: str = Field(default="LED", frozen=True)
     lights: LightingElement
     controls: LightingPV
 
@@ -457,7 +493,8 @@ class Lighting(_baseElement):
 class PID(_baseElement):
     """PID element."""
 
-    hardware_type: str = Field(default="RF", frozen=True)
+    hardware_type: str = Field(default="PID", frozen=True)
+    hardware_model: str = Field(default="RF", frozen=True)
     PID: PIDElement
     controls: PIDPV
 
@@ -465,7 +502,8 @@ class PID(_baseElement):
 class LLRF(_baseElement):
     """LLRF element."""
 
-    hardware_type: str = Field(default="Libera", frozen=True)
+    hardware_type: str = Field(default="LLRF", frozen=True)
+    hardware_model: str = Field(default="Libera", frozen=True)
     LLRF: LLRFElement
     controls: LLRFPV
 
@@ -473,7 +511,8 @@ class LLRF(_baseElement):
 class RFCavity(PhysicalElement):
     """RFCavity element."""
 
-    hardware_type: str = Field(default="Linac", frozen=True)
+    hardware_type: str = Field(default="RFCavity", frozen=True)
+    hardware_model: str = Field(default="SBand", frozen=True)
     cavity: RFCavityElement
     simulation: RFCavitySimulationElement
 
@@ -482,6 +521,7 @@ class Wakefield(PhysicalElement):
     """Collimator element."""
 
     hardware_type: str = Field(default="Wakefield", frozen=True)
+    hardware_model: str = Field(default="Dielectric", frozen=True)
     cavity: WakefieldElement
     simulation: WakefieldSimulationElement
 
@@ -489,7 +529,8 @@ class Wakefield(PhysicalElement):
 class RFDeflectingCavity(PhysicalElement):
     """RFCavity element."""
 
-    hardware_type: str = Field(default="TDC", frozen=True)
+    hardware_type: str = Field(default="RFDeflectingCavity", frozen=True)
+    hardware_model: str = Field(default="SBand", frozen=True)
     cavity: RFDeflectingCavityElement
     simulation: RFCavitySimulationElement
 
@@ -497,7 +538,8 @@ class RFDeflectingCavity(PhysicalElement):
 class RFModulator(_baseElement):
     """RFModulator element."""
 
-    hardware_type: str = Field(default="Thales", frozen=True)
+    hardware_type: str = Field(default="RFModulator", frozen=True)
+    hardware_model: str = Field(default="Thales", frozen=True)
     modulator: RFModulatorElement
     controls: RFModulatorPV
 
@@ -505,7 +547,8 @@ class RFModulator(_baseElement):
 class RFProtection(_baseElement):
     """RFProtection element."""
 
-    hardware_type: str = Field(default="PROT", frozen=True)
+    hardware_type: str = Field(default="RFProtection", frozen=True)
+    hardware_model: str = Field(default="PROT", frozen=True)
     modulator: RFProtectionElement
     controls: RFProtectionPV
 
@@ -538,12 +581,14 @@ class Marker(PhysicalElement):
     """Marker element."""
 
     hardware_type: str = Field(default="Marker", frozen=True)
+    hardware_model: str = Field(default="Simulation", frozen=True)
 
 
 class Aperture(PhysicalElement):
     """Aperture element."""
 
     hardware_type: str = Field(default="Aperture", frozen=True)
+    hardware_model: str = Field(default="Simulation", frozen=True)
     aperture: ApertureElement
 
 
@@ -551,3 +596,4 @@ class Collimator(Aperture):
     """Collimator element."""
 
     hardware_type: str = Field(default="Collimator", frozen=True)
+    hardware_model: str = Field(default="Simulation", frozen=True)

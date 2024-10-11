@@ -3,9 +3,9 @@ aperture:
   horizontal_size: 0.005
   shape: rectangular
   vertical_size: 0.005
-class_name: Aperture
 hardware_class: Simulation
-hardware_type: aperture
+hardware_model: Simulation
+hardware_type: Aperture
 machine_area: S07
 name: CLA-S07-SIM-TDC-01-APER
 physical:

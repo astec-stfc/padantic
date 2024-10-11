@@ -1,0 +1,27 @@
+alias: null
+controls:
+  Close: CLA-FED-PS-SHTR-01:Close
+  Cmi: CLA-FED-PS-SHTR-01:Cmi
+  Open: CLA-FED-PS-SHTR-01:Open
+  State: CLA-FED-PS-SHTR-01:State
+hardware_class: Vacuum
+hardware_model: Generic
+hardware_type: Shutter
+machine_area: FED
+name: CLA-FED-PS-SHTR-01
+physical:
+  datum: [3.6807505, 0.0, 77.7199]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.32
+  middle: [3.6807505, 0.0, 77.7199]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+shutter:
+  interlocks: []
+subelement: false
+virtual_name: ''

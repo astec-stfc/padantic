@@ -287,6 +287,11 @@ classPVRecords:
     -  HDF:WriteFile_RBV
     -  HDF:FileNumber_RBV
     -  HDF:NumCapture_RBV
+    -  CAMERACOUNT
+    -  CAMERALIMIT
+    - 'Sta'
+    - 'Off'
+    - 'On'
   CS:
     - cameraCount
     - cameraLimit

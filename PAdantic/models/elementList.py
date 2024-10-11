@@ -220,17 +220,26 @@ class MachineLayout(BaseLatticeModel):
                 filter_list = [_type.lower() for _type in filter]
             # apply search criteria
             return [
-                ele for ele in result if (getattr(ele, attrib).lower() in filter_list)
+                ele
+                for ele in result
+                if (
+                    hasattr(ele, attrib) and getattr(ele, attrib).lower() in filter_list
+                )
             ]
         return result
 
     def get_all_elements(
         self,
         element_type: Union[str, list, None] = None,
+        element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
     ) -> List[str]:
         return self.elements_between(
-            end=None, start=None, element_type=element_type, element_class=element_class
+            end=None,
+            start=None,
+            element_type=element_type,
+            element_class=element_class,
+            element_model=element_model,
         )
 
     def elements_between(
@@ -238,6 +247,7 @@ class MachineLayout(BaseLatticeModel):
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
     ) -> List[str]:
         """
@@ -263,6 +273,9 @@ class MachineLayout(BaseLatticeModel):
         result = self._get_all_elements()[first:last]
 
         result = self._filter_element_list(result, element_type, "hardware_type")
+        result = self._filter_element_list(
+            result, element_model, "hardware_model"
+        )
         result = self._filter_element_list(result, element_class, "hardware_class")
 
         return self._get_element_names(result)
@@ -331,7 +344,11 @@ class MachineModel(YAMLBaseModel):
     def update(self, values: dict) -> None:
         return self.append(values)
 
-    def __getitem__(self, item: str) -> int:
+    def __getitem__(
+        self, item: str | list[str] | tuple[str]
+    ) -> BaseModel | list[BaseModel]:
+        if isinstance(item, (list, tuple)):
+            return [self.elements[subitem] for subitem in item]
         return self.elements[item]
 
     def __setitem__(self, item: str, value: Any) -> None:
@@ -393,10 +410,15 @@ class MachineModel(YAMLBaseModel):
     def get_all_elements(
         self,
         element_type: Union[str, list, None] = None,
+        element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
     ) -> List[str]:
         return self.elements_between(
-            end=None, start=None, element_type=element_type, element_class=element_class
+            end=None,
+            start=None,
+            element_type=element_type,
+            element_class=element_class,
+            element_model=element_model,
         )
 
     def elements_between(
@@ -404,6 +426,7 @@ class MachineModel(YAMLBaseModel):
         end: str = None,
         start: str = None,
         element_type: Union[str, list, None] = None,
+        element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
     ) -> List[str]:
         """
@@ -439,6 +462,10 @@ class MachineModel(YAMLBaseModel):
 
         # return a list of elements along this beam path
         elements = path_obj.elements_between(
-            start=start, end=end, element_type=element_type, element_class=element_class
+            start=start,
+            end=end,
+            element_type=element_type,
+            element_class=element_class,
+            element_model=element_model,
         )
         return elements

@@ -3,9 +3,9 @@ aperture:
   horizontal_size: 0.01
   shape: elliptical
   vertical_size: 0.01
-class_name: Collimator
 hardware_class: Simulation
-hardware_type: collimator
+hardware_model: Simulation
+hardware_type: Collimator
 machine_area: S02
 name: CLA-S02-DIA-ECOL-01
 physical:

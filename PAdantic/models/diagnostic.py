@@ -1,9 +1,16 @@
-from pydantic import Field, NonNegativeFloat, NonNegativeInt, field_validator
+from pydantic import (
+    Field,
+    NonNegativeFloat,
+    NonNegativeInt,
+    field_validator,
+    model_validator,
+)
 from typing import List, Type, Union
-from .baseModels import IgnoreExtra, T, Aliases, DeviceList
+from .baseModels import IgnoreExtra, T, DeviceList
 
 
-class DiagnosticElement(IgnoreExtra): ...
+class DiagnosticElement(IgnoreExtra):
+    ...
 
 
 class BPM_Diagnostic(DiagnosticElement):
@@ -120,16 +127,46 @@ class Camera_Sensor(IgnoreExtra):
         return super().from_CATAP(fields)
 
 
+def PCO_Camera_Sensor():
+    return Camera_Sensor(
+        x_pixels=2560,
+        y_pixels=2160,
+        x_scale_factor=2,
+        y_scale_factor=2,
+        beam_pixel_average=97.2,
+        pixels_to_mm=[0.013, 0.013],
+        minimum=[150, 150],
+        maximum=[2400, 2000],
+        bit_depth=12,
+        operating_middle=[1000, 1000],
+        mechanical_middle=[1000, 1000]
+    )
+
+
+def Manta_Camera_Sensor():
+    return Camera_Sensor(
+        x_pixels=1936,
+        y_pixels=1216,
+        x_scale_factor=2,
+        y_scale_factor=2,
+        beam_pixel_average=97.2,
+        pixels_to_mm=[0.0233, 0.0177],
+        minimum=[136, 116],
+        maximum=[1800, 1100],
+        bit_depth=12,
+        operating_middle=[900, 550],
+        mechanical_middle=[900, 550]
+    )
+
+
 class Camera_Diagnostic(DiagnosticElement):
     """Camera Diagnostic model."""
 
     type: str = Field(alias="CAM_TYPE")
-    pixel_results_indices: (
-        Camera_Pixel_Results_Indices  # = Camera_Pixel_Results_Indices()
-    )
-    pixel_results_names: Camera_Pixel_Results_Names  # = Camera_Pixel_Results_Names()
-    mask: Camera_Mask  # = Camera_Mask()
-    sensor: Camera_Sensor  # = Camera_Sensor()
+    pixel_results_indices: Camera_Pixel_Results_Indices = Camera_Pixel_Results_Indices()
+    pixel_results_names: Camera_Pixel_Results_Names = Camera_Pixel_Results_Names()
+    mask: Camera_Mask = Camera_Mask()
+    sensor: Camera_Sensor = Camera_Sensor()
     epics_x_pixels: int = Field(alias="ARRAY_DATA_NUM_PIX_X", default=1080)
     epics_y_pixels: int = Field(alias="ARRAY_DATA_NUM_PIX_Y", default=1280)
     rotation: Union[float, int] = 0
@@ -149,13 +186,37 @@ class Camera_Diagnostic(DiagnosticElement):
         return super().from_CATAP(fields)
 
 
+def Camera_Diagnostic_Type(type: str = "PCO", **kwargs) -> Camera_Diagnostic:
+    if type.lower() == "pco":
+        return PCO_Camera_Diagnostic(type=type, **kwargs)
+    if type.lower() == "manta":
+        return Manta_Camera_Diagnostic(type=type, **kwargs)
+    return Manta_Camera_Diagnostic(type=type, **kwargs)
+
+
+def PCO_Camera_Diagnostic(**kwargs):
+    return Camera_Diagnostic(sensor=PCO_Camera_Sensor(), **kwargs)
+
+
+def Manta_Camera_Diagnostic(**kwargs):
+    return Camera_Diagnostic(sensor=Manta_Camera_Sensor(), **kwargs)
+
+
 class Screen_Diagnostic(DiagnosticElement):
-    """Camera Diagnostic model."""
+    """Screen Diagnostic model."""
 
     type: str = Field(alias="screen_type", default="CLARA_HV_MOVER")
     has_camera: bool = True
     camera_name: str = ""
     devices: Union[str, list, DeviceList] = DeviceList()
+
+    @model_validator(mode="before")
+    def update_camera_name_if_not_defined(cls, data):
+        if (
+            "camera_name" in data and data["camera_name"] == ""
+        ) or "camera_name" not in data:
+            data["camera_name"] = data["name"].replace("-SCR-", "-CAM-")
+        return data
 
     @field_validator("devices", mode="before")
     @classmethod

@@ -1,5 +1,4 @@
 alias: null
-class_name: Dipole
 controls:
   GETSETI: CLA-FED-MAG-DIP-01:GETSETI
   ILK_RESET: CLA-FED-MAG-DIP-01:Rst
@@ -25,7 +24,8 @@ electrical:
   minI: -309.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: dipole
+hardware_model: Generic
+hardware_type: Dipole
 machine_area: FED
 magnetic:
   field_integral_coefficients:
@@ -51,7 +51,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: dipole
+  hardware_class: Dipole
   manufacturer: Dipole Type 7
   serial_number: '1'
 name: CLA-FED-MAG-DIP-01

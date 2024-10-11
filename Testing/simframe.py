@@ -1,12 +1,11 @@
 import os
 import sys
+import argparse
 
 sys.path.append(r"C:\Users\jkj62\Documents\GitHub\SimFrame")
 sys.path.append(os.path.abspath("../../"))
-from PAdantic.PAdantic import PAdantic
-from SimulationFramework import Framework as fw
+from SimulationFramework import Framework as fw  # noqa
 
-import argparse
 
 parser = argparse.ArgumentParser(description="Track the FEBE lattice.")
 parser.add_argument(

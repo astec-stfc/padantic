@@ -11,15 +11,12 @@ from PAdantic.Exporters.YAML import export_machine_combined_file
 machine = PAdantic(
     layout_file="Machines/CLARA/layouts.yaml",
     section_file="Machines/CLARA/sections.yaml",
-    yaml_dir="Machines/CLARA/summary.yaml",
+    yaml_dir="Machines/CLARA/YAML/",
 )
 # print(list(machine.lattices['CLARA'].elements))
 # print(machine['CLA-S07-DIA-CDR-01'])
-print(
-    machine.elements_between(
-        start="CLA-S05-MAG-QUAD-01", end="CLA-SP2-DIA-SCR-02", element_type=None
-    )
-)
+machine.default_layout = "CLARA"
+print(machine.get_all_elements(element_class="diagnostic", element_type="Screen"))
 
 # from PAdantic.Importers.SimFrame_Loader import SF_files, read_SimFrame_YAML, get_SimFrame_PV
 # from PAdantic.Exporters.YAML import export_as_yaml, export_machine

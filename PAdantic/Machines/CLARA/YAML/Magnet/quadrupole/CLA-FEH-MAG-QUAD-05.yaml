@@ -1,5 +1,4 @@
 alias: null
-class_name: Quadrupole
 controls:
   GETSETI: CLA-FEH-MAG-QUAD-05:GETSETI
   ILK_RESET: CLA-FEH-MAG-QUAD-05:Rst
@@ -24,20 +23,21 @@ electrical:
   minI: -0.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: quadrupole
+hardware_model: Generic
+hardware_type: Quadrupole
 machine_area: FEH
 magnetic:
   field_integral_coefficients:
     coefficients: [0]
   length: 0.277
   linear_saturation_coefficients:
-    I0: 0.0
-    I_max: 0.0
-    L: 0.0
-    a: 0.0
-    d: 0.0
+    I0: 3917.594998327607
+    I_max: 21.3826019196347
+    L: 256.23
+    a: -3.3964117291842617e-06
+    d: 52.1293482975826
     f: 0.0
-    m: 0.0
+    m: 0.026218869030178723
   multipoles:
     K1L:
       normal: -1.736535
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: quadrupole
+  hardware_class: Quadrupole
   manufacturer: Quadrupole Type 4
   serial_number: QW4-06
 name: CLA-FEH-MAG-QUAD-05
