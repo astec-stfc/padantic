@@ -101,5 +101,3 @@ if __name__ == "__main__":
     for c in changes_files:
         opt.framework.load_changes_file(c)
     print(opt.framework["bunch_compressor"])
-    # print(opt.framework['FEBE'])
-    # opt.track(startfile=opt.start_lattice, endfile='FEBE', preprocess=True, track=True, postprocess=False, save_summary=False)

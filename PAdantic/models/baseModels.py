@@ -71,11 +71,6 @@ class IgnoreExtra(YAMLBaseModel):
         populate_by_name=True,
     )
 
-    # @model_serializer
-    # def ser_model(self) -> Dict[str, Any]:
-    #     # print(self.__class__.__name__, [getattr(self,k) for k in self.model_fields.keys()])
-    #     return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) != 0 and getattr(self,k) is not None and getattr(self,k) != {}}
-
     def _create_field_class(
         self, fields: dict, fieldname: str, fieldclass: List[str]
     ) -> None:

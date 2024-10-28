@@ -1,9 +1,6 @@
-from pydantic import field_validator, confloat, Field, NonNegativeFloat, AliasChoices
-from typing import List, Union
-
-from ._functions import _rotation_matrix
-
-from .baseModels import IgnoreExtra, NumpyVectorModel
+from pydantic import Field
+from typing import Union
+from .baseModels import IgnoreExtra
 
 
 class ApertureElement(IgnoreExtra):

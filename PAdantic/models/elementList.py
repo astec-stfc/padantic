@@ -273,9 +273,7 @@ class MachineLayout(BaseLatticeModel):
         result = self._get_all_elements()[first:last]
 
         result = self._filter_element_list(result, element_type, "hardware_type")
-        result = self._filter_element_list(
-            result, element_model, "hardware_model"
-        )
+        result = self._filter_element_list(result, element_model, "hardware_model")
         result = self._filter_element_list(result, element_class, "hardware_class")
 
         return self._get_element_names(result)

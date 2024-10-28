@@ -1,3 +1,5 @@
+import numpy as np
+from scipy.constants import speed_of_light
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -6,7 +8,6 @@ from pydantic import (
     NonNegativeInt,
     create_model,
     NonNegativeFloat,
-    AliasChoices,
 )
 from typing import Dict, Any, List, Union
 
@@ -23,8 +24,8 @@ class Multipole(BaseModel):
 
 
 multipoles = {
-    "K" + str(l) + "L": (Multipole, Field(default=Multipole(order=l), repr=False))
-    for l in range(0, 13)
+    "K" + str(_l) + "L": (Multipole, Field(default=Multipole(order=_l), repr=False))
+    for _l in range(0, 13)
 }
 MultipolesData = create_model("Multipoles", **multipoles)
 
@@ -80,7 +81,7 @@ class Multipoles(MultipolesData):
     def __eq__(self, other) -> bool:
         return self.ser_model() == other
 
-    def __neq__(self) -> bool:
+    def __neq__(self, other) -> bool:
         return not self.__eq__(other)
 
 
@@ -90,11 +91,11 @@ class FieldIntegral(BaseModel):
     coefficients: List[Union[int, float]] = [0]
 
     def currentToK(self, current: float, energy: float) -> float:
-        sign = numpy.copysign(1, current)
-        ficmod = [i * int(sign) for i in field_integral_coefficients[:-1]]
+        sign = np.copysign(1, current)
+        ficmod = [i * int(sign) for i in self.coefficients[:-1]]
         coeffs = np.append(ficmod, self.coefficients[-1])
-        int_strength = numpy.polyval(coeffs, abs(current))
-        effect = (constants.speed_of_light / 1e6) * int_strength / energy
+        int_strength = np.polyval(coeffs, abs(current))
+        effect = (speed_of_light / 1e6) * int_strength / energy
         return effect
 
     def __iter__(self) -> iter:
@@ -136,16 +137,14 @@ class LinearSaturationFit(BaseModel):
             [setattr(self, k, v) for k, v in zip(self.model_fields.keys(), v)]
 
     def currentToK(self, current: float, energy: float) -> float:
-        sign = numpy.copysign(1, current)
         abs_I = abs(current)
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         int_strength = (
-            m * I
+            m * current
             if abs_I < I_max
-            else copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), I)
+            else np.copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), current)
         )
         gradient = int_strength / L
-        effect = (constants.speed_of_light / 1e6) * int_strength / energy
         return gradient
 
     def __iter__(self) -> iter:
@@ -257,7 +256,7 @@ class Sextupole_Magnet(MagneticElement):
 
 
 solenoidFields = {
-    "S" + str(l) + "L": (float, Field(default=0, repr=False)) for l in range(0, 13)
+    "S" + str(_l) + "L": (float, Field(default=0, repr=False)) for _l in range(0, 13)
 }
 solenoidFieldsData = create_model("solenoidFieldsData", **solenoidFields)
 
@@ -291,7 +290,7 @@ class SolenoidFields(solenoidFieldsData):
     def __eq__(self, other) -> bool:
         return self.ser_model() == other
 
-    def __neq__(self) -> bool:
+    def __neq__(self, other) -> bool:
         return not self.__eq__(other)
 
 
