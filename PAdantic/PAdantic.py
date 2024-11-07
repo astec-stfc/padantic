@@ -60,6 +60,9 @@ class PAdantic(MachineModel):
     def get_all_magnets(self, end: str = None, start: str = None):
         return self.elements_between(start=start, end=end, element_class="magnet")
 
+    def get_all_solenoids(self, end: str = None, start: str = None):
+        return self.elements_between(start=start, end=end, element_class="magnet", element_type="solenoid")
+
     def get_all_quadrupoles(self, end: str = None, start: str = None):
         return self.elements_between(start=start, end=end, element_class="magnet", element_type="quadrupole")
 
