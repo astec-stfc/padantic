@@ -145,7 +145,8 @@ class MachineLayout(BaseLatticeModel):
             all_elem_corrected = []
             for elem in all_elems_reversed:
                 vector = not elem.physical.end.vector_angle(start_pos, [0, 0, -1]) < 0
-                if vector:
+                subelem = elem.subelement
+                if vector or subelem:
                     all_elem_corrected += [elem]
                     start_pos = elem.physical.start
             self._all_elements = list(reversed(all_elem_corrected))
