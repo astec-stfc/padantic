@@ -9,10 +9,10 @@
 # for electrons moving along CLARA, defining
 # each path as a list of machine sections
 
-default_layout: CLARA
+default_layout: CLARAFEBE
 layouts:
   # default layout, beam to FEBE
-  CLARA:
+  CLARAFEBE:
     - "HRG1"
     - "S01"
     - "L01"
@@ -84,3 +84,21 @@ layouts:
     - "L04"
     - "S07"
     - "SP3"
+
+  # beam to end of S07 straight-on
+  CLARA:
+    - "HRG1"
+    - "S01"
+    - "L01"
+    - "S02"
+    - "L02"
+    - "S03"
+    - "L03"
+    - "L03"
+    - "S04"
+    - "L4H"
+    - "S05"
+    - "VBC"
+    - "S06"
+    - "L04"
+    - "S07"
