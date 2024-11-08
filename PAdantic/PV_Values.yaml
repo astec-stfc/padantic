@@ -73,8 +73,6 @@ classTypes:
     - APER
     - IMG
     - VALV
-  SIM:
-    - MARK
   IOC:
     - CS
   OPT:
@@ -355,6 +353,7 @@ classPVRecords:
     - RCUM3
     - RPOS
     - H:MREL
+    - POSBTN
   LIGHT:
     - 'Off'
     - 'On'
@@ -631,8 +630,6 @@ classPVRecords:
     - V:MREL
     - H:POS
     - V:POS
-    - POSBTN
-  PICO:
     - POSBTN
   LIN:
     - CAV

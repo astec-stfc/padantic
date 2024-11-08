@@ -104,7 +104,7 @@ class _baseElement(IgnoreExtra):
     machine_area: str
     virtual_name: str = ""
     alias: Union[str, list, Aliases, None] = Field(alias="name_alias", default=None)
-    subelement: bool = False
+    subelement: bool | str = False
 
     @field_validator("name", mode="before")
     @classmethod
@@ -131,7 +131,7 @@ class _baseElement(IgnoreExtra):
         else:
             raise ValueError("alias should be a string or a list of strings")
 
-    def escape_string_list(self, escapes):
+    def escape_string_list(self, escapes) -> str:
         if len(list(escapes)) > 0:
             return string_with_quotes(",".join(map(str, list(escapes))))
         return string_with_quotes("")
@@ -140,7 +140,7 @@ class _baseElement(IgnoreExtra):
     def from_CATAP(cls: Type[T], fields: dict) -> T:
         return cls(**fields)
 
-    def generate_aliases(self):
+    def generate_aliases(self) -> list:
         magnetPV = PV.fromString(str(self.name) + ":")  # ('CLA', 'S07', 'QUAD', 1)
         return [
             magnetPV.area + "-" + magnetPV.typename + str(magnetPV.index).zfill(2),
@@ -148,7 +148,7 @@ class _baseElement(IgnoreExtra):
             magnetPV.area + "-" + magnetPV.typename + str(magnetPV.index),
         ]
 
-    def to_CATAP(self):
+    def to_CATAP(self) -> dict:
         aliases = (
             ",".join(self.alias.aliases)
             if self.alias is not None
@@ -163,7 +163,7 @@ class _baseElement(IgnoreExtra):
         }
 
     @property
-    def no_controls(self):
+    def no_controls(self) -> str:
         return (
             self.__class__.__name__
             + "("
@@ -178,7 +178,7 @@ class _baseElement(IgnoreExtra):
         )
 
     @property
-    def subdirectory(self):
+    def subdirectory(self) -> str:
         if self.__class__.__name__ == self.hardware_type:
             return os.path.join(self.hardware_class, self.hardware_type)
         return os.path.join(
@@ -186,15 +186,25 @@ class _baseElement(IgnoreExtra):
         )
 
     @property
-    def YAML_filename(self):
+    def YAML_filename(self) -> str:
         return os.path.join(self.subdirectory, self.name + ".yaml")
 
     @property
-    def hardware_info(self):
+    def hardware_info(self) -> dict:
         return {"class": self.hardware_class, "type": self.hardware_type}
 
     def flat(self):
         return flatten(self.model_dump(), parent_key="", separator="_")
+
+    def is_subelement(self) -> bool:
+        if self.subelement.lower() == "false":
+            return False
+        elif self.subelement.lower() == "true":
+            return True
+        if isinstance(self.subelement, bool):
+            return self.subelement
+        else:
+            return isinstance(self.subelement, str)
 
 
 class PhysicalElement(_baseElement):

@@ -30,13 +30,13 @@ hardware_type: BPM
 machine_area: S07
 name: CLA-S07-DIA-BPM-08
 physical:
-  datum: [0.0, 0.0, 49.0578]
+  datum: [0.0, 0.0, 50.157196]
   error:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
   global_rotation: [0.0, 0.0, 0.0]
   length: 0.21
-  middle: [0.0, 0.0, 48.9528]
+  middle: [0.0, 0.0, 50.052196]
   rotation: [0.0, 0.0, 0.0]
   survey:
     position: [0.0, 0.0, 0.0]

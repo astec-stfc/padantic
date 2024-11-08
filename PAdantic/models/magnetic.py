@@ -10,7 +10,8 @@ from pydantic import (
     NonNegativeFloat,
 )
 from typing import Dict, Any, List, Union
-
+import numpy as np
+from scipy import constants
 from .baseModels import IgnoreExtra, T
 
 
@@ -24,8 +25,8 @@ class Multipole(BaseModel):
 
 
 multipoles = {
-    "K" + str(_l) + "L": (Multipole, Field(default=Multipole(order=_l), repr=False))
-    for _l in range(0, 13)
+    "K" + str(no) + "L": (Multipole, Field(default=Multipole(order=no), repr=False))
+    for no in range(0, 13)
 }
 MultipolesData = create_model("Multipoles", **multipoles)
 
@@ -256,7 +257,7 @@ class Sextupole_Magnet(MagneticElement):
 
 
 solenoidFields = {
-    "S" + str(_l) + "L": (float, Field(default=0, repr=False)) for _l in range(0, 13)
+    "S" + str(no) + "L": (float, Field(default=0, repr=False)) for no in range(0, 13)
 }
 solenoidFieldsData = create_model("solenoidFieldsData", **solenoidFields)
 
@@ -287,10 +288,10 @@ class SolenoidFields(solenoidFieldsData):
     def normal(self, order: int) -> Union[int, float]:
         return getattr(self, "S" + str(order) + "L")
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         return self.ser_model() == other
 
-    def __neq__(self, other) -> bool:
+    def __neq__(self, other: Any) -> bool:
         return not self.__eq__(other)
 
 
