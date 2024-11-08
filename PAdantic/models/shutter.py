@@ -1,7 +1,7 @@
 from pydantic import Field, field_validator
-from typing import List, Type, Union
+from typing import List, Union
 
-from .baseModels import IgnoreExtra, T
+from .baseModels import IgnoreExtra
 
 
 class ShutterElement(IgnoreExtra):

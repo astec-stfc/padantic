@@ -46,40 +46,72 @@ class PAdantic(MachineModel):
         return self.elements_between(start=start, end=end, element_class="diagnostic")
 
     def get_all_charge_diagnostics(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="diagnostic", element_type=["FCM", "WCM", "ICT"])
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="diagnostic",
+            element_type=["FCM", "WCM", "ICT"],
+        )
 
     def get_all_position_diagnostics(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="diagnostic", element_type=["Screen", "BPM"])
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="diagnostic",
+            element_type=["Screen", "BPM"],
+        )
 
     def get_all_cameras(self, end: str = None, start: str = None):
-        return [self[scr].diagnostic.camera_name for scr in self.elements_between(start=start, end=end, element_class="diagnostic", element_type="Screen")]
+        return [
+            self[scr].diagnostic.camera_name
+            for scr in self.elements_between(
+                start=start, end=end, element_class="diagnostic", element_type="Screen"
+            )
+        ]
 
     def get_all_screens_and_cameras(self, end: str = None, start: str = None):
-        return {scr: self[scr].diagnostic.camera_name for scr in self.elements_between(start=start, end=end, element_class="diagnostic", element_type="Screen")}
+        return {
+            scr: self[scr].diagnostic.camera_name
+            for scr in self.elements_between(
+                start=start, end=end, element_class="diagnostic", element_type="Screen"
+            )
+        }
 
     def get_all_magnets(self, end: str = None, start: str = None):
         return self.elements_between(start=start, end=end, element_class="magnet")
 
-    def get_all_solenoids(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type="solenoid")
-
     def get_all_quadrupoles(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type="quadrupole")
+        return self.elements_between(
+            start=start, end=end, element_class="magnet", element_type="quadrupole"
+        )
 
     def get_all_dipoles(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type="dipole")
+        return self.elements_between(
+            start=start, end=end, element_class="magnet", element_type="dipole"
+        )
 
     def get_all_correctors(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type=["corrector", "horizontal_corrector", "vertical_corrector"])
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type=["corrector", "horizontal_corrector", "vertical_corrector"],
+        )
 
     def get_all_sextupoles(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type="sextupole")
+        return self.elements_between(
+            start=start, end=end, element_class="magnet", element_type="sextupole"
+        )
 
     def get_all_solenoids(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet", element_type="solenoid")
+        return self.elements_between(
+            start=start, end=end, element_class="magnet", element_type="solenoid"
+        )
 
     def get_all_vacuum_components(self, end: str = None, start: str = None):
         return self.elements_between(start=start, end=end, element_class="vacuum")
 
     def get_all_shutters(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="vacuum", element_type="shutter")
+        return self.elements_between(
+            start=start, end=end, element_class="vacuum", element_type="shutter"
+        )

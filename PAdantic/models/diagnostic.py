@@ -9,8 +9,7 @@ from typing import List, Type, Union
 from .baseModels import IgnoreExtra, T, DeviceList
 
 
-class DiagnosticElement(IgnoreExtra):
-    ...
+class DiagnosticElement(IgnoreExtra): ...
 
 
 class BPM_Diagnostic(DiagnosticElement):
@@ -139,7 +138,7 @@ def PCO_Camera_Sensor():
         maximum=[2400, 2000],
         bit_depth=12,
         operating_middle=[1000, 1000],
-        mechanical_middle=[1000, 1000]
+        mechanical_middle=[1000, 1000],
     )
 
 
@@ -155,7 +154,7 @@ def Manta_Camera_Sensor():
         maximum=[1800, 1100],
         bit_depth=12,
         operating_middle=[900, 550],
-        mechanical_middle=[900, 550]
+        mechanical_middle=[900, 550],
     )
 
 

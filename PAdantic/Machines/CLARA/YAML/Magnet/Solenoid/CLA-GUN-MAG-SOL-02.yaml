@@ -61,5 +61,5 @@ physical:
   survey:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
-subelement: true
+subelement: CLA-HRG1-GUN-CAV-01
 virtual_name: ''

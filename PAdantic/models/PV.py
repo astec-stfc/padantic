@@ -3,7 +3,6 @@ from pydantic import (
     model_serializer,
     ConfigDict,
     field_validator,
-    ValidationInfo,
     Field,
     create_model,
     computed_field,
@@ -20,6 +19,11 @@ with open(
     data = yaml.load(stream, Loader=yaml.Loader)
     for k, v in data.items():
         globals()[k] = v
+    machineNames = globals()["machineNames"]
+    areaNames = globals()["areaNames"]
+    classTypes = globals()["classTypes"]
+    classPVRecords = globals()["classPVRecords"]
+    classPVNames = globals()["classPVNames"]
 
 
 class PVSet(YAMLBaseModel):
@@ -97,8 +101,8 @@ class PV(PVSet):
 
     def validate_machine(cls) -> str:
         v = cls._pv_dict["machine"]
-        if v.upper() not in map(str.upper, machineNames):
-            print("PV - Validate Machine Error:", machineNames, v)
+        if v.upper() not in map(str.upper, machineNames):  # type: ignore # noqa
+            print("PV - Validate Machine Error:", machineNames, v)  # type: ignore # noqa
             raise ValueError("Invalid Machine", v.upper())
         return v.upper()
 
@@ -109,11 +113,11 @@ class PV(PVSet):
 
     def validate_area(cls) -> str:
         v = cls._pv_dict["area"]
-        if v == None:
+        if v is None:
             return v
         else:
-            if v.upper() not in map(str.upper, areaNames) and not v == "":
-                print("PV - Validate Area Error:", areaNames, v)
+            if v.upper() not in map(str.upper, areaNames) and not v == "":  # noqa
+                print("PV - Validate Area Error:", areaNames, v)  # noqa
                 raise ValueError("Invalid Area")
             return v.upper()
 
@@ -124,11 +128,11 @@ class PV(PVSet):
 
     def validate_class(cls) -> str:
         v = cls._pv_dict["classname"]
-        if v == None:
+        if v is None:
             return v
         else:
-            if v.upper() not in map(str.upper, classTypes.keys()):
-                print("PV - Validate Class Error:", classTypes.keys(), v)
+            if v.upper() not in map(str.upper, classTypes.keys()):  # noqa
+                print("PV - Validate Class Error:", classTypes.keys(), v)  # noqa
                 raise ValueError("Invalid Class Name")
             return v.upper()
 
@@ -140,12 +144,12 @@ class PV(PVSet):
     def validate_type(cls) -> str:
         """Confirm that `typename` is in the valid types for class `classname`"""
         v = cls._pv_dict["typename"]
-        if v == None:
+        if v is None:
             return v
         else:
             classname = cls._pv_dict["classname"]
-            if v.upper() not in map(str.upper, classTypes[classname]):
-                print("PV - Validate Type Error:", classTypes[classname], v)
+            if v.upper() not in map(str.upper, classTypes[classname]):  # noqa
+                print("PV - Validate Type Error:", classTypes[classname], v)  # noqa
                 raise ValueError("Invalid Type Name")
             return v.upper()
 
@@ -156,7 +160,7 @@ class PV(PVSet):
 
     def validate_index(cls) -> int:
         v = cls._pv_dict["index"]
-        if v == None:
+        if v is None:
             return v
         elif v.isdigit():
             return int(v)
@@ -172,19 +176,19 @@ class PV(PVSet):
     def validate_record(cls) -> str:
         """Confirm that `record` is in the valid PV record names for class `classname` and type `typename`"""
         v = cls._pv_dict["record"]
-        if v == None or v == "":
+        if v is None or v == "":
             return v
         if "typename" in cls._pv_dict:
             typename = cls._pv_dict["typename"]
         else:
             raise ValueError("typename missing")
-        if typename in classPVRecords:
-            records = classPVRecords[typename]
+        if typename in classPVRecords:  # noqa
+            records = classPVRecords[typename]  # noqa
         else:
             raise ValueError(f"Invalid Record typename {typename} [{cls._pv_dict}]")
-        if isinstance(classPVRecords[typename], str):
+        if isinstance(classPVRecords[typename], str):  # noqa
             # If we are referencing another record class!
-            records = classPVRecords[classPVRecords[typename]]
+            records = classPVRecords[classPVRecords[typename]]  # noqa
         # print(f'validate_record {typename}', records)
         if v.upper() not in map(str.upper, records):
             # print(f'validate_record {v}','    -',v)
@@ -219,193 +223,6 @@ class PV(PVSet):
     @property
     def name(self) -> str:
         return self.pv_string
-
-    def __str__(self) -> str:
-        return self.name
-
-    def __int__(self) -> int:
-        return self.index
-
-    def __repr__(self):
-        return self.__str__()
-
-    @model_serializer
-    def ser_model(self) -> str:
-        return self.__str__()
-
-
-class PVOld(PVSet):
-    """PV model."""
-
-    machine: Union[str, None]
-    area: Union[str, None]
-    classname: Union[str, None]
-    typename: Union[str, None]
-    index: Union[int, str, None]
-    record: str
-    _PV_index: List[int]
-
-    @field_validator("machine", mode="before")
-    @classmethod
-    def validate_machine(cls, v: str) -> str:
-        if v.upper() not in map(str.upper, machineNames):
-            print("PV - Validate Machine Error:", machineNames, v)
-            raise ValueError("Invalid Machine", v.upper())
-        return v.upper()
-
-    @field_validator("area", mode="before")
-    @classmethod
-    def validate_area(cls, v: str) -> str:
-        if v == None:
-            return v
-        else:
-            if v.upper() not in map(str.upper, areaNames) and not v == "":
-                print("PV - Validate Area Error:", areaNames, v)
-                raise ValueError("Invalid Area")
-            return v.upper()
-
-    @field_validator("classname", mode="before")
-    @classmethod
-    def validate_class(cls, v: str) -> str:
-        if v == None:
-            return v
-        else:
-            if v.upper() not in map(str.upper, classtypeNames.keys()):
-                print("PV - Validate Class Error:", classtypeNames.keys(), v)
-                raise ValueError("Invalid Class Name")
-            return v.upper()
-
-    @field_validator("typename", mode="before")
-    @classmethod
-    def validate_type(cls, v: str, info: ValidationInfo) -> str:
-        if v == None:
-            return v
-        else:
-            classname = info.data["classname"]
-            if v.upper() not in map(str.upper, classtypeNames[classname]):
-                print("PV - Validate Type Error:", classtypeNames[classname], v)
-                raise ValueError("Invalid Type Name")
-            return v.upper()
-
-    @field_validator("index", mode="before")
-    @classmethod
-    def validate_index(cls, v: str) -> int:
-        if v == None:
-            return v
-        elif v.isdigit():
-            return int(v)
-        elif not isinstance(v, str):
-            raise ValueError(f"Invalid index {v}")
-        return v
-
-    @field_validator("record", mode="before")
-    @classmethod
-    def validate_record(cls, v: str, info: ValidationInfo) -> str:
-        if v == None or v == "":
-            return v
-        if "typename" in info.data:
-            typename = info.data["typename"]
-        else:
-            raise ValueError("typename missing")
-        if typename in classrecordNames:
-            records = classrecordNames[typename]
-        else:
-            raise ValueError(f"Invalid Record typename {typename}")
-        if isinstance(classrecordNames[typename], str):
-            records = classrecordNames[classrecordNames[typename]]
-        # print(f'validate_record {typename}', records)
-        if v.upper() not in map(str.upper, records):
-            # print(f'validate_record {v}','    -',v)
-            raise ValueError("Invalid Record Name")
-        return v
-
-    @classmethod
-    def fromString(cls, pv: str) -> T:
-        assert ":" in pv
-        prefix, postfix = pv.split(":", 1)
-        substr = prefix.split("-")
-        if len(substr) == 5:
-            model = cls.model_validate(
-                {
-                    "machine": substr[0],
-                    "area": substr[1],
-                    "classname": substr[2],
-                    "typename": substr[3],
-                    "index": substr[4],
-                    "record": postfix,
-                }
-            )
-            model._PV_index = list(range(5))
-        elif len(substr) == 4:
-            model = cls.model_validate(
-                {
-                    "machine": substr[0],
-                    "area": None,
-                    "classname": substr[1],
-                    "typename": substr[2],
-                    "index": substr[3],
-                    "record": postfix,
-                }
-            )
-            model._PV_index = [0, 2, 3, 4]
-        elif len(substr) == 3:
-            model = cls.model_validate(
-                {
-                    "machine": substr[0],
-                    "area": substr[1],
-                    "classname": substr[2],
-                    "typename": None,
-                    "index": None,
-                    "record": postfix,
-                }
-            )
-            model._PV_index = [0, 1, 2]
-        elif len(substr) == 7:
-            # print(substr[-1])
-            # print({'machine': substr[0], 'area': substr[1], 'classname': substr[2],
-            #                  'typename': '-'.join(substr[4:-1]), 'index': substr[-1], 'record': postfix})
-            model = cls.model_validate(
-                {
-                    "machine": substr[0],
-                    "area": substr[1],
-                    "classname": substr[2],
-                    "typename": "-".join(substr[4:-1]),
-                    "index": substr[-1],
-                    "record": postfix,
-                }
-            )
-            model._PV_index = list(range(5))
-        return model
-
-    @property
-    def _indexString(self) -> str:
-        if 4 in self._PV_index:
-            if isinstance(self.index, int):
-                return "-" + str(self.index).zfill(2)
-            else:
-                return "-" + str(self.index)
-
-    @property
-    def basename(self) -> str:
-        name = (
-            "-".join(
-                [
-                    getattr(self, a)
-                    for a in [
-                        ["machine", "area", "classname", "typename"][i]
-                        for i in self._PV_index
-                        if i < 4
-                    ]
-                ]
-            )
-            + self._indexString
-        )
-        return name
-
-    @property
-    def name(self) -> str:
-        name = self.basename + ":" + self.record
-        return name
 
     def __str__(self) -> str:
         return self.name
@@ -496,7 +313,7 @@ PVMappings = {
 
 for k, v in PVMappings.items():
     pvs = {}
-    for p in classPVNames[k]:
+    for p in classPVNames[k]:  # noqa
         if isinstance(p, str):
             pvs[p] = (PV, Field(postfixdefault=p))
         if isinstance(p, dict):

@@ -1,9 +1,7 @@
 import glob
-from math import copysign, ceil
 from yaml import load
 from Importers.MySafeLoader import MySafeLoader
-
-from PAdantic.models.PV import (
+from PAdantic.models.PV import (  # noqa: F401
     MagnetPV,
     BPMPV,
     CameraPV,
@@ -25,7 +23,7 @@ from PAdantic.models.PV import (
     elementTypes,
     PVTypes,
 )
-from PAdantic.models.element import *
+from PAdantic.models.element import *  # noqa
 
 
 class ReplacePc:

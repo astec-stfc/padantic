@@ -55,7 +55,9 @@ from ..models.element import (
 )
 from ..models.diagnostic import Camera_Diagnostic_Type
 
-with open(os.path.dirname(os.path.abspath(__file__)) + '/camera_assignments.yaml', 'r') as stream:
+with open(
+    os.path.dirname(os.path.abspath(__file__)) + "/camera_assignments.yaml", "r"
+) as stream:
     camera_assignments = yaml.load(stream, Loader=yaml.Loader)
     camera_types = {}
     for k, v in camera_assignments.items():
@@ -232,8 +234,12 @@ def read_SimFrame_YAML(filename):
             if elem["type"] == "screen":
                 elemmodel = interpret_SimFrame_Element(name, elem)
                 elemlist.update({name: elemmodel})
-                camtype = camera_types[elemmodel.name] if elemmodel.name in camera_types else "PCO"
-                print(elemmodel.diagnostic.camera_name, 'camtype = ', camtype)
+                camtype = (
+                    camera_types[elemmodel.name]
+                    if elemmodel.name in camera_types
+                    else "PCO"
+                )
+                print(elemmodel.diagnostic.camera_name, "camtype = ", camtype)
                 elemmodelcam = Camera(
                     name=elemmodel.diagnostic.camera_name,
                     hardware_model=camtype,
