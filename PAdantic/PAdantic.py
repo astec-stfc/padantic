@@ -1,10 +1,9 @@
 import os
+import glob
 from pydantic import field_validator
+from yaml.constructor import Constructor
 from .models.elementList import MachineModel
 from .Importers.YAML_Loader import read_YAML_Element_File, read_YAML_Combined_File
-import glob
-
-from yaml.constructor import Constructor
 
 
 def add_bool(self, node):

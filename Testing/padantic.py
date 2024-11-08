@@ -1,12 +1,7 @@
 import sys
 
 sys.path.append("..")
-from PAdantic.PAdantic import PAdantic
-from PAdantic.Exporters.YAML import export_machine_combined_file
-
-
-# machine = PAdantic(layout_file='Machines/CLARA/layouts.yaml', section_file='Machines/CLARA/sections.yaml', yaml_dir='Machines/CLARA/YAML/')
-# print(export_machine_combined_file('../PAdantic/Machines/CLARA', machine))
+from PAdantic.PAdantic import PAdantic  # noqa E402
 
 machine = PAdantic(
     layout_file="Machines/CLARA/layouts.yaml",

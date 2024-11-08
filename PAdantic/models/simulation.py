@@ -1,6 +1,5 @@
 from pydantic import Field
 from typing import Union
-
 from .baseModels import IgnoreExtra
 
 

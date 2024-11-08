@@ -12,7 +12,8 @@ import yaml
 
 from .baseModels import T, YAMLBaseModel
 
-# Load PV definitions
+# Load PV definitions from yaml file
+# This creates some flake8 F821 warnings that are ignored manually
 with open(
     os.path.abspath(os.path.dirname(__file__)) + "/../PV_Values.yaml", "r"
 ) as stream:
@@ -101,8 +102,8 @@ class PV(PVSet):
 
     def validate_machine(cls) -> str:
         v = cls._pv_dict["machine"]
-        if v.upper() not in map(str.upper, machineNames):  # type: ignore # noqa
-            print("PV - Validate Machine Error:", machineNames, v)  # type: ignore # noqa
+        if v.upper() not in map(str.upper, machineNames):  # noqa F821
+            print("PV - Validate Machine Error:", machineNames, v)  # noqa F821
             raise ValueError("Invalid Machine", v.upper())
         return v.upper()
 
@@ -116,8 +117,8 @@ class PV(PVSet):
         if v is None:
             return v
         else:
-            if v.upper() not in map(str.upper, areaNames) and not v == "":  # noqa
-                print("PV - Validate Area Error:", areaNames, v)  # noqa
+            if v.upper() not in map(str.upper, areaNames) and not v == "":  # noqa F821
+                print("PV - Validate Area Error:", areaNames, v)  # noqa F821
                 raise ValueError("Invalid Area")
             return v.upper()
 
@@ -131,8 +132,8 @@ class PV(PVSet):
         if v is None:
             return v
         else:
-            if v.upper() not in map(str.upper, classTypes.keys()):  # noqa
-                print("PV - Validate Class Error:", classTypes.keys(), v)  # noqa
+            if v.upper() not in map(str.upper, classTypes.keys()):  # noqa F821
+                print("PV - Validate Class Error:", classTypes.keys(), v)  # noqa F821
                 raise ValueError("Invalid Class Name")
             return v.upper()
 
@@ -148,8 +149,10 @@ class PV(PVSet):
             return v
         else:
             classname = cls._pv_dict["classname"]
-            if v.upper() not in map(str.upper, classTypes[classname]):  # noqa
-                print("PV - Validate Type Error:", classTypes[classname], v)  # noqa
+            if v.upper() not in map(str.upper, classTypes[classname]):  # noqa F821
+                print(
+                    "PV - Validate Type Error:", classTypes[classname], v  # noqa F821
+                )
                 raise ValueError("Invalid Type Name")
             return v.upper()
 
@@ -182,13 +185,13 @@ class PV(PVSet):
             typename = cls._pv_dict["typename"]
         else:
             raise ValueError("typename missing")
-        if typename in classPVRecords:  # noqa
-            records = classPVRecords[typename]  # noqa
+        if typename in classPVRecords:  # noqa F821
+            records = classPVRecords[typename]  # noqa F821
         else:
             raise ValueError(f"Invalid Record typename {typename} [{cls._pv_dict}]")
-        if isinstance(classPVRecords[typename], str):  # noqa
+        if isinstance(classPVRecords[typename], str):  # noqa F821
             # If we are referencing another record class!
-            records = classPVRecords[classPVRecords[typename]]  # noqa
+            records = classPVRecords[classPVRecords[typename]]  # noqa F821
         # print(f'validate_record {typename}', records)
         if v.upper() not in map(str.upper, records):
             # print(f'validate_record {v}','    -',v)
@@ -313,7 +316,7 @@ PVMappings = {
 
 for k, v in PVMappings.items():
     pvs = {}
-    for p in classPVNames[k]:  # noqa
+    for p in classPVNames[k]:  # noqa F821
         if isinstance(p, str):
             pvs[p] = (PV, Field(postfixdefault=p))
         if isinstance(p, dict):

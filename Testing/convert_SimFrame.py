@@ -1,15 +1,12 @@
 import sys
-import os
 
 sys.path.append("..")
-from PAdantic.PAdantic import PAdantic
-from PAdantic.Importers.SimFrame_Loader import (
+from PAdantic.Importers.SimFrame_Loader import (  # noqa E402
     SF_files,
     read_SimFrame_YAML,
-    get_SimFrame_PV,
 )
-from PAdantic.models.elementList import MachineModel
-from PAdantic.Exporters.YAML import export_as_yaml, export_machine
+from PAdantic.models.elementList import MachineModel  # noqa E402
+from PAdantic.Exporters.YAML import export_machine  # noqa E402
 
 machine = MachineModel(
     layout_file="../PAdantic/Machines/CLARA/layouts.yaml",

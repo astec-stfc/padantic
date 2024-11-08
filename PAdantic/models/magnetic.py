@@ -1,3 +1,5 @@
+import numpy as np
+from scipy.constants import speed_of_light
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -94,7 +96,7 @@ class FieldIntegral(BaseModel):
         ficmod = [i * int(sign) for i in self.coefficients[:-1]]
         coeffs = np.append(ficmod, self.coefficients[-1])
         int_strength = np.polyval(coeffs, abs(current))
-        effect = (constants.speed_of_light / 1e6) * int_strength / energy
+        effect = (speed_of_light / 1e6) * int_strength / energy
         return effect
 
     def __iter__(self) -> iter:

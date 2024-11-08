@@ -1,3 +1,4 @@
+import os
 import glob
 from yaml import load
 from Importers.MySafeLoader import MySafeLoader
@@ -139,11 +140,16 @@ catap_files = [
     # r'YAML\CLA-L01-RF-PROTE-01.yaml',
 ]
 
-catap_files = glob.glob(
-    "\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yaml",
-    recursive=True,
+catap_path = os.path.join(
+    "\\\\claraserv3.dl.ac.uk",
+    "claranet",
+    "packages",
+    "CATAP",
+    "Nightly",
+    "CATAP_Nightly_17_01_2024",
+    "python310",
+    "MasterLattice",
 )
-catap_files += glob.glob(
-    "\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\Nightly\\CATAP_Nightly_17_01_2024\\python310\\MasterLattice\\*\\CLA*.yml",
-    recursive=True,
-)
+
+catap_files = glob.glob(os.path.join(catap_path, "*", "CLA*.yaml"), recursive=True)
+catap_files += glob.glob(os.path.join(catap_path, "*", "CLA*.yml"), recursive=True)

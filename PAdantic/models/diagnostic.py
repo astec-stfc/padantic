@@ -9,7 +9,8 @@ from typing import List, Type, Union
 from .baseModels import IgnoreExtra, T, DeviceList
 
 
-class DiagnosticElement(IgnoreExtra): ...
+class DiagnosticElement(IgnoreExtra):
+    pass
 
 
 class BPM_Diagnostic(DiagnosticElement):

@@ -135,7 +135,8 @@ class ElementError(IgnoreExtra):
             return super().__eq__(other)
 
 
-class ElementSurvey(ElementError): ...
+class ElementSurvey(ElementError):
+    pass
 
 
 class PhysicalElement(IgnoreExtra):
