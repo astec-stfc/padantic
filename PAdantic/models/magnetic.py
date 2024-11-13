@@ -10,8 +10,6 @@ from pydantic import (
     NonNegativeFloat,
 )
 from typing import Dict, Any, List, Union
-import numpy as np
-from scipy import constants
 from .baseModels import IgnoreExtra, T
 
 
