@@ -1,0 +1,20 @@
+alias: null
+hardware_class: Simulation
+hardware_model: Simulation
+hardware_type: Marker
+machine_area: SP1
+name: CLA-SP1-DIA-FCUP-01
+physical:
+  datum: [-2.82434, 0.0, 8.9121]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.785398]
+  length: 0.0
+  middle: [-2.82434, 0.0, 8.9121]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''
