@@ -273,4 +273,5 @@ SF_files = [
     r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP2.yaml",
     r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP3.yaml",
     r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_FEBE.yaml",
+    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP1.yaml",
 ]

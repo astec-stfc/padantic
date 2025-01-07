@@ -197,9 +197,9 @@ class _baseElement(IgnoreExtra):
         return flatten(self.model_dump(), parent_key="", separator="_")
 
     def is_subelement(self) -> bool:
-        if self.subelement.lower() == "false":
+        if str(self.subelement).lower() == "false":
             return False
-        elif self.subelement.lower() == "true":
+        elif str(self.subelement).lower() == "true":
             return True
         if isinstance(self.subelement, bool):
             return self.subelement
