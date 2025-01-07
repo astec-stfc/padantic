@@ -432,6 +432,7 @@ class MachineModel(YAMLBaseModel):
         element_type: Union[str, list, None] = None,
         element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
+        path: str = None
     ) -> List[str]:
         """
         Returns an ordered list of all lattice elements (of a specific type) between
@@ -443,20 +444,23 @@ class MachineModel(YAMLBaseModel):
         :returns: List of all element names between *start* and *end* (inclusive)
         """
         # determine the beam path
-        if hasattr(self, "_default_path") and self._default_path in self.lattices:
-            default_path = self._default_path
-        else:
-            raise Exception('"default_layout" = %s is not defined' % self._default_path)
+        if path is None:
+            if hasattr(self, "_default_path") and self._default_path in self.lattices:
+                path = self._default_path
+            else:
+                raise Exception('"default_layout" = %s is not defined' % self._default_path)
+        elif path not in self.lattices:
+            raise Exception('"path" = %s is not defined' % path)
 
         if end is None:
-            path_obj = self.lattices[default_path]
+            path_obj = self.lattices[path]
             end = path_obj.elements[-1]
         else:
             end_obj = self.get_element(end)
             beam_path = (
                 end_obj.machine_area
                 if (end_obj.machine_area in self.lattices)
-                else default_path
+                else path
             )
             path_obj = self.lattices[beam_path]
 

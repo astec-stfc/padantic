@@ -41,76 +41,117 @@ class PAdantic(MachineModel):
             yaml_elems = [read_YAML_Element_File(y) for y in YAML_files]
         self.update({y.name: y for y in yaml_elems})
 
-    def get_all_diagnostics(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="diagnostic")
+    def get_all_diagnostics(self, end: str = None, start: str = None, path: str = None):
+        return self.elements_between(start=start, end=end, element_class="diagnostic", path=path)
 
-    def get_all_charge_diagnostics(self, end: str = None, start: str = None):
+    def get_all_charge_diagnostics(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
             end=end,
             element_class="diagnostic",
             element_type=["FCM", "WCM", "ICT"],
+            path=path
         )
 
-    def get_all_position_diagnostics(self, end: str = None, start: str = None):
+    def get_all_position_diagnostics(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
             end=end,
             element_class="diagnostic",
             element_type=["Screen", "BPM"],
+            path=path
         )
 
-    def get_all_cameras(self, end: str = None, start: str = None):
+    def get_all_cameras(self, end: str = None, start: str = None, path: str = None):
         return [
             self[scr].diagnostic.camera_name
             for scr in self.elements_between(
-                start=start, end=end, element_class="diagnostic", element_type="Screen"
+                start=start,
+                end=end,
+                element_class="diagnostic",
+                element_type="Screen",
+                path=path
             )
         ]
 
-    def get_all_screens_and_cameras(self, end: str = None, start: str = None):
+    def get_all_screens_and_cameras(self, end: str = None, start: str = None, path: str = None):
         return {
             scr: self[scr].diagnostic.camera_name
             for scr in self.elements_between(
-                start=start, end=end, element_class="diagnostic", element_type="Screen"
+                start=start,
+                end=end,
+                element_class="diagnostic",
+                element_type="Screen",
+                path=path
             )
         }
 
-    def get_all_magnets(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="magnet")
-
-    def get_all_quadrupoles(self, end: str = None, start: str = None):
+    def get_all_magnets(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
-            start=start, end=end, element_class="magnet", element_type="quadrupole"
+            start=start,
+            end=end,
+            element_class="magnet",
+            path=path
+            )
+
+    def get_all_quadrupoles(self, end: str = None, start: str = None, path: str = None):
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type="quadrupole",
+            path=path
         )
 
-    def get_all_dipoles(self, end: str = None, start: str = None):
+    def get_all_dipoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
-            start=start, end=end, element_class="magnet", element_type="dipole"
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type="dipole",
+            path=path
         )
 
-    def get_all_correctors(self, end: str = None, start: str = None):
+    def get_all_correctors(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
             end=end,
             element_class="magnet",
             element_type=["corrector", "horizontal_corrector", "vertical_corrector"],
+            path=path
         )
 
-    def get_all_sextupoles(self, end: str = None, start: str = None):
+    def get_all_sextupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
-            start=start, end=end, element_class="magnet", element_type="sextupole"
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type="sextupole",
+            path=path
         )
 
-    def get_all_solenoids(self, end: str = None, start: str = None):
+    def get_all_solenoids(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
-            start=start, end=end, element_class="magnet", element_type="solenoid"
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type="solenoid",
+            path=path
         )
 
-    def get_all_vacuum_components(self, end: str = None, start: str = None):
-        return self.elements_between(start=start, end=end, element_class="vacuum")
-
-    def get_all_shutters(self, end: str = None, start: str = None):
+    def get_all_vacuum_components(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
-            start=start, end=end, element_class="vacuum", element_type="shutter"
+            start=start,
+            end=end,
+            element_class="vacuum",
+            path=path
+            )
+
+    def get_all_shutters(self, end: str = None, start: str = None, path: str = None):
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="vacuum",
+            element_type="shutter",
+            path=path
         )

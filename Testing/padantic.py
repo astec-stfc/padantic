@@ -10,4 +10,4 @@ machine = PAdantic(
 )
 
 machine.default_layout = "CLARA"
-print(machine.get_all_solenoids())
+print(machine.get_all_position_diagnostics(path='C2V'))
