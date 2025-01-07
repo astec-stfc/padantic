@@ -29,15 +29,15 @@ machine_area: FEA
 magnetic:
   field_integral_coefficients:
     coefficients: [0]
-  length: 0.21
+  length: 0.177875
   linear_saturation_coefficients:
-    I0: 0.0
-    I_max: 0.0
-    L: 0.0
-    a: 0.0
-    d: 0.0
+    I0: 772.707351709677
+    I_max: 31.9674
+    L: 177.875031278515
+    a: -2.23593968326E-05
+    d: 13.32742444
     f: 0.0
-    m: 0.0
+    m: 0.0331249987
   multipoles:
     K1L:
       normal: -1.10639
@@ -60,7 +60,7 @@ physical:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
   global_rotation: [0.0, 0.0, -0.4886921906]
-  length: 0.21
+  length: 0.15
   middle: [1.57277651, 0.0, 53.3458555]
   rotation: [0.0, 0.0, 0.0]
   survey:

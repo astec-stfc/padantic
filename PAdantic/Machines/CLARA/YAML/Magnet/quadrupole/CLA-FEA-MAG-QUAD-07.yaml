@@ -60,7 +60,7 @@ physical:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
   global_rotation: [0.0, 0.0, -0.4886921906]
-  length: 0.21
+  length: 0.15
   middle: [2.22064751, 0.0, 54.5643235]
   rotation: [0.0, 0.0, 0.0]
   survey:

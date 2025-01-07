@@ -29,7 +29,7 @@ machine_area: FED
 magnetic:
   field_integral_coefficients:
     coefficients: [0]
-  length: 0.277
+  length: 0.25623
   linear_saturation_coefficients:
     I0: 4007.3504827231336
     I_max: 21.527626373656222
