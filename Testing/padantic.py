@@ -23,5 +23,5 @@ def unique_list(a_list):
 
 
 machine.default_layout = "CLARA"
-abs_all_position_diagnostics = unique_list([machine.get_all_position_diagnostics(path=p) for p in machine.lattices])
-print([machine.elements[e] for e in abs_all_position_diagnostics[:1]])
+for method in [m for m in dir(machine) if 'get_all_' in m and not '__' in m]:
+    print(method, ':', getattr(machine, method))
