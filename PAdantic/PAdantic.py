@@ -41,6 +41,11 @@ class PAdantic(MachineModel):
             yaml_elems = [read_YAML_Element_File(y) for y in YAML_files]
         self.update({y.name: y for y in yaml_elems})
 
+    def get_rf_cavities(self, end: str = None, start: str = None, path: str = None):
+        return self.elements_between(
+            start=start, end=end, element_class="rf", path=path
+        )
+
     def get_diagnostics(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start, end=end, element_class="diagnostic", path=path
@@ -171,7 +176,7 @@ class PAdantic(MachineModel):
             path=path,
         )
 
-    def __get_all_elements(
+    def __all_elements(
         self, element_class: str | None = None, element_type: str | None = None
     ) -> set:
         return set(
@@ -192,100 +197,104 @@ class PAdantic(MachineModel):
         )
 
     @property
-    def get_all_elements(self):
-        return self.__get_all_elements(element_class="diagnostic")
+    def all_elements(self):
+        return self.__all_elements()
 
     @property
-    def get_all_diagnostics(self):
-        return self.__get_all_elements(element_class="diagnostic")
+    def all_rf_cavities(self):
+        return self.__all_elements(element_class="rf")
 
     @property
-    def get_all_charge_diagnostics(self) -> set:
-        return self.__get_all_elements(
+    def all_diagnostics(self):
+        return self.__all_elements(element_class="diagnostic")
+
+    @property
+    def all_charge_diagnostics(self) -> set:
+        return self.__all_elements(
             element_class="diagnostic",
             element_type=["FCM", "WCM", "ICT"],
         )
 
     @property
-    def get_all_beam_position_monitors(self) -> set:
-        return self.__get_all_elements(
+    def all_beam_position_monitors(self) -> set:
+        return self.__all_elements(
             element_class="diagnostic",
             element_type="BPM",
         )
 
     @property
-    def get_all_position_diagnostics(self) -> set:
-        return self.__get_all_elements(
+    def all_position_diagnostics(self) -> set:
+        return self.__all_elements(
             element_class="diagnostic",
             element_type=["Screen", "BPM"],
         )
 
     @property
-    def get_all_cameras(self) -> set:
+    def all_cameras(self) -> set:
         return [
             self[scr].diagnostic.camera_name
-            for scr in self.__get_all_elements(
+            for scr in self.__all_elements(
                 element_class="diagnostic",
                 element_type="Screen",
             )
         ]
 
     @property
-    def get_all_screens_and_cameras(self) -> set:
+    def all_screens_and_cameras(self) -> set:
         return {
             scr: self[scr].diagnostic.camera_name
-            for scr in self.__get_all_elements(
+            for scr in self.__all_elements(
                 element_class="diagnostic",
                 element_type="Screen",
             )
         }
 
     @property
-    def get_all_magnets(self) -> set:
-        return self.__get_all_elements(element_class="magnet")
+    def all_magnets(self) -> set:
+        return self.__all_elements(element_class="magnet")
 
     @property
-    def get_all_quadrupoles(self) -> set:
-        return self.__get_all_elements(
+    def all_quadrupoles(self) -> set:
+        return self.__all_elements(
             element_class="magnet",
             element_type="quadrupole",
         )
 
     @property
-    def get_all_dipoles(self) -> set:
-        return self.__get_all_elements(
+    def all_dipoles(self) -> set:
+        return self.__all_elements(
             element_class="magnet",
             element_type="dipole",
         )
 
     @property
-    def get_all_correctors(self) -> set:
-        return self.__get_all_elements(
+    def all_correctors(self) -> set:
+        return self.__all_elements(
             element_class="magnet",
             element_type=["corrector", "horizontal_corrector", "vertical_corrector"],
         )
 
     @property
-    def get_all_sextupoles(self) -> set:
-        return self.__get_all_elements(
+    def all_sextupoles(self) -> set:
+        return self.__all_elements(
             element_class="magnet",
             element_type="sextupole",
         )
 
     @property
-    def get_all_solenoids(self) -> set:
-        return self.__get_all_elements(
+    def all_solenoids(self) -> set:
+        return self.__all_elements(
             element_class="magnet",
             element_type="solenoid",
         )
 
     @property
-    def get_all_vacuum_components(self) -> set:
-        return self.__get_all_elements(element_class="vacuum")
+    def all_vacuum_components(self) -> set:
+        return self.__all_elements(element_class="vacuum")
 
     @property
-    def get_all_shutters(self) -> set:
-        return self.__get_all_elements(
+    def all_shutters(self) -> set:
+        return self.__all_elements(
             element_class="vacuum",
             element_type="shutter",
         )
