@@ -44,7 +44,7 @@ from ..models.element import (
     FCM,
     ICT,
     Screen,
-    Corrector,
+    Combined_Corrector,
     Horizontal_Corrector,
     Vertical_Corrector,
     Wakefield,
@@ -123,7 +123,7 @@ SimFrame_Elements = {
     ),
     # 'rf_deflecting_cavity': SimFrame_Conversion(typeclass=Sextupole, PV_class='Magnet'),
     "kicker": SimFrame_Conversion(
-        typeclass=Corrector, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Combined_Corrector, PV_class="Magnet", hardware_class="Magnet"
     ),
     "hkicker": SimFrame_Conversion(
         typeclass=Horizontal_Corrector, PV_class="Magnet", hardware_class="Magnet"
@@ -231,6 +231,8 @@ def read_SimFrame_YAML(filename):
                 elemlist.update({hname: elemmodel})
                 elemmodel = interpret_SimFrame_Element(vname, velem)
                 elemlist.update({vname: elemmodel})
+                elem['Horizontal_Corrector'] = hname
+                elem['Vertical_Corrector'] = vname
             if elem["type"] == "screen":
                 elemmodel = interpret_SimFrame_Element(name, elem)
                 elemlist.update({name: elemmodel})

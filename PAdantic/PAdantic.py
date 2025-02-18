@@ -1,5 +1,6 @@
 import os
 import glob
+from more_itertools import flatten
 from pydantic import field_validator
 from yaml.constructor import Constructor
 from .models.elementList import MachineModel
@@ -128,14 +129,71 @@ class PAdantic(MachineModel):
             path=path,
         )
 
+    def __get_combined_corrector_sub_correctors(self, elem: str):
+        if hasattr(self[elem], "Horizontal_Corrector") and self[elem].Horizontal_Corrector is not None:
+            if hasattr(self[elem], "Vertical_Corrector") and self[elem].Vertical_Corrector is not None:
+                return [self[elem].Horizontal_Corrector, self[elem].Vertical_Corrector]
+            else:
+                return [self[elem].Horizontal_Corrector]
+        elif hasattr(self[elem], "Vertical_Corrector") and self[elem].Vertical_Corrector is not None:
+            return [self[elem].Vertical_Corrector]
+        else:
+            return [elem]
+
     def get_correctors(self, end: str = None, start: str = None, path: str = None):
-        return self.elements_between(
+        correctors = self.elements_between(
             start=start,
             end=end,
             element_class="magnet",
-            element_type=["corrector", "horizontal_corrector", "vertical_corrector"],
+            element_type=["combined_corrector", "horizontal_corrector", "vertical_corrector"],
             path=path,
         )
+        return list(flatten([
+            (
+                self.__get_combined_corrector_sub_correctors(c)
+            )
+            for c in correctors
+        ]))
+
+    def get_horizontal_correctors(
+        self, end: str = None, start: str = None, path: str = None
+    ):
+        horizontal_correctors = self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type=["combined_corrector", "horizontal_corrector"],
+            path=path,
+        )
+        return [
+            (
+                self[c].Horizontal_Corrector
+                if hasattr(self[c], "Horizontal_Corrector")
+                and self[c].Horizontal_Corrector is not None
+                else c
+            )
+            for c in horizontal_correctors
+        ]
+
+    def get_vertical_correctors(
+        self, end: str = None, start: str = None, path: str = None
+    ):
+        vertical_correctors = self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type=["combined_corrector", "Vertical_Corrector"],
+            path=path,
+        )
+        return [
+            (
+                self[c].Vertical_Corrector
+                if hasattr(self[c], "Vertical_Corrector")
+                and self[c].Vertical_Corrector is not None
+                else c
+            )
+            for c in vertical_correctors
+        ]
 
     def get_sextupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
@@ -260,9 +318,53 @@ class PAdantic(MachineModel):
 
     @property
     def get_all_correctors(self) -> set:
-        return self.__get_all_elements(
-            element_class="magnet",
-            element_type=["corrector", "horizontal_corrector", "vertical_corrector"],
+        return set(
+            [
+                elem
+                for pathelems in [
+                    self.get_correctors(
+                        start=None,
+                        end=None,
+                        path=path,
+                    )
+                    for path in self.lattices.keys()
+                ]
+                for elem in pathelems
+            ]
+        )
+
+    @property
+    def get_all_horizontal_correctors(self) -> set:
+        return set(
+            [
+                elem
+                for pathelems in [
+                    self.get_horizontal_correctors(
+                        start=None,
+                        end=None,
+                        path=path,
+                    )
+                    for path in self.lattices.keys()
+                ]
+                for elem in pathelems
+            ]
+        )
+
+    @property
+    def get_all_vertical_correctors(self) -> set:
+        return set(
+            [
+                elem
+                for pathelems in [
+                    self.get_vertical_correctors(
+                        start=None,
+                        end=None,
+                        path=path,
+                    )
+                    for path in self.lattices.keys()
+                ]
+                for elem in pathelems
+            ]
         )
 
     @property

@@ -24,7 +24,7 @@ electrical:
   read_tolerance: 0.1
 hardware_class: Magnet
 hardware_model: Generic
-hardware_type: Corrector
+hardware_type: Vertical_Corrector
 machine_area: VBC
 magnetic:
   field_integral_coefficients:

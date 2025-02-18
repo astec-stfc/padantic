@@ -23,5 +23,4 @@ def unique_list(a_list):
 
 
 machine.default_layout = "CLARA"
-for method in [m for m in dir(machine) if 'get_all_' in m and not '__' in m]:
-    print(method, ':', getattr(machine, method))
+print([machine.get_horizontal_correctors()])

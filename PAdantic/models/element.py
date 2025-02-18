@@ -325,12 +325,6 @@ class Sextupole(Magnet):
     magnetic: Sextupole_Magnet
 
 
-class Corrector(Dipole):
-    """Corrector element."""
-
-    hardware_type: str = Field(default="Corrector", frozen=True)
-
-
 class Horizontal_Corrector(Dipole):
     """Horizontal Corrector element."""
 
@@ -341,6 +335,14 @@ class Vertical_Corrector(Dipole):
     """Vertical Corrector element."""
 
     hardware_type: str = Field(default="Vertical_Corrector", frozen=True)
+
+
+class Combined_Corrector(Dipole):
+    """H&V Corrector element."""
+
+    hardware_type: str = Field(default="Combined_Corrector", frozen=True)
+    Horizontal_Corrector: str | None = Field(default=None, frozen=True)
+    Vertical_Corrector: str | None = Field(default=None, frozen=True)
 
 
 class Solenoid(Magnet):

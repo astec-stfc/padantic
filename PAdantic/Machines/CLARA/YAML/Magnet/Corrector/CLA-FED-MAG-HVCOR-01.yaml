@@ -24,7 +24,9 @@ electrical:
   read_tolerance: 0.1
 hardware_class: Magnet
 hardware_model: Generic
-hardware_type: Corrector
+hardware_type: Combined_Corrector
+Horizontal_Corrector: CLA-FED-MAG-HCOR-01
+Vertical_Corrector: CLA-FED-MAG-VCOR-01
 machine_area: FED
 magnetic:
   field_integral_coefficients:
