@@ -23,4 +23,4 @@ def unique_list(a_list):
 
 
 machine.default_layout = "CLARA"
-print([machine.get_horizontal_correctors()])
+print([machine.get_lattice_correctors()])

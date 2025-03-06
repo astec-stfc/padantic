@@ -200,6 +200,17 @@ class PAdantic(MachineModel):
             for c in vertical_correctors
         ]
 
+    def get_lattice_correctors(
+        self, end: str = None, start: str = None, path: str = None
+    ):
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type=["combined_corrector", "horizontal_corrector", "vertical_corrector"],
+            path=path,
+        )
+
     def get_sextupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
