@@ -116,6 +116,15 @@ class PAdantic(MachineModel):
             start=start, end=end, element_class="magnet", path=path
         )
 
+    def get_separate_magnets(self, end: str = None, start: str = None, path: str = None):
+        magnets = self.get_magnets(end=end, start=start, path=path)
+        return list(flatten([
+            (
+                self.__get_combined_corrector_sub_correctors(c)
+            )
+            for c in magnets
+        ]))
+
     def get_quadrupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
@@ -334,6 +343,23 @@ class PAdantic(MachineModel):
         return self.__all_elements(
             element_class="magnet",
             element_type="dipole",
+        )
+
+    @property
+    def all_separate_magnets(self) -> set:
+        return set(
+            [
+                elem
+                for pathelems in [
+                    self.get_separate_magnets(
+                        start=None,
+                        end=None,
+                        path=path
+                    )
+                    for path in self.lattices.keys()
+                ]
+                for elem in pathelems
+            ]
         )
 
     @property
