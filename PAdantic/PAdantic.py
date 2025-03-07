@@ -220,6 +220,17 @@ class PAdantic(MachineModel):
             path=path,
         )
 
+    def get_combined_correctors(
+        self, end: str = None, start: str = None, path: str = None
+    ):
+        return self.elements_between(
+            start=start,
+            end=end,
+            element_class="magnet",
+            element_type=["combined_corrector"],
+            path=path,
+        )
+
     def get_sextupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start,
@@ -343,6 +354,13 @@ class PAdantic(MachineModel):
         return self.__all_elements(
             element_class="magnet",
             element_type="dipole",
+        )
+
+    @property
+    def all_combined_correctors(self) -> set:
+        return self.__all_elements(
+            element_class="magnet",
+            element_type="combined_corrector",
         )
 
     @property
