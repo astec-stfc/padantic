@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.constants import speed_of_light
+from scipy.constants import speed_of_light, pi
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -11,6 +11,18 @@ from pydantic import (
 )
 from typing import Dict, Any, List, Union
 from .baseModels import IgnoreExtra, T
+
+
+def Power(a, b):
+    return a**b
+
+
+def Sqrt(a):
+    return Power(a, 0.5)
+
+
+Pi = pi
+Degree = pi / 180.0
 
 
 class Multipole(BaseModel):
@@ -112,6 +124,10 @@ class LinearSaturationFit(BaseModel):
     d: float = 0
     L: NonNegativeFloat = 0
 
+    @property
+    def coefficients(self) -> List[Union[int, float]]:
+        return [self.m, self.I_max, self.f, self.a, self.I0, self.d, self.L]
+
     @classmethod
     def from_string(cls, v: Union[str, List]) -> T:
         if isinstance(v, str):
@@ -135,7 +151,7 @@ class LinearSaturationFit(BaseModel):
             assert len(v) == len(self.model_fields.keys())
             [setattr(self, k, v) for k, v in zip(self.model_fields.keys(), v)]
 
-    def currentToK(self, current: float, energy: float) -> float:
+    def currentToK(self, current: float, energy: float) -> list[float, float]:
         abs_I = abs(current)
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         int_strength = (
@@ -143,9 +159,27 @@ class LinearSaturationFit(BaseModel):
             if abs_I < I_max
             else np.copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), current)
         )
-        gradient = int_strength / L
-        return gradient
+        gradient = 1000 / L * (speed_of_light / 1e6) * int_strength / energy
+        return gradient, int_strength
 
+    def KToCurrent(self, K: float, energy: float) -> float:
+        m, I_max, f, a, I0, d, L = list(self.coefficients)
+        int_strength = K * energy * L / (speed_of_light / 1e6) / 1000
+        abs_str = abs(int_strength)
+        linear_current = int_strength / m
+        if abs(linear_current) < I_max:
+            return linear_current
+        elif f == 0:
+            return I0-Sqrt((abs_str-d)/a)
+        else:
+            p = (-6 * f * a * I0 - a**2)/(3 * f**2)
+            q = ((2 * a**3) + (18 * f * a**2 * I0) + (27 * f**2 * (a * I0**2 + d - abs_str))) / (27 * f**3)
+            r = Sqrt((p / 3)**3)
+            theta = np.arccos(-q / (2 * r))
+            r_cbrt = -r**(1/3)
+            t3 = 2 * r_cbrt * np.cos((theta / 3) + 4 * Pi / 3)
+            return t3-a/(3*f)
+        
     def __iter__(self) -> iter:
         return iter(
             [getattr(self, k) for k in ["m", "I_max", "f", "a", "I0", "d", "L"]]

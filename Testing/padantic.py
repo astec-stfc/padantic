@@ -22,5 +22,10 @@ def unique_list(a_list):
     return seen
 
 
-machine.default_layout = "CLARA"
-print([machine.get_lattice_correctors()])
+machine.default_layout = "SP3"
+print(machine.get_all_elements())
+exit()
+for magnet_name in machine.get_quadrupoles():
+    linsat = machine.get_element(magnet_name).magnetic.linear_saturation_coefficients
+    print(magnet_name, linsat.currentToK(10, 240))
+    print(magnet_name, linsat.KToCurrent(linsat.currentToK(1, 240)[0], 240))
