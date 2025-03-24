@@ -376,7 +376,7 @@ class MachineModel(YAMLBaseModel):
             for _area in areas:
                 # collect list of elements from this machine area
                 new_elements = [
-                    x for x in elements.values() if (x.machine_area == _area)
+                    x for x in elements.values() if (x.name in self._section_definitions[_area])
                 ]
                 if _area in self._section_definitions:
                     self.sections[_area] = SectionLattice(
