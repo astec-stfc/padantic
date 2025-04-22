@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.constants import speed_of_light, pi
+from scipy.constants import speed_of_light, pi, elementary_charge
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -151,7 +151,24 @@ class LinearSaturationFit(BaseModel):
             assert len(v) == len(self.model_fields.keys())
             [setattr(self, k, v) for k, v in zip(self.model_fields.keys(), v)]
 
-    def currentToK(self, current: float, energy: float) -> list[float, float]:
+    def currentToK(self, current: float, momentum: float) -> float:
+        """
+        Convert the current in the magnet to the normalized strength (K value).
+
+        The method calculates the normalized strength (K value) of the magnetic field 
+        based on the provided current and momentum. It uses the field integral coefficients 
+        to compute the integrated field strength and applies a scaling factor based on 
+        the speed of light and the beam momentum.
+
+        Args:
+            current (float): The current flowing through the magnet (in amperes).
+            momentum (float): The momentum of the particle beam (in MeV/c).
+
+        Returns:
+            dict: A dictionary containing the K value, KL value, gradient, and integrated strength.
+                The K value is the normalized strength of the magnetic field, KL is the K value multiplied by the length of the magnet,
+                gradient is the magnetic field gradient, and integrated strength is the integrated field strength.
+        """
         abs_I = abs(current)
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         int_strength = (
@@ -159,12 +176,45 @@ class LinearSaturationFit(BaseModel):
             if abs_I < I_max
             else np.copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), current)
         )
-        gradient = 1000 / L * (speed_of_light / 1e6) * int_strength / energy
-        return gradient, int_strength
+        K = 1000 / L * (speed_of_light / 1e6) * int_strength / momentum
+        gradient = 1000 * int_strength / L
+        return {'K': K, 'KL': K * L / 1000, 'gradient': gradient, 'int_strength': int_strength}
 
-    def KToCurrent(self, K: float, energy: float) -> float:
+    def KLToCurrent(self, KL: float | dict, momentum: float) -> float:
+        """
+        Convert the normalized strength (K value) of the magnetic field to the corresponding current.
+
+        This method calculates the current required to produce a given normalized strength (K value) 
+        of the magnetic field, based on the magnet's linear and saturation fit coefficients. It accounts 
+        for both linear and nonlinear (saturation) behavior of the magnet.
+
+        Args:
+            KL (float): The normalized strength (K value) of the magnetic field.
+                OR
+            dict: A dictionary containing the K value and its gradient.
+            momentum (float): The momentum of the particle beam (in MeV/c).
+
+        Returns:
+            float: The current (in amperes) required to produce the given K value.
+        """
         m, I_max, f, a, I0, d, L = list(self.coefficients)
-        int_strength = K * energy * L / (speed_of_light / 1e6) / 1000
+        if isinstance(KL, dict):
+            if 'KL' in KL:
+                KL = KL['KL']
+            elif 'K' in KL:
+                KL = KL['K'] * L / 1000
+        return self.KToCurrent(KL / (L / 1000), momentum)
+
+    def KToCurrent(self, K: float | dict, momentum: float) -> float:
+        m, I_max, f, a, I0, d, L = list(self.coefficients)
+        if isinstance(K, dict):
+            if 'K' in K:
+                K = K['K']
+            elif 'KL' in K:
+                K = K['KL'] / (L / 1000)
+            else:
+                raise ValueError(f"K value not found in the dictionary {K}")
+        int_strength = 1000 * K * L * momentum / (speed_of_light)
         abs_str = abs(int_strength)
         linear_current = int_strength / m
         if abs(linear_current) < I_max:
@@ -195,13 +245,12 @@ class MagneticElement(IgnoreExtra):
     multipoles: Multipoles = Multipoles()
     systematic_multipoles: Multipoles = Multipoles()
     random_multipoles: Multipoles = Multipoles()
-    # field_integral_coefficients: FieldIntegral = FieldIntegral()
+    field_integral_coefficients: FieldIntegral = FieldIntegral()
     linear_saturation_coefficients: LinearSaturationFit = LinearSaturationFit()
     settle_time: float = Field(alias="mag_set_max_wait_time", default=45.0)
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)
-        self.field_integral_coefficients = self.linear_saturation_coefficients
         if "kl" in data:
             self.kl = data["kl"]
         if "angle" in data and self.order == 0:
@@ -227,23 +276,23 @@ class MagneticElement(IgnoreExtra):
             )
         # print(self.multipoles)
 
-    # @field_validator("field_integral_coefficients", mode="before")
-    # @classmethod
-    # def validate_field_integral_coefficients(
-    #     cls, v: Union[str, List, dict]
-    # ) -> FieldIntegral:
-    #     if isinstance(v, str):
-    #         return FieldIntegral(coefficients=list(map(float, v.split(","))))
-    #     elif isinstance(v, (list, tuple)):
-    #         return FieldIntegral(coefficients=list(v))
-    #     elif isinstance(v, (dict)):
-    #         return FieldIntegral(**v)
-    #     elif isinstance(v, (FieldIntegral)):
-    #         return v
-    #     else:
-    #         raise ValueError(
-    #             "field_integral_coefficients should be a string or a list of floats"
-    #         )
+    @field_validator("field_integral_coefficients", mode="before")
+    @classmethod
+    def validate_field_integral_coefficients(
+        cls, v: Union[str, List, dict]
+    ) -> FieldIntegral:
+        if isinstance(v, str):
+            return FieldIntegral(coefficients=list(map(float, v.split(","))))
+        elif isinstance(v, (list, tuple)):
+            return FieldIntegral(coefficients=list(v))
+        elif isinstance(v, (dict)):
+            return FieldIntegral(**v)
+        elif isinstance(v, (FieldIntegral)):
+            return v
+        else:
+            raise ValueError(
+                "field_integral_coefficients should be a string or a list of floats"
+            )
 
     # @debug
     def KnL(self, order: int = None) -> Union[int, float]:

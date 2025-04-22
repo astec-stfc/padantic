@@ -24,9 +24,10 @@ def unique_list(a_list):
 
 
 machine.default_layout = "SP3"
-pprint({d: machine.get_element(d).yaml_dump() for d in machine.get_dipoles()})
-exit()
+# pprint({d: machine.get_element(d).yaml_dump() for d in machine.get_dipoles()})
+# exit()
 for magnet_name in machine.get_quadrupoles():
     linsat = machine.get_element(magnet_name).magnetic.linear_saturation_coefficients
-    print(magnet_name, linsat.currentToK(10, 240))
-    print(magnet_name, linsat.KToCurrent(linsat.currentToK(1, 240)[0], 240))
+    kvals = magnet_name, linsat.currentToK(48, 30)
+    print(magnet_name, kvals[1]['K'], linsat.KToCurrent(kvals[1], 30))
+    print(magnet_name, kvals[1]['KL'], linsat.KLToCurrent(kvals[1], 30))
