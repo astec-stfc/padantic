@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 
 sys.path.append("..")
 from PAdantic.PAdantic import PAdantic  # noqa E402
@@ -23,7 +24,7 @@ def unique_list(a_list):
 
 
 machine.default_layout = "SP3"
-print(machine.get_all_elements())
+pprint({d: machine.get_element(d).yaml_dump() for d in machine.get_dipoles()})
 exit()
 for magnet_name in machine.get_quadrupoles():
     linsat = machine.get_element(magnet_name).magnetic.linear_saturation_coefficients

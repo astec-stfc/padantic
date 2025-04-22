@@ -195,12 +195,13 @@ class MagneticElement(IgnoreExtra):
     multipoles: Multipoles = Multipoles()
     systematic_multipoles: Multipoles = Multipoles()
     random_multipoles: Multipoles = Multipoles()
-    field_integral_coefficients: FieldIntegral = FieldIntegral()
+    # field_integral_coefficients: FieldIntegral = FieldIntegral()
     linear_saturation_coefficients: LinearSaturationFit = LinearSaturationFit()
     settle_time: float = Field(alias="mag_set_max_wait_time", default=45.0)
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)
+        self.field_integral_coefficients = self.linear_saturation_coefficients
         if "kl" in data:
             self.kl = data["kl"]
         if "angle" in data and self.order == 0:
@@ -226,23 +227,23 @@ class MagneticElement(IgnoreExtra):
             )
         # print(self.multipoles)
 
-    @field_validator("field_integral_coefficients", mode="before")
-    @classmethod
-    def validate_field_integral_coefficients(
-        cls, v: Union[str, List, dict]
-    ) -> FieldIntegral:
-        if isinstance(v, str):
-            return FieldIntegral(coefficients=list(map(float, v.split(","))))
-        elif isinstance(v, (list, tuple)):
-            return FieldIntegral(coefficients=list(v))
-        elif isinstance(v, (dict)):
-            return FieldIntegral(**v)
-        elif isinstance(v, (FieldIntegral)):
-            return v
-        else:
-            raise ValueError(
-                "field_integral_coefficients should be a string or a list of floats"
-            )
+    # @field_validator("field_integral_coefficients", mode="before")
+    # @classmethod
+    # def validate_field_integral_coefficients(
+    #     cls, v: Union[str, List, dict]
+    # ) -> FieldIntegral:
+    #     if isinstance(v, str):
+    #         return FieldIntegral(coefficients=list(map(float, v.split(","))))
+    #     elif isinstance(v, (list, tuple)):
+    #         return FieldIntegral(coefficients=list(v))
+    #     elif isinstance(v, (dict)):
+    #         return FieldIntegral(**v)
+    #     elif isinstance(v, (FieldIntegral)):
+    #         return v
+    #     else:
+    #         raise ValueError(
+    #             "field_integral_coefficients should be a string or a list of floats"
+    #         )
 
     # @debug
     def KnL(self, order: int = None) -> Union[int, float]:
