@@ -1,5 +1,5 @@
 from pydantic import BaseModel, model_serializer, ConfigDict
-from typing import TypeVar, Dict, Any, Type, List, Union
+from typing import TypeVar, Any, Type, List, Union
 import yaml
 import numpy as np
 
@@ -28,10 +28,10 @@ yaml.add_representer(flow_list, flow_list_rep)
 
 
 def convert_numpy_types(v):
-    if isinstance(v, dict):
+    if isinstance(v, (dict)):
         return {k: convert_numpy_types(l) for k, l in v.items()}
     if isinstance(v, (np.ndarray, list, tuple)):
-        return flow_list([convert_numpy_types(l) for l in v])
+        return flow_list([convert_numpy_types(arr) for arr in v])
     elif isinstance(v, (np.float64, np.float32, np.float16, np.float_)):
         return float(v)
     elif isinstance(
@@ -71,11 +71,6 @@ class IgnoreExtra(YAMLBaseModel):
         populate_by_name=True,
     )
 
-    # @model_serializer
-    # def ser_model(self) -> Dict[str, Any]:
-    #     # print(self.__class__.__name__, [getattr(self,k) for k in self.model_fields.keys()])
-    #     return {k: getattr(self,k) for k in self.model_fields.keys() if getattr(self,k) != 0 and getattr(self,k) is not None and getattr(self,k) != {}}
-
     def _create_field_class(
         self, fields: dict, fieldname: str, fieldclass: List[str]
     ) -> None:
@@ -106,7 +101,10 @@ class NumpyModel(YAMLBaseModel):
 
     @model_serializer
     def ser_model(self) -> np.ndarray:
-        return self.array
+        try:
+            return self.array
+        except Exception:
+            return self
 
     @property
     def array(self) -> np.ndarray:
@@ -138,14 +136,14 @@ class NumpyVectorModel(NumpyModel):
         return iter([getattr(self, k) for k in self.model_fields.keys()])
 
     def __eq__(self, other: Any) -> bool:
-        if other == 0 or other == 0.0 or other == None:
+        if other == 0 or other == 0.0 or other is None:
             if all([getattr(self, k) == 0 for k in self.model_fields.keys()]):
                 return True
             return False
         return list(self) == list(other)
 
     def __neq__(self, other: Any) -> bool:
-        if other == 0 or other == 0.0 or other == None:
+        if other == 0 or other == 0.0 or other is None:
             if all([getattr(self, k) == 0 for k in self.model_fields.keys()]):
                 return False
             return True

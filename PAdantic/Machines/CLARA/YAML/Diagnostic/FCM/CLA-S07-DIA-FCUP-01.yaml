@@ -1,0 +1,24 @@
+alias: null
+controls:
+  Q: CLA-S07-DIA-FCUP-01:Q
+diagnostic:
+  type: faraday_cup
+hardware_class: Diagnostic
+hardware_model: Generic
+hardware_type: FCM
+machine_area: S07
+name: CLA-S07-DIA-FCUP-01
+physical:
+  datum: [0.0, 0.0, 53.997011]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.0
+  middle: [0.0, 0.0, 53.997011]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

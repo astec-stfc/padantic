@@ -1,5 +1,5 @@
 import os
-from math import copysign, ceil
+from math import ceil
 import pandas
 
 magnet_table_filename = os.path.join(
@@ -55,7 +55,6 @@ def add_magnet_table_parameters(n, e, magnetPV):
         e.manufacturer.serial_number = serial_number
         e.electrical.maxI = ceil(I_degauss)
         e.electrical.minI = -1.0 * ceil(I_degauss)
-    except Exception as exc:
+    except Exception:
         print("Magnet missing from magnet table!", magnet)
-        # print(exc)
     return e

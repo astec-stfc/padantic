@@ -1,3 +1,5 @@
+import numpy as np
+from scipy.constants import speed_of_light, pi, elementary_charge
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -6,11 +8,21 @@ from pydantic import (
     NonNegativeInt,
     create_model,
     NonNegativeFloat,
-    AliasChoices,
 )
 from typing import Dict, Any, List, Union
-
 from .baseModels import IgnoreExtra, T
+
+
+def Power(a, b):
+    return a**b
+
+
+def Sqrt(a):
+    return Power(a, 0.5)
+
+
+Pi = pi
+Degree = pi / 180.0
 
 
 class Multipole(BaseModel):
@@ -23,8 +35,8 @@ class Multipole(BaseModel):
 
 
 multipoles = {
-    "K" + str(l) + "L": (Multipole, Field(default=Multipole(order=l), repr=False))
-    for l in range(0, 13)
+    "K" + str(no) + "L": (Multipole, Field(default=Multipole(order=no), repr=False))
+    for no in range(0, 13)
 }
 MultipolesData = create_model("Multipoles", **multipoles)
 
@@ -80,7 +92,7 @@ class Multipoles(MultipolesData):
     def __eq__(self, other) -> bool:
         return self.ser_model() == other
 
-    def __neq__(self) -> bool:
+    def __neq__(self, other) -> bool:
         return not self.__eq__(other)
 
 
@@ -90,11 +102,11 @@ class FieldIntegral(BaseModel):
     coefficients: List[Union[int, float]] = [0]
 
     def currentToK(self, current: float, energy: float) -> float:
-        sign = numpy.copysign(1, current)
-        ficmod = [i * int(sign) for i in field_integral_coefficients[:-1]]
+        sign = np.copysign(1, current)
+        ficmod = [i * int(sign) for i in self.coefficients[:-1]]
         coeffs = np.append(ficmod, self.coefficients[-1])
-        int_strength = numpy.polyval(coeffs, abs(current))
-        effect = (constants.speed_of_light / 1e6) * int_strength / energy
+        int_strength = np.polyval(coeffs, abs(current))
+        effect = (speed_of_light / 1e6) * int_strength / energy
         return effect
 
     def __iter__(self) -> iter:
@@ -111,6 +123,10 @@ class LinearSaturationFit(BaseModel):
     I0: float = 0
     d: float = 0
     L: NonNegativeFloat = 0
+
+    @property
+    def coefficients(self) -> List[Union[int, float]]:
+        return [self.m, self.I_max, self.f, self.a, self.I0, self.d, self.L]
 
     @classmethod
     def from_string(cls, v: Union[str, List]) -> T:
@@ -135,19 +151,85 @@ class LinearSaturationFit(BaseModel):
             assert len(v) == len(self.model_fields.keys())
             [setattr(self, k, v) for k, v in zip(self.model_fields.keys(), v)]
 
-    def currentToK(self, current: float, energy: float) -> float:
-        sign = numpy.copysign(1, current)
+    def currentToK(self, current: float, momentum: float) -> float:
+        """
+        Convert the current in the magnet to the normalized strength (K value).
+
+        The method calculates the normalized strength (K value) of the magnetic field 
+        based on the provided current and momentum. It uses the field integral coefficients 
+        to compute the integrated field strength and applies a scaling factor based on 
+        the speed of light and the beam momentum.
+
+        Args:
+            current (float): The current flowing through the magnet (in amperes).
+            momentum (float): The momentum of the particle beam (in MeV/c).
+
+        Returns:
+            dict: A dictionary containing the K value, KL value, gradient, and integrated strength.
+                The K value is the normalized strength of the magnetic field, KL is the K value multiplied by the length of the magnet,
+                gradient is the magnetic field gradient, and integrated strength is the integrated field strength.
+        """
         abs_I = abs(current)
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         int_strength = (
-            m * I
+            m * current
             if abs_I < I_max
-            else copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), I)
+            else np.copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), current)
         )
-        gradient = int_strength / L
-        effect = (constants.speed_of_light / 1e6) * int_strength / energy
-        return gradient
+        K = 1000 / L * (speed_of_light / 1e6) * int_strength / momentum
+        gradient = 1000 * int_strength / L
+        return {'K': K, 'KL': K * L / 1000, 'gradient': gradient, 'int_strength': int_strength}
 
+    def KLToCurrent(self, KL: float | dict, momentum: float) -> float:
+        """
+        Convert the normalized strength (K value) of the magnetic field to the corresponding current.
+
+        This method calculates the current required to produce a given normalized strength (K value) 
+        of the magnetic field, based on the magnet's linear and saturation fit coefficients. It accounts 
+        for both linear and nonlinear (saturation) behavior of the magnet.
+
+        Args:
+            KL (float): The normalized strength (K value) of the magnetic field.
+                OR
+            dict: A dictionary containing the K value and its gradient.
+            momentum (float): The momentum of the particle beam (in MeV/c).
+
+        Returns:
+            float: The current (in amperes) required to produce the given K value.
+        """
+        m, I_max, f, a, I0, d, L = list(self.coefficients)
+        if isinstance(KL, dict):
+            if 'KL' in KL:
+                KL = KL['KL']
+            elif 'K' in KL:
+                KL = KL['K'] * L / 1000
+        return self.KToCurrent(KL / (L / 1000), momentum)
+
+    def KToCurrent(self, K: float | dict, momentum: float) -> float:
+        m, I_max, f, a, I0, d, L = list(self.coefficients)
+        if isinstance(K, dict):
+            if 'K' in K:
+                K = K['K']
+            elif 'KL' in K:
+                K = K['KL'] / (L / 1000)
+            else:
+                raise ValueError(f"K value not found in the dictionary {K}")
+        int_strength = 1000 * K * L * momentum / (speed_of_light)
+        abs_str = abs(int_strength)
+        linear_current = int_strength / m
+        if abs(linear_current) < I_max:
+            return linear_current
+        elif f == 0:
+            return I0-Sqrt((abs_str-d)/a)
+        else:
+            p = (-6 * f * a * I0 - a**2)/(3 * f**2)
+            q = ((2 * a**3) + (18 * f * a**2 * I0) + (27 * f**2 * (a * I0**2 + d - abs_str))) / (27 * f**3)
+            r = Sqrt((p / 3)**3)
+            theta = np.arccos(-q / (2 * r))
+            r_cbrt = -r**(1/3)
+            t3 = 2 * r_cbrt * np.cos((theta / 3) + 4 * Pi / 3)
+            return t3-a/(3*f)
+        
     def __iter__(self) -> iter:
         return iter(
             [getattr(self, k) for k in ["m", "I_max", "f", "a", "I0", "d", "L"]]
@@ -257,7 +339,7 @@ class Sextupole_Magnet(MagneticElement):
 
 
 solenoidFields = {
-    "S" + str(l) + "L": (float, Field(default=0, repr=False)) for l in range(0, 13)
+    "S" + str(no) + "L": (float, Field(default=0, repr=False)) for no in range(0, 13)
 }
 solenoidFieldsData = create_model("solenoidFieldsData", **solenoidFields)
 
@@ -288,10 +370,10 @@ class SolenoidFields(solenoidFieldsData):
     def normal(self, order: int) -> Union[int, float]:
         return getattr(self, "S" + str(order) + "L")
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         return self.ser_model() == other
 
-    def __neq__(self) -> bool:
+    def __neq__(self, other: Any) -> bool:
         return not self.__eq__(other)
 
 

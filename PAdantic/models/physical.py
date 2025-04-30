@@ -49,9 +49,9 @@ class Position(NumpyVectorModel):
 class Rotation(NumpyVectorModel):
     """Rotation model."""
 
-    phi: confloat(ge=-3.14, le=3.14) = 0.0
-    psi: confloat(ge=-3.14, le=3.14) = 0.0
-    theta: confloat(ge=-3.14, le=3.14) = 0.0
+    phi: confloat(ge=-3.14, le=3.14) = 0.0  # type: ignore
+    psi: confloat(ge=-3.14, le=3.14) = 0.0  # type: ignore
+    theta: confloat(ge=-3.14, le=3.14) = 0.0  # type: ignore
 
     def __add__(self, other: Type[T]) -> T:
         return Rotation(
@@ -135,13 +135,16 @@ class ElementError(IgnoreExtra):
             return super().__eq__(other)
 
 
-class ElementSurvey(ElementError): ...
+class ElementSurvey(ElementError):
+    pass
 
 
 class PhysicalElement(IgnoreExtra):
     """Physical info model."""
 
-    middle: Position = Field(alias=AliasChoices("position", "centre"), default=0)
+    middle: Position = Field(
+        alias=AliasChoices("position", "centre"), default=Position()
+    )
     datum: Position = Field(default=0)
     rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)

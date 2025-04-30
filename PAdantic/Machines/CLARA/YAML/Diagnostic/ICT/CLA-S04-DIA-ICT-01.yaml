@@ -1,0 +1,24 @@
+alias: null
+controls:
+  Q: CLA-S04-DIA-ICT-01:Q
+diagnostic:
+  type: integrated_current_transformer
+hardware_class: Diagnostic
+hardware_model: Generic
+hardware_type: ICT
+machine_area: S04
+name: CLA-S04-DIA-ICT-01
+physical:
+  datum: [0.0, 0.0, 16.680768]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.05
+  middle: [0.0, 0.0, 16.655768]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

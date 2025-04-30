@@ -3,9 +3,9 @@ aperture:
   horizontal_size: 1.0
   shape: rectangular
   vertical_size: 1.0
-class_name: Collimator
 hardware_class: Simulation
-hardware_type: collimator
+hardware_model: Simulation
+hardware_type: Collimator
 machine_area: VBC
 name: CLA-VBC-DIA-RCOL-01
 physical:

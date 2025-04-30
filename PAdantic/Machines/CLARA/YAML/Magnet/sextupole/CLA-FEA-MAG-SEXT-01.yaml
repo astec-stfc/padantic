@@ -1,5 +1,4 @@
 alias: null
-class_name: Sextupole
 controls:
   GETSETI: CLA-FEA-MAG-SEXT-01:GETSETI
   ILK_RESET: CLA-FEA-MAG-SEXT-01:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: -8.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: sextupole
+hardware_model: Generic
+hardware_type: Sextupole
 machine_area: FEA
 magnetic:
   field_integral_coefficients:
@@ -45,7 +45,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: sextupole
+  hardware_class: Sextupole
   manufacturer: Sextupole Type 1
   serial_number: 0
 name: CLA-FEA-MAG-SEXT-01

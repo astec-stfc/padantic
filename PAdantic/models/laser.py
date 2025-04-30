@@ -1,5 +1,5 @@
-from pydantic import Field, field_validator
-from typing import List, Type, Union
+from pydantic import Field
+from typing import Type, Union
 
 from .baseModels import IgnoreExtra, T
 

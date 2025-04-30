@@ -3,9 +3,9 @@ aperture:
   horizontal_size: 0.017
   shape: rectangular
   vertical_size: 0.017
-class_name: Aperture
 hardware_class: Simulation
-hardware_type: aperture
+hardware_model: Simulation
+hardware_type: Aperture
 machine_area: S05
 name: CLA-S05-SIM-APER-01
 physical:

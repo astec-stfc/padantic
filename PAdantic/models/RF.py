@@ -1,5 +1,5 @@
 from pydantic import Field, field_validator, create_model
-from typing import List, Type, Any, Union
+from typing import List, Type, Union
 
 from .baseModels import IgnoreExtra, T, YAMLBaseModel
 
@@ -46,7 +46,8 @@ class PIDPhaseRange(IgnoreExtra):
         return iter([getattr(self, k) for k in self.model_fields.keys()])
 
 
-class PIDWeightRange(PIDPhaseRange): ...
+class PIDWeightRange(PIDPhaseRange):
+    pass
 
 
 class PIDElement(IgnoreExtra):
@@ -108,7 +109,8 @@ fields = {str(i): (str, Field(alias="CH" + str(i), default="")) for i in range(1
 ChannelNamesBase = create_model("ChannelNamesBase", **fields, __base__=IgnoreExtra)
 
 
-class ChannelNames(ChannelNamesBase): ...
+class ChannelNames(ChannelNamesBase):
+    pass
 
 
 llrffieldnames = [
@@ -221,11 +223,13 @@ class LLRFElement(IgnoreExtra):
         return super().from_CATAP(fields)
 
 
-class RFModulatorElement(IgnoreExtra): ...
+class RFModulatorElement(IgnoreExtra):
+    pass
 
 
 class RFProtectionElement(IgnoreExtra):
     prot_type: str
 
 
-class RFHeartbeatElement(IgnoreExtra): ...
+class RFHeartbeatElement(IgnoreExtra):
+    pass

@@ -3,9 +3,9 @@ aperture:
   horizontal_size: 1.0
   shape: rectangular
   vertical_size: 1.0
-class_name: Aperture
 hardware_class: Simulation
-hardware_type: aperture
+hardware_model: Simulation
+hardware_type: Aperture
 machine_area: FEC1
 name: CLA-FEC1-DIA-ECOL-01
 physical:

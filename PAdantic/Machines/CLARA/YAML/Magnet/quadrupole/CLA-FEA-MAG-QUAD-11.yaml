@@ -1,5 +1,4 @@
 alias: null
-class_name: Quadrupole
 controls:
   GETSETI: CLA-FEA-MAG-QUAD-11:GETSETI
   ILK_RESET: CLA-FEA-MAG-QUAD-11:Rst
@@ -24,20 +23,21 @@ electrical:
   minI: -94.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: quadrupole
+hardware_model: Generic
+hardware_type: Quadrupole
 machine_area: FEA
 magnetic:
   field_integral_coefficients:
     coefficients: [0]
-  length: 0.21
+  length: 0.178319
   linear_saturation_coefficients:
-    I0: 0.0
-    I_max: 0.0
-    L: 0.0
-    a: 0.0
-    d: 0.0
+    I0: 741.624923432923
+    I_max: 34.6120
+    L: 178.318693031886
+    a: -2.33928255182E-05
+    d: 12.83820567
     f: 0.0
-    m: 0.0
+    m: 0.0330780582
   multipoles:
     K1L:
       normal: 1.59249
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: quadrupole
+  hardware_class: Quadrupole
   manufacturer: Quadrupole Type 3
   serial_number: '16614'
 name: CLA-FEA-MAG-QUAD-11
@@ -60,7 +60,7 @@ physical:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
   global_rotation: [0.0, 0.0, -0.2443460953]
-  length: 0.21
+  length: 0.15
   middle: [3.4096768, 0.0, 58.21276305]
   rotation: [0.0, 0.0, 0.0]
   survey:

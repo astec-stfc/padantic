@@ -1,5 +1,4 @@
 alias: null
-class_name: Quadrupole
 controls:
   GETSETI: CLA-S04-MAG-QUAD-07:GETSETI
   ILK_RESET: CLA-S04-MAG-QUAD-07:Rst
@@ -24,7 +23,8 @@ electrical:
   minI: -94.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: quadrupole
+hardware_model: Generic
+hardware_type: Quadrupole
 machine_area: S04
 magnetic:
   field_integral_coefficients:
@@ -50,7 +50,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: quadrupole
+  hardware_class: Quadrupole
   manufacturer: Quadrupole Type 3
   serial_number: '16613'
 name: CLA-S04-MAG-QUAD-07

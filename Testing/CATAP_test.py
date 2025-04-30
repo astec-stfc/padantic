@@ -1,16 +1,10 @@
-import sys, os, time
-import random as r
-import numpy as np
-import inspect
-import atexit
-import copy
+import os
+import sys
 
-# sys.path.append(r'\\claraserv3.dl.ac.uk\claranet\packages\CATAP\Nightly\CATAP_Nightly_07_02_2023\python38')
 sys.path.append(
     r"C:\Users\jkj62.CLRC\Documents\GitHub\CATAP\Nightly\CATAP_Nightly_15_04_2024\python310"
 )
-# from CATAP.EPICSTools import *
-from CATAP.HardwareFactory import *
+from CATAP.HardwareFactory import HardwareFactory, STATE  # noqa E402
 
 
 class Test:

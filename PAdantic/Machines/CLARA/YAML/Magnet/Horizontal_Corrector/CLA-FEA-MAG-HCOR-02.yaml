@@ -1,0 +1,65 @@
+alias: null
+controls:
+  GETSETI: CLA-FEA-MAG-HCOR-02:GETSETI
+  ILK_RESET: CLA-FEA-MAG-HCOR-02:Rst
+  INT_STR: CLA-FEA-MAG-HCOR-02:INT_STR
+  INT_STR_MM: CLA-FEA-MAG-HCOR-02:INT_STR_MM
+  K_ANG: CLA-FEA-MAG-HCOR-02:K_ANG
+  K_DIP_P: CLA-FEA-MAG-HCOR-02:K_DIP_P
+  K_MRAD: CLA-FEA-MAG-HCOR-02:K_MRAD
+  K_SET_P: CLA-FEA-MAG-HCOR-02:K_SET_P
+  K_VAL: CLA-FEA-MAG-HCOR-02:K_VAL
+  READI: CLA-FEA-MAG-HCOR-02:READI
+  RILK: CLA-FEA-MAG-HCOR-02:RILK
+  RPOWER: CLA-FEA-MAG-HCOR-02:RPOWER
+  SETI: CLA-FEA-MAG-HCOR-02:SETI
+  SPOWER: CLA-FEA-MAG-HCOR-02:SPOWER
+degauss:
+  steps: 11
+  tolerance: 0.5
+  values: [12.97, -12.97, 7.8, -7.8, 5.2, -5.2, 2.6, -2.6, 1.3, -1.3, 0.0]
+electrical:
+  maxI: 13
+  minI: -13.0
+  read_tolerance: 0.1
+hardware_class: Magnet
+hardware_model: Generic
+hardware_type: Horizontal_Corrector
+machine_area: FEA
+magnetic:
+  field_integral_coefficients:
+    coefficients: [0]
+  length: 0.2
+  linear_saturation_coefficients:
+    I0: 0.0
+    I_max: 0.0
+    L: 0.0
+    a: 0.0
+    d: 0.0
+    f: 0.0
+    m: 0.0
+  multipoles: {}
+  order: 0
+  random_multipoles: {}
+  settle_time: 45.0
+  skew: false
+  systematic_multipoles: {}
+manufacturer:
+  hardware_class: Horizontal_Corrector
+  manufacturer: Corrector Type 4L+
+  serial_number: '16628'
+name: CLA-FEA-MAG-HCOR-02
+physical:
+  datum: [1.71832451, 0.0, 53.61959476]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, -0.4886921906]
+  length: 0.2
+  middle: [1.71832451, 0.0, 53.61959476]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

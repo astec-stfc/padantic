@@ -1,0 +1,164 @@
+alias: null
+controls:
+  ANA_AvgIntensity_RBV: CLA-S07-DIA-CAM-02:ANA:AvgIntensity_RBV
+  ANA_CPU_CropSubMask_RBV: CLA-S07-DIA-CAM-02:ANA:CSM_CPU
+  ANA_CPU_Dot_RBV: CLA-S07-DIA-CAM-02:ANA:DP_CPU
+  ANA_CPU_Npoint_RBV: CLA-S07-DIA-CAM-02:ANA:NP_CPU
+  ANA_CPU_RBV: CLA-S07-DIA-CAM-02:ANA:ANA_CPU
+  ANA_CenterX: CLA-S07-DIA-CAM-02:ANA:CenterX
+  ANA_CenterX_RBV: CLA-S07-DIA-CAM-02:ANA:CenterX_RBV
+  ANA_CenterY: CLA-S07-DIA-CAM-02:ANA:CenterY
+  ANA_CenterY_RBV: CLA-S07-DIA-CAM-02:ANA:CenterY_RBV
+  ANA_CovXYPix_RBV: CLA-S07-DIA-CAM-02:ANA:CovXYPix_RBV
+  ANA_CovXY_RBV: CLA-S07-DIA-CAM-02:ANA:CovXY_RBV
+  ANA_EnableCallbacks: CLA-S07-DIA-CAM-02:ANA:EnableCallbacks
+  ANA_EnableCallbacks_RBV: CLA-S07-DIA-CAM-02:ANA:EnableCallbacks_RBV
+  ANA_FloorLevel: CLA-S07-DIA-CAM-02:ANA:Floor
+  ANA_FloorLevel_RBV: CLA-S07-DIA-CAM-02:ANA:Floor_RBV
+  ANA_FlooredPercent_RBV: CLA-S07-DIA-CAM-02:ANA:FLOORED_PCENT
+  ANA_FlooredPoints_RBV: CLA-S07-DIA-CAM-02:ANA:FLOORED_PTS
+  ANA_Intensity_RBV: CLA-S07-DIA-CAM-02:ANA:Intensity_RBV
+  ANA_MMResults_RBV: CLA-S07-DIA-CAM-02:ANA:MMResults_RBV
+  ANA_MaskHeight_RBV: CLA-S07-DIA-CAM-02:ANA:MaskHeight_RBV
+  ANA_MaskWidth_RBV: CLA-S07-DIA-CAM-02:ANA:MaskWidth_RBV
+  ANA_MaskXCenter: CLA-S07-DIA-CAM-02:ANA:MaskXCenter
+  ANA_MaskXCenter_RBV: CLA-S07-DIA-CAM-02:ANA:MaskXCenter_RBV
+  ANA_MaskXRad: CLA-S07-DIA-CAM-02:ANA:MaskXRad
+  ANA_MaskXRad_RBV: CLA-S07-DIA-CAM-02:ANA:MaskXRad_RBV
+  ANA_MaskYCenter: CLA-S07-DIA-CAM-02:ANA:MaskYCenter
+  ANA_MaskYCenter_RBV: CLA-S07-DIA-CAM-02:ANA:MaskYCenter_RBV
+  ANA_MaskYRad: CLA-S07-DIA-CAM-02:ANA:MaskYRad
+  ANA_MaskYRad_RBV: CLA-S07-DIA-CAM-02:ANA:MaskYRad_RBV
+  ANA_NPointStepSize: CLA-S07-DIA-CAM-02:ANA:StepSize
+  ANA_NPointStepSize_RBV: CLA-S07-DIA-CAM-02:ANA:StepSize_RBV
+  ANA_NewBkgrnd: CLA-S07-DIA-CAM-02:ANA:NewBkgrnd
+  ANA_NewBkgrnd_RBV: CLA-S07-DIA-CAM-02:ANA:NewBkgrnd_RBV
+  ANA_OVERLAY_1_CROSS: CLA-S07-DIA-CAM-02:OVER:1:Use
+  ANA_OVERLAY_1_CROSS_RBV: CLA-S07-DIA-CAM-02:OVER:1:Use_RBV
+  ANA_OVERLAY_2_RESULT: CLA-S07-DIA-CAM-02:OVER:2:Use
+  ANA_OVERLAY_2_RESULT_RBV: CLA-S07-DIA-CAM-02:OVER:2:Use_RBV
+  ANA_OVERLAY_3_MASK: CLA-S07-DIA-CAM-02:OVER:3:Use
+  ANA_OVERLAY_3_MASK_RBV: CLA-S07-DIA-CAM-02:OVER:3:Use_RBV
+  ANA_PixH_RBV: CLA-S07-DIA-CAM-02:ANA:PixH_RBV
+  ANA_PixMM: CLA-S07-DIA-CAM-02:ANA:PixMM
+  ANA_PixMM_RBV: CLA-S07-DIA-CAM-02:ANA:PixMM_RBV
+  ANA_PixW_RBV: CLA-S07-DIA-CAM-02:ANA:PixW_RBV
+  ANA_PixelResults_RBV: CLA-S07-DIA-CAM-02:ANA:PixelResults_RBV
+  ANA_SigmaXPix_RBV: CLA-S07-DIA-CAM-02:ANA:SigmaXPix_RBV
+  ANA_SigmaX_RBV: CLA-S07-DIA-CAM-02:ANA:SigmaX_RBV
+  ANA_SigmaYPix_RBV: CLA-S07-DIA-CAM-02:ANA:SigmaYPix_RBV
+  ANA_SigmaY_RBV: CLA-S07-DIA-CAM-02:ANA:SigmaY_RBV
+  ANA_UseBkgrnd: CLA-S07-DIA-CAM-02:ANA:UseBkgrnd
+  ANA_UseBkgrnd_RBV: CLA-S07-DIA-CAM-02:ANA:UseBkgrnd_RBV
+  ANA_UseFloor: CLA-S07-DIA-CAM-02:ANA:UseFloor
+  ANA_UseFloor_RBV: CLA-S07-DIA-CAM-02:ANA:UseFloor_RBV
+  ANA_UseNPoint: CLA-S07-DIA-CAM-02:ANA:UseNPoint
+  ANA_UseNPoint_RBV: CLA-S07-DIA-CAM-02:ANA:UseNPoint_RBV
+  ANA_XPix_RBV: CLA-S07-DIA-CAM-02:ANA:XPix_RBV
+  ANA_X_RBV: CLA-S07-DIA-CAM-02:ANA:X_RBV
+  ANA_YPix_RBV: CLA-S07-DIA-CAM-02:ANA:YPix_RBV
+  ANA_Y_RBV: CLA-S07-DIA-CAM-02:ANA:Y_RBV
+  CAM1_ArrayData: CLA-S07-DIA-CAM-02:CAM1:ArrayData
+  CAM2_ArrayData: CLA-S07-DIA-CAM-02:CAM2:ArrayData
+  CAM_AcquirePeriod_RBV: CLA-S07-DIA-CAM-02:CAM:AcquirePeriod_RBV
+  CAM_AcquireTime_RBV: CLA-S07-DIA-CAM-02:CAM:AcquireTime_RBV
+  CAM_Acquire_RBV: CLA-S07-DIA-CAM-02:CAM:Acquire_RBV
+  CAM_Active_Count: CLA-S07-DIA-CAM-02:cameraCount
+  CAM_Active_Limit: CLA-S07-DIA-CAM-02:cameraLimit
+  CAM_ArrayRate_RBV: CLA-S07-DIA-CAM-02:CAM:ArrayRate_RBV
+  CAM_Start_Acquire: CLA-S07-DIA-CAM-02:CAM:Start
+  CAM_Stop_Acquire: CLA-S07-DIA-CAM-02:CAM:Stop
+  CAM_Temperature_RBV: CLA-S07-DIA-CAM-02:CAM:Temperature_RBV
+  HDFB_Buffer_FileNumber: CLA-S07-DIA-CAM-02:HDFB:FileNumber
+  HDFB_Buffer_FileNumber_RBV: CLA-S07-DIA-CAM-02:HDFB:FileNumber_RBV
+  HDFB_image_buffer_fileName: CLA-S07-DIA-CAM-02:HDFB:FileName
+  HDFB_image_buffer_fileName_RBV: CLA-S07-DIA-CAM-02:HDFB:FileName_RBV
+  HDFB_image_buffer_filePath: CLA-S07-DIA-CAM-02:HDFB:FilePath
+  HDFB_image_buffer_filePath_RBV: CLA-S07-DIA-CAM-02:HDFB:FilePath_RBV
+  HDFB_image_buffer_trigger: CLA-S07-DIA-CAM-02:CAM:Trigger.PROC
+  HDF_Capture: CLA-S07-DIA-CAM-02:HDF:Capture
+  HDF_Capture_RBV: CLA-S07-DIA-CAM-02:HDF:Capture_RBV
+  HDF_FileName: CLA-S07-DIA-CAM-02:HDF:FileName
+  HDF_FileName_RBV: CLA-S07-DIA-CAM-02:HDF:FileName_RBV
+  HDF_FileNumber: CLA-S07-DIA-CAM-02:HDF:FileNumber
+  HDF_FileNumber_RBV: CLA-S07-DIA-CAM-02:HDF:FileNumber_RBV
+  HDF_FilePath: CLA-S07-DIA-CAM-02:HDF:FilePath
+  HDF_FilePath_RBV: CLA-S07-DIA-CAM-02:HDF:FilePath_RBV
+  HDF_NumCapture: CLA-S07-DIA-CAM-02:HDF:NumCapture
+  HDF_NumCapture_RBV: CLA-S07-DIA-CAM-02:HDF:NumCapture_RBV
+  HDF_WriteFile: CLA-S07-DIA-CAM-02:HDF:WriteFile
+  HDF_WriteFile_RBV: CLA-S07-DIA-CAM-02:HDF:WriteFile_RBV
+  HDF_WriteMessage: CLA-S07-DIA-CAM-02:HDF:WriteMessage
+  HDF_WriteStatus: CLA-S07-DIA-CAM-02:HDF:WriteStatus
+  LED_Off: CLA-S07-DIA-CAM-02:Off
+  LED_On: CLA-S07-DIA-CAM-02:On
+  LED_Sta: CLA-S07-DIA-CAM-02:Sta
+  ROI1_ImageData_RBV: CLA-S07-DIA-CAM-02:CAM3:ArrayData
+  ROI1_MinX: CLA-S07-DIA-CAM-02:ROI1:MinX
+  ROI1_MinX_RBV: CLA-S07-DIA-CAM-02:ROI1:MinX_RBV
+  ROI1_MinY: CLA-S07-DIA-CAM-02:ROI1:MinY
+  ROI1_MinY_RBV: CLA-S07-DIA-CAM-02:ROI1:MinY_RBV
+  ROI1_SizeX: CLA-S07-DIA-CAM-02:ROI1:SizeX
+  ROI1_SizeX_RBV: CLA-S07-DIA-CAM-02:ROI1:SizeX_RBV
+  ROI1_SizeY: CLA-S07-DIA-CAM-02:ROI1:SizeY
+  ROI1_SizeY_RBV: CLA-S07-DIA-CAM-02:ROI1:SizeY_RBV
+  ROIandMask_SetX: CLA-S07-DIA-CAM-02:ANA:SetX
+  ROIandMask_SetXrad: CLA-S07-DIA-CAM-02:ANA:SetXrad
+  ROIandMask_SetY: CLA-S07-DIA-CAM-02:ANA:SetY
+  ROIandMask_SetYrad: CLA-S07-DIA-CAM-02:ANA:SetYrad
+diagnostic:
+  epics_x_pixels: 1080
+  epics_y_pixels: 1280
+  flipped_horizontally: true
+  flipped_vertically: false
+  mask:
+    maximum: [300, 300]
+    middle: [1280, 1080]
+    radius: [1240, 1040]
+    use_maximum_values: true
+  pixel_results_indices:
+    covariance: 4
+    x: 0
+    x_sigma: 2
+    y: 1
+    y_sigma: 3
+  pixel_results_names:
+    covariance: COV
+    x: X
+    x_sigma: X_SIGMA
+    y: Y
+    y_sigma: Y_SIGMA
+  rotation: 0
+  sensor:
+    beam_pixel_average: 97.2
+    bit_depth: 12
+    maximum: [2400, 2000]
+    mechanical_middle: [1000, 1000]
+    middle: [0, 0]
+    minimum: [150, 150]
+    operating_middle: [1000, 1000]
+    pixels_to_mm: [0.013, 0.013]
+    x_pixels: 2560
+    x_scale_factor: 2
+    y_pixels: 2160
+    y_scale_factor: 2
+  type: PCO
+hardware_class: Diagnostic
+hardware_model: PCO
+hardware_type: Camera
+machine_area: S07
+name: CLA-S07-DIA-CAM-02
+physical:
+  datum: [0.0, 0.0, 42.661277]
+  error:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+  global_rotation: [0.0, 0.0, 0.0]
+  length: 0.0
+  middle: [0.0, 0.0, 42.661277]
+  rotation: [0.0, 0.0, 0.0]
+  survey:
+    position: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+subelement: false
+virtual_name: ''

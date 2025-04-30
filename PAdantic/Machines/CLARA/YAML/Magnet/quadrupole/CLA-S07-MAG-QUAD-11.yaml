@@ -1,5 +1,4 @@
 alias: null
-class_name: Quadrupole
 controls:
   GETSETI: CLA-S07-MAG-QUAD-11:GETSETI
   ILK_RESET: CLA-S07-MAG-QUAD-11:Rst
@@ -24,12 +23,13 @@ electrical:
   minI: -94.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: quadrupole
+hardware_model: Generic
+hardware_type: Quadrupole
 machine_area: S07
 magnetic:
   field_integral_coefficients:
     coefficients: [0]
-  length: 0.162
+  length: 0.21
   linear_saturation_coefficients:
     I0: 0.0
     I_max: 0.0
@@ -50,18 +50,18 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: quadrupole
+  hardware_class: Quadrupole
   manufacturer: Quadrupole Type 3
   serial_number: '19380'
 name: CLA-S07-MAG-QUAD-11
 physical:
-  datum: [0.0, 0.0, 48.7478]
+  datum: [0.0, 0.0, 49.569511]
   error:
     position: [0.0, 0.0, 0.0]
     rotation: [0.0, 0.0, 0.0]
   global_rotation: [0.0, 0.0, 0.0]
-  length: 0.162
-  middle: [0.0, 0.0, 48.6668]
+  length: 0.21
+  middle: [0.0, 0.0, 49.464511]
   rotation: [0.0, 0.0, 0.0]
   survey:
     position: [0.0, 0.0, 0.0]

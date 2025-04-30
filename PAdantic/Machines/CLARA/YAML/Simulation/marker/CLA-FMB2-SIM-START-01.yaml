@@ -1,7 +1,7 @@
 alias: null
-class_name: Marker
 hardware_class: Simulation
-hardware_type: marker
+hardware_model: Simulation
+hardware_type: Marker
 machine_area: FMB2
 name: CLA-FMB2-SIM-START-01
 physical:

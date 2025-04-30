@@ -1,7 +1,7 @@
 alias: null
-class_name: Marker
 hardware_class: Simulation
-hardware_type: marker
+hardware_model: Simulation
+hardware_type: Marker
 machine_area: FMS
 name: CLA-FMS-SIM-MARK-03
 physical:

@@ -1,9 +1,9 @@
-from yaml.reader import *
-from yaml.scanner import *
-from yaml.parser import *
-from yaml.composer import *
-from Importers.MySafeConstructor import *
-from yaml.resolver import *
+from yaml.reader import Reader
+from yaml.scanner import Scanner
+from yaml.parser import Parser
+from yaml.composer import Composer
+from Importers.MySafeConstructor import MySafeConstructor
+from yaml.resolver import Resolver
 
 
 class MySafeLoader(Reader, Scanner, Parser, Composer, MySafeConstructor, Resolver):

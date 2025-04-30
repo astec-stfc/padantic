@@ -1,12 +1,11 @@
 import os
 import sys
+import argparse
 
 sys.path.append(r"C:\Users\jkj62\Documents\GitHub\SimFrame")
 sys.path.append(os.path.abspath("../../"))
-from PAdantic.PAdantic import PAdantic
-from SimulationFramework import Framework as fw
+from SimulationFramework import Framework as fw  # noqa
 
-import argparse
 
 parser = argparse.ArgumentParser(description="Track the FEBE lattice.")
 parser.add_argument(
@@ -102,5 +101,3 @@ if __name__ == "__main__":
     for c in changes_files:
         opt.framework.load_changes_file(c)
     print(opt.framework["bunch_compressor"])
-    # print(opt.framework['FEBE'])
-    # opt.track(startfile=opt.start_lattice, endfile='FEBE', preprocess=True, track=True, postprocess=False, save_summary=False)

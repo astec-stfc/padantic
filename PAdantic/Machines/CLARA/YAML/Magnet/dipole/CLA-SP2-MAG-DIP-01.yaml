@@ -1,5 +1,4 @@
 alias: null
-class_name: Dipole
 controls:
   GETSETI: CLA-SP2-MAG-DIP-01:GETSETI
   ILK_RESET: CLA-SP2-MAG-DIP-01:Rst
@@ -25,7 +24,8 @@ electrical:
   minI: -332.0
   read_tolerance: 0.1
 hardware_class: Magnet
-hardware_type: dipole
+hardware_model: Generic
+hardware_type: Dipole
 machine_area: SP2
 magnetic:
   field_integral_coefficients:
@@ -51,7 +51,7 @@ magnetic:
   skew: false
   systematic_multipoles: {}
 manufacturer:
-  hardware_class: dipole
+  hardware_class: Dipole
   manufacturer: Dipole Type 5
   serial_number: 1822-21088-02
 name: CLA-SP2-MAG-DIP-01

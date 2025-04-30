@@ -1,10 +1,7 @@
+import yaml
 from yaml import CLoader as Loader
-from copy import copy
-from typing import get_origin, Any, Dict
-from pydantic import BaseModel
-import glob
 
-from ..models.PV import (
+from ..models.PV import (  # noqa
     MagnetPV,
     BPMPV,
     CameraPV,
@@ -26,17 +23,17 @@ from ..models.PV import (
     elementTypes,
     PVTypes,
 )
-from ..models.element import *
+from ..models.element import *  # noqa
 
 
 def interpret_YAML_Element(elem):
-    if "class_name" in elem and elem["class_name"] in globals():
+    if "hardware_type" in elem and elem["hardware_type"] in globals():
         try:
-            felem = globals()[elem["class_name"]]
+            felem = globals()[elem["hardware_type"]]
             elemmodel = felem(**elem)
             return elemmodel
         except Exception as e:
-            print("Error", e)
+            print("interpret_YAML_Element - Error", e)
 
 
 def read_YAML_Element_File(filename):
