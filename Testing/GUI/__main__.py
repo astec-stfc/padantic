@@ -1,7 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QComboBox
-from pydantic import BaseModel
-import sys
+from PyQt5.QtWidgets import (
+    QApplication,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QTextEdit,
+    QComboBox,
+)
 
 sys.path.append(r"C:\Users\jkj62.CLRC\Documents\GitHub\PAdantic")
 from PAdantic.PAdantic import PAdantic  # noqa E402
@@ -11,6 +17,7 @@ machine = PAdantic(
     section_file="Machines/CLARA/sections.yaml",
     yaml_dir="Machines/CLARA/YAML/",
 )
+
 
 class ElementWidget(QWidget):
     def __init__(self, element):
@@ -43,11 +50,15 @@ class MainWindow(QWidget):
         self.model_b_layout = QVBoxLayout()
 
         self.element_a_dropdown = QComboBox()
-        self.element_a_dropdown.addItems([element for element in machine.get_all_elements()])
+        self.element_a_dropdown.addItems(
+            [element for element in machine.get_all_elements()]
+        )
         self.model_a_layout.addWidget(self.element_a_dropdown)
 
         self.element_b_dropdown = QComboBox()
-        self.element_b_dropdown.addItems([element for element in machine.get_all_elements()])
+        self.element_b_dropdown.addItems(
+            [element for element in machine.get_all_elements()]
+        )
         self.model_b_layout.addWidget(self.element_b_dropdown)
 
         # self.compare_button = QPushButton("Compare Models")
@@ -65,7 +76,6 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.result_text)
 
         self.setLayout(self.layout)
-
 
 
 if __name__ == "__main__":

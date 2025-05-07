@@ -116,14 +116,15 @@ class PAdantic(MachineModel):
             start=start, end=end, element_class="magnet", path=path
         )
 
-    def get_separate_magnets(self, end: str = None, start: str = None, path: str = None):
+    def get_separate_magnets(
+        self, end: str = None, start: str = None, path: str = None
+    ):
         magnets = self.get_magnets(end=end, start=start, path=path)
-        return list(flatten([
-            (
-                self.__get_combined_corrector_sub_correctors(c)
+        return list(
+            flatten(
+                [(self.__get_combined_corrector_sub_correctors(c)) for c in magnets]
             )
-            for c in magnets
-        ]))
+        )
 
     def get_quadrupoles(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
@@ -144,12 +145,21 @@ class PAdantic(MachineModel):
         )
 
     def __get_combined_corrector_sub_correctors(self, elem: str):
-        if hasattr(self[elem], "Horizontal_Corrector") and self[elem].Horizontal_Corrector is not None:
-            if hasattr(self[elem], "Vertical_Corrector") and self[elem].Vertical_Corrector is not None:
+        if (
+            hasattr(self[elem], "Horizontal_Corrector")
+            and self[elem].Horizontal_Corrector is not None
+        ):
+            if (
+                hasattr(self[elem], "Vertical_Corrector")
+                and self[elem].Vertical_Corrector is not None
+            ):
                 return [self[elem].Horizontal_Corrector, self[elem].Vertical_Corrector]
             else:
                 return [self[elem].Horizontal_Corrector]
-        elif hasattr(self[elem], "Vertical_Corrector") and self[elem].Vertical_Corrector is not None:
+        elif (
+            hasattr(self[elem], "Vertical_Corrector")
+            and self[elem].Vertical_Corrector is not None
+        ):
             return [self[elem].Vertical_Corrector]
         else:
             return [elem]
@@ -159,15 +169,18 @@ class PAdantic(MachineModel):
             start=start,
             end=end,
             element_class="magnet",
-            element_type=["combined_corrector", "horizontal_corrector", "vertical_corrector"],
+            element_type=[
+                "combined_corrector",
+                "horizontal_corrector",
+                "vertical_corrector",
+            ],
             path=path,
         )
-        return list(flatten([
-            (
-                self.__get_combined_corrector_sub_correctors(c)
+        return list(
+            flatten(
+                [(self.__get_combined_corrector_sub_correctors(c)) for c in correctors]
             )
-            for c in correctors
-        ]))
+        )
 
     def get_horizontal_correctors(
         self, end: str = None, start: str = None, path: str = None
@@ -216,7 +229,11 @@ class PAdantic(MachineModel):
             start=start,
             end=end,
             element_class="magnet",
-            element_type=["combined_corrector", "horizontal_corrector", "vertical_corrector"],
+            element_type=[
+                "combined_corrector",
+                "horizontal_corrector",
+                "vertical_corrector",
+            ],
             path=path,
         )
 
@@ -369,11 +386,7 @@ class PAdantic(MachineModel):
             [
                 elem
                 for pathelems in [
-                    self.get_separate_magnets(
-                        start=None,
-                        end=None,
-                        path=path
-                    )
+                    self.get_separate_magnets(start=None, end=None, path=path)
                     for path in self.lattices.keys()
                 ]
                 for elem in pathelems

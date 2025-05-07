@@ -1,5 +1,4 @@
 import sys
-from pprint import pprint
 
 sys.path.append("..")
 from PAdantic.PAdantic import PAdantic  # noqa E402
@@ -29,5 +28,5 @@ machine.default_layout = "SP3"
 for magnet_name in machine.get_quadrupoles():
     linsat = machine.get_element(magnet_name).magnetic.linear_saturation_coefficients
     kvals = magnet_name, linsat.currentToK(48, 30)
-    print(magnet_name, kvals[1]['K'], linsat.KToCurrent(kvals[1], 30))
-    print(magnet_name, kvals[1]['KL'], linsat.KLToCurrent(kvals[1], 30))
+    print(magnet_name, kvals[1]["K"], linsat.KToCurrent(kvals[1], 30))
+    print(magnet_name, kvals[1]["KL"], linsat.KLToCurrent(kvals[1], 30))
