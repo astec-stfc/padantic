@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.constants import speed_of_light, pi, elementary_charge
+from scipy.constants import speed_of_light, pi
 from pydantic import (
     BaseModel,
     model_serializer,
@@ -155,9 +155,9 @@ class LinearSaturationFit(BaseModel):
         """
         Convert the current in the magnet to the normalized strength (K value).
 
-        The method calculates the normalized strength (K value) of the magnetic field 
-        based on the provided current and momentum. It uses the field integral coefficients 
-        to compute the integrated field strength and applies a scaling factor based on 
+        The method calculates the normalized strength (K value) of the magnetic field
+        based on the provided current and momentum. It uses the field integral coefficients
+        to compute the integrated field strength and applies a scaling factor based on
         the speed of light and the beam momentum.
 
         Args:
@@ -166,8 +166,9 @@ class LinearSaturationFit(BaseModel):
 
         Returns:
             dict: A dictionary containing the K value, KL value, gradient, and integrated strength.
-                The K value is the normalized strength of the magnetic field, KL is the K value multiplied by the length of the magnet,
-                gradient is the magnetic field gradient, and integrated strength is the integrated field strength.
+                The K value is the normalized strength of the magnetic field, KL is the K value multiplied by the
+                length of the magnet, gradient is the magnetic field gradient, and integrated strength is the
+                integrated field strength.
         """
         abs_I = abs(current)
         m, I_max, f, a, I0, d, L = list(self.coefficients)
@@ -187,8 +188,8 @@ class LinearSaturationFit(BaseModel):
         """
         Convert the normalized strength (K value) of the magnetic field to the corresponding current.
 
-        This method calculates the current required to produce a given normalized strength (K value) 
-        of the magnetic field, based on the magnet's linear and saturation fit coefficients. It accounts 
+        This method calculates the current required to produce a given normalized strength (K value)
+        of the magnetic field, based on the magnet's linear and saturation fit coefficients. It accounts
         for both linear and nonlinear (saturation) behavior of the magnet.
 
         Args:
@@ -202,19 +203,19 @@ class LinearSaturationFit(BaseModel):
         """
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         if isinstance(KL, dict):
-            if 'KL' in KL:
-                KL = KL['KL']
-            elif 'K' in KL:
-                KL = KL['K'] * L / 1000
+            if "KL" in KL:
+                KL = KL["KL"]
+            elif "K" in KL:
+                KL = KL["K"] * L / 1000
         return self.KToCurrent(KL / (L / 1000), momentum)
 
     def KToCurrent(self, K: float | dict, momentum: float) -> float:
         m, I_max, f, a, I0, d, L = list(self.coefficients)
         if isinstance(K, dict):
-            if 'K' in K:
-                K = K['K']
-            elif 'KL' in K:
-                K = K['KL'] / (L / 1000)
+            if "K" in K:
+                K = K["K"]
+            elif "KL" in K:
+                K = K["KL"] / (L / 1000)
             else:
                 raise ValueError(f"K value not found in the dictionary {K}")
         int_strength = 1e6 * K * L * momentum / (speed_of_light)
@@ -223,16 +224,20 @@ class LinearSaturationFit(BaseModel):
         if abs(linear_current) < I_max:
             return linear_current
         elif f == 0:
-            return I0-Sqrt((abs_str-d)/a)
+            return I0 - Sqrt((abs_str - d) / a)
         else:
-            p = (-6 * f * a * I0 - a**2)/(3 * f**2)
-            q = ((2 * a**3) + (18 * f * a**2 * I0) + (27 * f**2 * (a * I0**2 + d - abs_str))) / (27 * f**3)
-            r = Sqrt((p / 3)**3)
+            p = (-6 * f * a * I0 - a**2) / (3 * f**2)
+            q = (
+                (2 * a**3)
+                + (18 * f * a**2 * I0)
+                + (27 * f**2 * (a * I0**2 + d - abs_str))
+            ) / (27 * f**3)
+            r = Sqrt((p / 3) ** 3)
             theta = np.arccos(-q / (2 * r))
-            r_cbrt = -r**(1/3)
+            r_cbrt = -(r ** (1 / 3))
             t3 = 2 * r_cbrt * np.cos((theta / 3) + 4 * Pi / 3)
-            return t3-a/(3*f)
-        
+            return t3 - a / (3 * f)
+
     def __iter__(self) -> iter:
         return iter(
             [getattr(self, k) for k in ["m", "I_max", "f", "a", "I0", "d", "L"]]

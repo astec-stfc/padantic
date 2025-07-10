@@ -231,8 +231,8 @@ def read_SimFrame_YAML(filename):
                 elemlist.update({hname: elemmodel})
                 elemmodel = interpret_SimFrame_Element(vname, velem)
                 elemlist.update({vname: elemmodel})
-                elem['Horizontal_Corrector'] = hname
-                elem['Vertical_Corrector'] = vname
+                elem["Horizontal_Corrector"] = hname
+                elem["Vertical_Corrector"] = vname
             if elem["type"] == "screen":
                 elemmodel = interpret_SimFrame_Element(name, elem)
                 elemlist.update({name: elemmodel})

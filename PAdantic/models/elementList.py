@@ -145,7 +145,9 @@ class MachineLayout(BaseLatticeModel):
             start_pos = all_elems[-1].physical.start
             all_elem_corrected = []
             for elem in all_elems_reversed:
-                vector = not elem.physical.end.vector_angle(start_pos, [0, 0, -1]) < -5e-6
+                vector = (
+                    not elem.physical.end.vector_angle(start_pos, [0, 0, -1]) < -5e-6
+                )
                 if not elem.is_subelement():
                     superelem = elem.name
                 subelem = (
@@ -154,8 +156,6 @@ class MachineLayout(BaseLatticeModel):
                 if vector or subelem:
                     all_elem_corrected += [elem]
                     start_pos = elem.physical.start
-                # else:
-                #     print("MachineLayout", "model_post_init", elem.name, vector, elem.physical.end.vector_angle(start_pos, [0, 0, -1]))
             self._all_elements = list(reversed(all_elem_corrected))
         else:
             self._all_elements = {}
@@ -378,7 +378,9 @@ class MachineModel(YAMLBaseModel):
             for _area in areas:
                 # collect list of elements from this machine area
                 new_elements = [
-                    x for x in elements.values() if (x.name in self._section_definitions[_area])
+                    x
+                    for x in elements.values()
+                    if (x.name in self._section_definitions[_area])
                 ]
                 if _area in self._section_definitions:
                     self.sections[_area] = SectionLattice(
@@ -434,7 +436,7 @@ class MachineModel(YAMLBaseModel):
         element_type: Union[str, list, None] = None,
         element_model: Union[str, list, None] = None,
         element_class: Union[str, list, None] = None,
-        path: str = None
+        path: str = None,
     ) -> List[str]:
         """
         Returns an ordered list of all lattice elements (of a specific type) between
@@ -450,7 +452,9 @@ class MachineModel(YAMLBaseModel):
             if hasattr(self, "_default_path") and self._default_path in self.lattices:
                 path = self._default_path
             else:
-                raise Exception('"default_layout" = %s is not defined' % self._default_path)
+                raise Exception(
+                    '"default_layout" = %s is not defined' % self._default_path
+                )
         elif path not in self.lattices:
             raise Exception('"path" = %s is not defined' % path)
 
