@@ -1,0 +1,38 @@
+[build-system]
+requires = [
+    "setuptools",
+    "versioneer[toml]",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PAdantic"
+description = "A pydantic model for particle accelerators"
+readme = "README.md"
+dynamic = ["version"]
+authors = [
+    {name = "James Jones", email = "james.jones@stfc.ac.uk"},
+]
+maintainers = [
+    {name = "James Jones", email = "james.jones@stfc.ac.uk"},
+    {name = "Alex Brynes", email = "alexander.brynes@stfc.ac.uk"},
+    {name = "Mark Johnson", email = "mark.johnson@stfc.ac.uk"},
+]
+dependencies = [
+    "pydantic>=2", 
+    "pyyaml>=6", 
+    "numpy>=1.26",
+    "scipy>=1.15",
+    "munch>=4"
+]
+
+requires-python = ">= 3.10"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+
+[project.urls]
+Homepage = "https://gitlab.stfc.ac.uk/jkj62/padantic"
+Repository = "https://gitlab.stfc.ac.uk/jkj62/padantic.git"
+Issues = "https://gitlab.stfc.ac.uk/jkj62/padantic/-/issues/"
