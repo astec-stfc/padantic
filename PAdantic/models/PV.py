@@ -323,4 +323,6 @@ for k, v in PVMappings.items():
             for pd, vd in p.items():
                 pvs[pd] = (PV, Field(postfixdefault=vd))
     PVData = create_model(v + "PV", **pvs, __base__=ElementPV)
+    # print(PVData)
+    # print(pvs)
     globals()[v + "PV"] = type(v + "PV", (PVData,), {})

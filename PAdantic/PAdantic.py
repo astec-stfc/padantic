@@ -1,10 +1,15 @@
 import os
 import glob
-from more_itertools import flatten
+from itertools import chain
 from pydantic import field_validator
 from yaml.constructor import Constructor
 from .models.elementList import MachineModel
 from .Importers.YAML_Loader import read_YAML_Element_File, read_YAML_Combined_File
+
+
+def flatten(xss):
+    """Flatten a list of lists."""
+    return list(chain.from_iterable(xss))
 
 
 def add_bool(self, node):

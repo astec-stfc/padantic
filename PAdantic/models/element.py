@@ -280,7 +280,7 @@ class Magnet(Element):
         catap_dict = super().to_CATAP()
         catap_dict.update(
             {
-                "mag_type": self.type,
+                "mag_type": self.hardware_type,
                 "degauss_tolerance": self.degauss.tolerance,
                 "degauss_values": self.escape_string_list(self.degauss.values),
                 "num_degauss_steps": self.degauss.steps,

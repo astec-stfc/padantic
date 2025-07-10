@@ -151,7 +151,7 @@ class LinearSaturationFit(BaseModel):
             assert len(v) == len(self.model_fields.keys())
             [setattr(self, k, v) for k, v in zip(self.model_fields.keys(), v)]
 
-    def currentToK(self, current: float, momentum: float) -> float:
+    def currentToK(self, current: float, momentum: float | None = None) -> float:
         """
         Convert the current in the magnet to the normalized strength (K value).
 
@@ -175,10 +175,13 @@ class LinearSaturationFit(BaseModel):
             m * current
             if abs_I < I_max
             else np.copysign((f * abs_I**3 + a * (abs_I - I0) ** 2 + d), current)
-        )
-        K = 1000 / L * (speed_of_light / 1e6) * int_strength / momentum
-        gradient = 1000 * int_strength / L
-        return {'K': K, 'KL': K * L / 1000, 'gradient': gradient, 'int_strength': int_strength}
+        ) / 1000
+        gradient = int_strength / L
+        if momentum is not None:
+            KL = 1 * (speed_of_light / 1e6) * int_strength / momentum
+            return {'K': KL * 1000 / L, 'KL': KL, 'gradient': gradient, 'int_strength': int_strength}
+        else:
+            return {'gradient': gradient, 'int_strength': int_strength}
 
     def KLToCurrent(self, KL: float | dict, momentum: float) -> float:
         """
@@ -214,7 +217,7 @@ class LinearSaturationFit(BaseModel):
                 K = K['KL'] / (L / 1000)
             else:
                 raise ValueError(f"K value not found in the dictionary {K}")
-        int_strength = 1000 * K * L * momentum / (speed_of_light)
+        int_strength = 1e6 * K * L * momentum / (speed_of_light)
         abs_str = abs(int_strength)
         linear_current = int_strength / m
         if abs(linear_current) < I_max:
