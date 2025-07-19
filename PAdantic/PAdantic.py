@@ -5,6 +5,7 @@ from pydantic import field_validator
 from yaml.constructor import Constructor
 from .models.elementList import MachineModel
 from .Importers.YAML_Loader import read_YAML_Element_File, read_YAML_Combined_File
+import numpy as np
 
 
 def flatten(xss):
@@ -51,6 +52,24 @@ class PAdantic(MachineModel):
         return self.elements_between(
             start=start, end=end, element_class=None, path=path
         )
+
+    def _drift_length(self, start: list[float], end: list[float]):
+        return np.linalg.norm(end - start)
+        
+    def get_elements_s_pos(self, end: str = None, start: str = None, path: str = None):
+        elements = self.elements_between(
+            start=start, end=end, element_class=None, path=path
+        )
+        start_and_end = [[elem, self.elements[elem].physical.middle.array, self.elements[elem].physical.length] for elem in elements]
+        elem_s = {}
+        s_pos = 0
+        middle = [0, 0, 0]
+        for elem, m, l in start_and_end:
+            dl = self._drift_length(start=middle, end=m)
+            s_pos += l + dl
+            elem_s[elem] = s_pos
+            middle = m
+        return elem_s
 
     def get_rf_cavities(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
