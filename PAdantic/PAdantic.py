@@ -66,7 +66,7 @@ class PAdantic(MachineModel):
         middle = [0, 0, 0]
         for elem, m, l in start_and_end:
             dl = self._drift_length(start=middle, end=m)
-            s_pos += l + dl
+            s_pos += dl
             elem_s[elem] = s_pos
             middle = m
         return elem_s
