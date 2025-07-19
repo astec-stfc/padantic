@@ -23,6 +23,8 @@ def unique_list(a_list):
 
 
 machine.default_layout = "SP3"
+print(machine.get_elements_s_pos())
+exit()
 # pprint({d: machine.get_element(d).yaml_dump() for d in machine.get_dipoles()})
 # exit()
 for magnet_name in machine.get_quadrupoles():
