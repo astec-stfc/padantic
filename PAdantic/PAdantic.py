@@ -47,6 +47,11 @@ class PAdantic(MachineModel):
             yaml_elems = [read_YAML_Element_File(y) for y in YAML_files]
         self.update({y.name: y for y in yaml_elems})
 
+    def get_elements(self, end: str = None, start: str = None, path: str = None):
+        return self.elements_between(
+            start=start, end=end, element_class=None, path=path
+        )
+
     def get_rf_cavities(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
             start=start, end=end, element_class="rf", path=path

@@ -207,7 +207,7 @@ class _baseElement(IgnoreExtra):
             return isinstance(self.subelement, str)
 
 
-class PhysicalElement(_baseElement):
+class PhysicalBaseElement(_baseElement):
     """Element with physical, degaussable, electrical, manufacturer, and controls items."""
 
     physical: PhysicalElement
@@ -234,7 +234,7 @@ class PhysicalElement(_baseElement):
         return self.start_angle
 
 
-class Element(PhysicalElement):
+class Element(PhysicalBaseElement):
     """Element with physical, electrical and manufacturer items."""
 
     electrical: ElectricalElement
@@ -352,7 +352,7 @@ class Solenoid(Magnet):
     magnetic: Solenoid_Magnet
 
 
-class Diagnostic(PhysicalElement):
+class Diagnostic(PhysicalBaseElement):
     hardware_class: str = Field(default="Diagnostic", frozen=True)
 
 
@@ -457,7 +457,7 @@ class ICT(ChargeDiagnostic):
     hardware_type: str = Field(default="ICT", frozen=True)
 
 
-class VacuumGuage(PhysicalElement):
+class VacuumGuage(PhysicalBaseElement):
     """Vacuum Guage element."""
 
     hardware_type: str = Field(default="VacuumGuage", frozen=True)
@@ -466,7 +466,7 @@ class VacuumGuage(PhysicalElement):
     controls: VacuumGuagePV
 
 
-class LaserEnergyMeter(PhysicalElement):
+class LaserEnergyMeter(PhysicalBaseElement):
     """Laser Energy Meter element."""
 
     hardware_type: str = Field(default="LaserEnergyMeter", frozen=True)
@@ -520,7 +520,7 @@ class LLRF(_baseElement):
     controls: LLRFPV
 
 
-class RFCavity(PhysicalElement):
+class RFCavity(PhysicalBaseElement):
     """RFCavity element."""
 
     hardware_type: str = Field(default="RFCavity", frozen=True)
@@ -529,7 +529,7 @@ class RFCavity(PhysicalElement):
     simulation: RFCavitySimulationElement
 
 
-class Wakefield(PhysicalElement):
+class Wakefield(PhysicalBaseElement):
     """Collimator element."""
 
     hardware_type: str = Field(default="Wakefield", frozen=True)
@@ -538,7 +538,7 @@ class Wakefield(PhysicalElement):
     simulation: WakefieldSimulationElement
 
 
-class RFDeflectingCavity(PhysicalElement):
+class RFDeflectingCavity(PhysicalBaseElement):
     """RFCavity element."""
 
     hardware_type: str = Field(default="RFDeflectingCavity", frozen=True)
@@ -573,7 +573,7 @@ class RFHeartbeat(_baseElement):
     controls: RFHeartbeatPV
 
 
-class Shutter(PhysicalElement):
+class Shutter(PhysicalBaseElement):
     """Shutter element."""
 
     hardware_type: str = Field(default="Shutter", frozen=True)
@@ -581,7 +581,7 @@ class Shutter(PhysicalElement):
     controls: ShutterPV
 
 
-class Valve(PhysicalElement):
+class Valve(PhysicalBaseElement):
     """Valve element."""
 
     hardware_type: str = Field(default="Valve", frozen=True)
@@ -589,14 +589,14 @@ class Valve(PhysicalElement):
     controls: ValvePV
 
 
-class Marker(PhysicalElement):
+class Marker(PhysicalBaseElement):
     """Marker element."""
 
     hardware_type: str = Field(default="Marker", frozen=True)
     hardware_model: str = Field(default="Simulation", frozen=True)
 
 
-class Aperture(PhysicalElement):
+class Aperture(PhysicalBaseElement):
     """Aperture element."""
 
     hardware_type: str = Field(default="Aperture", frozen=True)
