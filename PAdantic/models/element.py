@@ -609,3 +609,7 @@ class Collimator(Aperture):
 
     hardware_type: str = Field(default="Collimator", frozen=True)
     hardware_model: str = Field(default="Simulation", frozen=True)
+
+
+class Drift(PhysicalBaseElement):
+    hardware_type: str = Field(default="Drift", frozen=True)

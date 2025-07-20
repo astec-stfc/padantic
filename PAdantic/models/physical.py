@@ -150,7 +150,7 @@ class PhysicalElement(IgnoreExtra):
     global_rotation: Rotation = Rotation(theta=0, phi=0, psi=0)
     error: ElementError = ElementError()
     survey: ElementSurvey = ElementSurvey()
-    length: NonNegativeFloat = 0.0
+    length: float = 0.0
 
     def __str__(self):
         # print({k: getattr(self, k) != 0 for k in self.model_fields.keys()})
