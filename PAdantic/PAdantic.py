@@ -1,10 +1,14 @@
 import os
 import glob
+from math import copysign
 from itertools import chain
 from pydantic import field_validator
 from yaml.constructor import Constructor
+
+from PAdantic.models.physical import PhysicalElement, Position
 from .models.elementList import MachineModel
-from .Importers.YAML_Loader import read_YAML_Element_File, read_YAML_Combined_File
+from .models.element import Drift
+from .Importers.YAML_Loader import read_YAML_Combined_File, read_YAML_Element_Files, interpret_YAML_Element
 import numpy as np
 
 
@@ -18,6 +22,16 @@ def add_bool(self, node):
 
 
 Constructor.add_constructor("tag:yaml.org,2002:bool", add_bool)
+
+
+def dot(a, b) -> float:
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def chunks(li, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(li), n):
+        yield li[i: i + n]
 
 
 class PAdantic(MachineModel):
@@ -45,8 +59,61 @@ class PAdantic(MachineModel):
             YAML_files = glob.glob(
                 os.path.abspath(self.yaml_dir + "/**/*.yaml"), recursive=True
             )
-            yaml_elems = [read_YAML_Element_File(y) for y in YAML_files]
+            yaml_data = read_YAML_Element_Files(YAML_files)
+            yaml_elems = [interpret_YAML_Element(data) for data in yaml_data]
         self.update({y.name: y for y in yaml_elems})
+
+    def createDrifts(self, end: str = None, start: str = None, path: str = None):
+        """Insert drifts into a sequence of 'elements'"""
+        positions = []
+        originalelements = dict()
+        elementno = 0
+        newelements = dict()
+
+        elements = self.elements_between(
+            start=start, end=end, element_class=None, path=path
+        )
+
+        for name in elements:
+            elem = self.elements[name]
+            originalelements[name] = elem
+            pos = elem.physical.start.array
+            positions.append(pos)
+            positions.append(elem.physical.end.array)
+        positions = positions[1:]
+        positions.append(positions[-1])
+        driftdata = list(
+            zip(iter(list(originalelements.items())), list(chunks(positions, 2)))
+        )
+
+        for e, d in driftdata:
+            newelements[e[0]] = e[1]
+            if len(d) > 1:
+                x1, y1, z1 = d[0]
+                x2, y2, z2 = d[1]
+                try:
+                    length = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
+                    vector = dot((d[1] - d[0]), [0, 0, 1])
+                except Exception as exc:
+                    print("Element with error = ", e[0])
+                    print(d)
+                    raise exc
+                if round(length, 6) > 0:
+                    elementno += 1
+                    name = "drift" + str(elementno)
+                    x, y, z = [(a + b) / 2.0 for a, b in zip(d[0], d[1])]
+                    newdrift = Drift(
+                        name=name,
+                        machine_area=newelements[e[0]].machine_area,
+                        hardware_class="drift",
+                        physical=PhysicalElement(
+                            length=round(copysign(length, vector), 6),
+                            middle=Position(x=x, y=y, z=z),
+                            datum=Position(x=x, y=y, z=z),
+                        )
+                    )
+                    newelements[name] = newdrift
+        return newelements
 
     def get_elements(self, end: str = None, start: str = None, path: str = None):
         return self.elements_between(
@@ -57,18 +124,16 @@ class PAdantic(MachineModel):
         return np.linalg.norm(end - start)
         
     def get_elements_s_pos(self, end: str = None, start: str = None, path: str = None):
-        elements = self.elements_between(
-            start=start, end=end, element_class=None, path=path
+        elements = self.createDrifts(
+            start=start, end=end, path=path
         )
-        start_and_end = [[elem, self.elements[elem].physical.middle.array, self.elements[elem].physical.length] for elem in elements]
+        start_and_end = [[name, elem.physical.length, elem.hardware_type == "Drift"] for name, elem in elements.items()]
         elem_s = {}
         s_pos = 0
-        middle = [0, 0, 0]
-        for elem, m, l in start_and_end:
-            dl = self._drift_length(start=middle, end=m)
-            s_pos += dl
-            elem_s[elem] = s_pos
-            middle = m
+        for elem, l, drift in start_and_end:
+            s_pos += l
+            if not drift:
+                elem_s[elem] = round(s_pos, 6)
         return elem_s
 
     def get_rf_cavities(self, end: str = None, start: str = None, path: str = None):
