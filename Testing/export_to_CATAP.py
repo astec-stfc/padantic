@@ -6,9 +6,9 @@ from PAdantic.PAdantic import PAdantic  # noqa E402
 from PAdantic.Exporters.CATAP import export_machine_dict
 
 machine = PAdantic(
-    layout_file="Machines/CLARA/layouts.yaml",
-    section_file="Machines/CLARA/sections.yaml",
-    yaml_dir="Machines/CLARA/YAML/",
+    layout_file="../../padantic-clara/CLARA/layouts.yaml",
+    section_file="../../padantic-clara/CLARA/sections.yaml",
+    yaml_dir="../../padantic-clara/CLARA/YAML/",
 )
 
 catap_machine = export_machine_dict(machine=machine)

@@ -7,7 +7,7 @@ from ..models.PV import (  # noqa
     CameraPV,
     ScreenPV,
     ChargeDiagnosticPV,
-    VacuumGuagePV,
+    VacuumGaugePV,
     LaserEnergyMeterPV,
     LaserHWPPV,
     LaserMirrorPV,

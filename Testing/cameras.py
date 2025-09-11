@@ -1,13 +1,13 @@
 import sys
+from pprint import pprint
 
 sys.path.append("../")
 from PAdantic.PAdantic import PAdantic  # noqa E402
 
 machine = PAdantic(
-    layout_file="Machines/CLARA/layouts.yaml",
-    section_file="Machines/CLARA/sections.yaml",
-    yaml_dir="Machines/CLARA/YAML/",
+    layout_file="../../padantic-clara/CLARA/layouts.yaml",
+    section_file="../../padantic-clara/CLARA/sections.yaml",
+    yaml_dir="../../padantic-clara/CLARA/YAML/",
 )
 machine.default_layout = "CLARA"
-print(machine.get_all_screens_and_cameras(end="CLA-S05-MAG-QUAD-01"))
-print(machine.get_all_shutters(end="CLA-FED-MAG-QUAD-03"))
+pprint(machine.get_screens_and_cameras(end="CLA-S05-MAG-QUAD-01"))

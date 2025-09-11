@@ -300,7 +300,7 @@ PVMappings = {
     "WCM": "ChargeDiagnostic",
     "ICT": "ChargeDiagnostic",
     "FCUP": "ChargeDiagnostic",
-    "IMG": "VacuumGuage",
+    "IMG": "VacuumGauge",
     "EM": "LaserEnergyMeter",
     "HWP": "LaserHWP",
     "PICO": "LaserMirror",

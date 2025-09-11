@@ -14,14 +14,11 @@ class ApertureElement(IgnoreExtra):
 class RFCavitySimulationElement(IgnoreExtra):
     field_amplitude: float = 0
     field_definition: Union[str, None] = None
-    field_definition_gdf: Union[str, None] = None
-    longitudinal_wakefield_sdds: Union[str, None] = None
-    transverse_wakefield_sdds: Union[str, None] = None
-    wakefield_gdf: Union[str, None] = None
+    wakefield_definition: Union[str, None] = None
     t_column: Union[str, None] = "t"
-    wx_column: Union[str, None] = "W"
-    wy_column: Union[str, None] = "W"
-    wz_column: Union[str, None] = "W"
+    wx_column: Union[str, None] = "Wx"
+    wy_column: Union[str, None] = "Wy"
+    wz_column: Union[str, None] = "Wz"
 
 
 class WakefieldSimulationElement(IgnoreExtra):
@@ -31,8 +28,6 @@ class WakefieldSimulationElement(IgnoreExtra):
     factor: float = 1
     field_amplitude: float = 0
     field_definition: str = "TWS_S-DL.dat"
-    field_definition_sdds: Union[str, None] = None
-    field_definition_gdf: Union[str, None] = None
     interpolate: bool = True
     scale_kick: float = 1
     t_column: str = Field(alias="tcolumn", default="t")

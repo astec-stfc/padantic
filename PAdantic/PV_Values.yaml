@@ -119,20 +119,8 @@ classTypes:
     - CAV
 classPVRecords:
   magnets:
-    - RILK
-    - SETI
-    - GETSETI
-    - READI
-    - SPOWER
-    - RPOWER
-    - K_DIP_P
-    - INT_STR_MM
-    - INT_STR
-    - K_SET_P
-    - K_ANG
-    - K_MRAD
-    - K_VAL
-    - Rst
+    - TEST1
+    - TEST2
   DIP: magnets
   HVCOR: magnets
   HCOR: magnets
@@ -141,484 +129,75 @@ classPVRecords:
   SOL: magnets
   SEXT: magnets
   BPM:
-    - SA1
-    - SA2
-    - SD1
-    - SD2
-    - RA1
-    - RA2
-    - RD1
-    - RD2
-    - X
-    - Y
-    - AWAK
-    - RDY
-    - DATA:B2V.VALA
+    - TEST1
+    - TEST2
   BAM:
-    - SA1
-    - SA2
-    - SD1
-    - SD2
-    - RA1
-    - RA2
-    - RD1
-    - RD2
-    - AWAK
-    - RDY
-    - DATA:B2V.VALA
+    - TEST1
+    - TEST2
   BLM:
-    - AWAK
-    - RDY
+    - TEST1
+    - TEST2
   CDR: BLM
   EOM:
-    - SA1
-    - SA2
-    - SD1
-    - SD2
-    - RA1
-    - RA2
-    - RD1
-    - RD2
-    - AWAK
-    - RDY
-    - DATA:B2V.VALA
+    - TEST1
+    - TEST2
   CBPM: BPM
   PMD: magnets
   CAM:
-    -  ANA:SetX
-    -  ANA:SetY
-    -  ANA:SetXRad
-    -  ANA:SetYRad
-    -  ANA:MaskXCenter
-    -  ANA:MaskYCenter
-    -  ANA:MaskXRad
-    -  ANA:MaskYRad
-    -  ANA:MaskYRad_RBV
-    -  ANA:MaskXRad_RBV
-    -  ANA:MaskWidth_RBV
-    -  ANA:MaskHeight_RBV
-    -  ANA:MaskYCenter_RBV
-    -  ANA:MaskXCenter_RBV
-    -  ROI1:MinX
-    -  ROI1:MinY
-    -  ROI1:SizeX
-    -  ROI1:SizeY
-    -  ROI1:MinY_RBV
-    -  ROI1:MinX_RBV
-    -  ROI1:SizeY_RBV
-    -  ROI1:SizeX_RBV
-    -  CAM3:ArrayData
-    -  ANA:CenterX
-    -  ANA:CenterY
-    -  ANA:CenterX_RBV
-    -  ANA:CenterY_RBV
-    -  CAM:Acquire_RBV
-    -  CAM:Stop
-    -  CAM:Start
-    -  ANA:EnableCallbacks
-    -  ANA:EnableCallbacks_RBV
-    -  OVER:3:Use
-    -  OVER:1:Use
-    -  OVER:2:Use
-    -  OVER:3:Use_RBV
-    -  OVER:1:Use_RBV
-    -  OVER:2:Use_RBV
-    -  ANA:NewBkgrnd
-    -  ANA:UseBkgrnd
-    -  ANA:UseBkgrnd_RBV
-    -  ANA:NewBkgrnd_RBV
-    -  ANA:UseFloor
-    -  ANA:Floor
-    -  ANA:UseFloor_RBV
-    -  ANA:Floor_RBV
-    -  ANA:FLOORED_PTS
-    -  ANA:FLOORED_PCENT
-    -  ANA:ANA_CPU
-    -  ANA:DP_CPU
-    -  ANA:NP_CPU
-    -  ANA:CSM_CPU
-    -  ANA:PixMM
-    -  ANA:PixW_RBV
-    -  ANA:PixH_RBV
-    -  ANA:PixMM_RBV
-    -  ANA:UseNPoint
-    -  ANA:UseNPoint_RBV
-    -  ANA:StepSize
-    -  ANA:StepSize_RBV
-    -  ANA:X_RBV
-    -  ANA:Y_RBV
-    -  ANA:XPix_RBV
-    -  ANA:YPix_RBV
-    -  ANA:CovXY_RBV
-    -  ANA:SigmaY_RBV
-    -  ANA:SigmaX_RBV
-    -  ANA:CovXYPix_RBV
-    -  ANA:SigmaYPix_RBV
-    -  ANA:SigmaXPix_RBV
-    -  ANA:Intensity_RBV
-    -  ANA:MMResults_RBV
-    -  ANA:PixelResults_RBV
-    -  ANA:AvgIntensity_RBV
-    -  CAM1:ArrayData
-    -  CAM2:ArrayData
-    -  HDFB:FileNumber
-    -  CAM:Trigger.PROC
-    -  HDFB:FileNumber_RBV
-    -  HDFB:FilePath
-    -  HDFB:FileName
-    -  HDFB:FileName_RBV
-    -  HDFB:FilePath_RBV
-    -  CAM:ArrayRate_RBV
-    -  CAM:Temperature_RBV
-    -  CAM:AcquireTime_RBV
-    -  CAM:AcquirePeriod_RBV
-    -  HDF:Capture
-    -  HDF:FilePath
-    -  HDF:FileName
-    -  HDF:WriteFile
-    -  HDF:FileNumber
-    -  HDF:NumCapture
-    -  HDF:WriteStatus
-    -  HDF:Capture_RBV
-    -  HDF:WriteMessage
-    -  HDF:FilePath_RBV
-    -  HDF:FileName_RBV
-    -  HDF:WriteFile_RBV
-    -  HDF:FileNumber_RBV
-    -  HDF:NumCapture_RBV
-    -  CAMERACOUNT
-    -  CAMERALIMIT
-    - 'Sta'
-    - 'Off'
-    - 'On'
+    - TEST1
+    - TEST2
   CS:
-    - cameraCount
-    - cameraLimit
+    - TEST1
+    - TEST2
   LED:
-    - 'Sta'
-    - 'Off'
-    - 'On'
+    - TEST1
+    - TEST2
   SCR:
-    - HB
-    - H:SDEV
-    - H:TRIGGER
-    - H:EX
-    - H:TGTPOS
-    - H:JOG
-    - H:JDIFF
-    - H:MOVING
-    - H:READY
-    - H:GET_DEV
-    - H:DEV_STATE
-    - H:MAX_POS
-    - H:DEV_CENT
-    - H:ACTPOS
-    - H:EN
-    - V:SDEV
-    - V:TRIGGER
-    - V:EX
-    - V:TGTPOS
-    - V:JOG
-    - V:JDIFF
-    - V:MOVING
-    - V:READY
-    - V:GET_DEV
-    - V:DEV_STATE
-    - V:MAX_POS
-    - V:DEV_CENT
-    - V:ACTPOS
-    - V:EN
-    - KEEP_ALIVE
+    - TEST1
+    - TEST2
   YAG: SCR
   WCM:
-    - Q
+    - TEST1
+    - TEST2
   ICT:
-    - Q
+    - TEST1
+    - TEST2
   FCUP:
-    - Q
+    - TEST1
+    - TEST2
   IMG:
-    - Sta
-    - P
+    - TEST1
+    - TEST2
   EM:
-    - OverRange_RB
-    - Run_SP
-    - Range_SP
-    - E_RB
+    - TEST1
+    - TEST2
   HWP:
-    - ROT:MABS
-    - ROT:RPOS
-    - ROT:ENABLE
+    - TEST1
+    - TEST2
   PICO:
-    - MREL
-    - RCUM1
-    - RCUM3
-    - RPOS
-    - H:MREL
-    - POSBTN
+    - TEST1
+    - TEST2
   LIGHT:
-    - 'Off'
-    - 'On'
-    - Sta
+    - TEST1
+    - TEST2
   CTRL:
-    - vm:phase
-    - ad1:ch3:phase:weight
-    - ad1:ch6:phase:weight
-    - vm:phase:pid.SCAN
-    - vm:phase:pid.OVAL
-    - ad1:ch3:phase_wrapped
-    - ad1:ch6:phase_wrapped
-    - vm:dsp:ff_amp:amplitude
-    - tcm:trig:source
-    - vm:dsp:sp_amp:amplitude
-    - vm:dsp:sp_amp:amplitude.DRVH
-    - vm:dsp:ff_ph:phase
-    - vm:dsp:sp_ph:phase
-    - app:rf_ctrl
-    - vm:dsp:ff_ph:lock
-    - vm:dsp:ff_amp:lock
-    - app:time_vector
-    - vm:feed_fwd:offset
-    - vm:feed_fwd:duration
-    - app:interlock:state
-    - vm:dsp:ff_pulse_shape:amp
-    - vm:dsp:ff_pulse_shape:apply_tables
-    - ad1:interlock:ch1:status
-    - ad1:interlock:ch1:enable
-    - ad1:interlock:ch1:U_level
-    - ad1:interlock:ch1:P_level
-    - ad1:interlock:ch1:Pdbm_level
-    - ad1:interlock:ch2:status
-    - ad1:interlock:ch2:enable
-    - ad1:interlock:ch2:U_level
-    - ad1:interlock:ch2:P_level
-    - ad1:interlock:ch2:Pdbm_level
-    - ad1:interlock:ch3:status
-    - ad1:interlock:ch3:enable
-    - ad1:interlock:ch3:U_level
-    - ad1:interlock:ch3:P_level
-    - ad1:interlock:ch3:Pdbm_level
-    - ad1:interlock:ch4:status
-    - ad1:interlock:ch4:enable
-    - ad1:interlock:ch4:U_level
-    - ad1:interlock:ch4:P_level
-    - ad1:interlock:ch4:Pdbm_level
-    - ad1:interlock:ch5:status
-    - ad1:interlock:ch5:enable
-    - ad1:interlock:ch5:U_level
-    - ad1:interlock:ch5:P_level
-    - ad1:interlock:ch5:Pdbm_level
-    - ad1:interlock:ch6:status
-    - ad1:interlock:ch6:enable
-    - ad1:interlock:ch6:U_level
-    - ad1:interlock:ch6:P_level
-    - ad1:interlock:ch6:Pdbm_level
-    - ad1:interlock:ch7:status
-    - ad1:interlock:ch7:enable
-    - ad1:interlock:ch7:U_level
-    - ad1:interlock:ch7:P_level
-    - ad1:interlock:ch7:Pdbm_level
-    - ad1:interlock:ch8:status
-    - ad1:interlock:ch8:enable
-    - ad1:interlock:ch8:U_level
-    - ad1:interlock:ch8:P_level
-    - ad1:interlock:ch8:Pdbm_level
-    - ad1:dod_demod_vec
-    - ad1:dod_demod_vec.SCAN
-    - ad1:dod_demod_vec.ACQM
-    - ad1:ch1:power_remote.SCAN
-    - ad1:ch1:power_remote.POWER
-    - ad1:ch1:power_remote.ACQM
-    - ad1:ch1:amp_phase.SCAN
-    - ad1:ch1:amp_phase.ACQM
-    - ad1:ch1:amp_phase.PHASE_REMOTE
-    - ad1:ch1:amp_derivative.SCAN
-    - ad1:ch1:amp_derivative.ACQM
-    - ad1:ch1:phase_derivative.SCAN
-    - ad1:ch1:phase_derivative.ACQM
-    - ad1:ch1:power_local.SCAN
-    - ad1:ch1:power_local.ACQM
-    - ad1:ch2:power_remote.SCAN
-    - ad1:ch2:power_remote.POWER
-    - ad1:ch2:power_remote.ACQM
-    - ad1:ch2:amp_phase.SCAN
-    - ad1:ch2:amp_phase.ACQM
-    - ad1:ch2:amp_phase.PHASE_REMOTE
-    - ad1:ch2:amp_derivative.SCAN
-    - ad1:ch2:amp_derivative.ACQM
-    - ad1:ch2:phase_derivative.SCAN
-    - ad1:ch2:phase_derivative.ACQM
-    - ad1:ch2:power_local.SCAN
-    - ad1:ch2:power_local.ACQM
-    - ad1:ch3:power_remote.SCAN
-    - ad1:ch3:power_remote.POWER
-    - ad1:ch3:power_remote.ACQM
-    - ad1:ch3:amp_phase.SCAN
-    - ad1:ch3:amp_phase.ACQM
-    - ad1:ch3:amp_phase.PHASE_REMOTE
-    - ad1:ch3:amp_derivative.SCAN
-    - ad1:ch3:amp_derivative.ACQM
-    - ad1:ch3:phase_derivative.SCAN
-    - ad1:ch3:phase_derivative.ACQM
-    - ad1:ch3:power_local.SCAN
-    - ad1:ch3:power_local.ACQM
-    - ad1:ch4:power_remote.SCAN
-    - ad1:ch4:power_remote.POWER
-    - ad1:ch4:power_remote.ACQM
-    - ad1:ch4:amp_phase.SCAN
-    - ad1:ch4:amp_phase.ACQM
-    - ad1:ch4:amp_phase.PHASE_REMOTE
-    - ad1:ch4:amp_derivative.SCAN
-    - ad1:ch4:amp_derivative.ACQM
-    - ad1:ch4:phase_derivative.SCAN
-    - ad1:ch4:phase_derivative.ACQM
-    - ad1:ch4:power_local.SCAN
-    - ad1:ch4:power_local.ACQM
-    - ad1:ch5:power_remote.SCAN
-    - ad1:ch5:power_remote.POWER
-    - ad1:ch5:power_remote.ACQM
-    - ad1:ch5:amp_phase.SCAN
-    - ad1:ch5:amp_phase.ACQM
-    - ad1:ch5:amp_phase.PHASE_REMOTE
-    - ad1:ch5:amp_derivative.SCAN
-    - ad1:ch5:amp_derivative.ACQM
-    - ad1:ch5:phase_derivative.SCAN
-    - ad1:ch5:phase_derivative.ACQM
-    - ad1:ch5:power_local.SCAN
-    - ad1:ch5:power_local.ACQM
-    - ad1:ch6:power_remote.SCAN
-    - ad1:ch6:power_remote.POWER
-    - ad1:ch6:power_remote.ACQM
-    - ad1:ch6:amp_phase.SCAN
-    - ad1:ch6:amp_phase.ACQM
-    - ad1:ch6:amp_phase.PHASE_REMOTE
-    - ad1:ch6:amp_derivative.SCAN
-    - ad1:ch6:amp_derivative.ACQM
-    - ad1:ch6:phase_derivative.SCAN
-    - ad1:ch6:phase_derivative.ACQM
-    - ad1:ch6:power_local.SCAN
-    - ad1:ch6:power_local.ACQM
-    - ad1:ch7:power_remote.SCAN
-    - ad1:ch7:power_remote.POWER
-    - ad1:ch7:power_remote.ACQM
-    - ad1:ch7:amp_phase.SCAN
-    - ad1:ch7:amp_phase.ACQM
-    - ad1:ch7:amp_phase.PHASE_REMOTE
-    - ad1:ch7:amp_derivative.SCAN
-    - ad1:ch7:amp_derivative.ACQM
-    - ad1:ch7:phase_derivative.SCAN
-    - ad1:ch7:phase_derivative.ACQM
-    - ad1:ch7:power_local.SCAN
-    - ad1:ch7:power_local.ACQM
-    - ad1:ch8:power_remote.SCAN
-    - ad1:ch8:power_remote.POWER
-    - ad1:ch8:power_remote.ACQM
-    - ad1:ch8:amp_phase.SCAN
-    - ad1:ch8:amp_phase.ACQM
-    - ad1:ch8:amp_phase.PHASE_REMOTE
-    - ad1:ch8:amp_derivative.SCAN
-    - ad1:ch8:amp_derivative.ACQM
-    - ad1:ch8:phase_derivative.SCAN
-    - ad1:ch8:phase_derivative.ACQM
-    - ad1:ch8:power_local.SCAN
-    - ad1:ch8:power_local.ACQM
-    - AVG_PHASE
-    - FORWARD_PHASE_WEIGHT
-    - PROBE_PHASE_WEIGHT
-    - SCAN
-    - PID_OVAL
-    - FORWARD_PHASE_WRAPPED
-    - PROBE_PHASE_WRAPPED
+    - TEST1
+    - TEST2
   HRF:
-    - SYSMDE
-    - FAULT
-    - SYSST
-    - COUNTDOWN
-    - HVPS:VS:R
-    - HVPS:ALM:LO:R
-    - HVPS:ALM:HI:R
-    - HVPS:V
-    - HVPS:I
-    - HEAT:V
-    - HEAT:I
-    - RESET:V
-    - RESET:I
-    - ION:V
-    - ION:I
-    - SUP:T
-    - SUP:P
-    - RET:T
-    - RET:P
-    - BDY:FR
-    - COL:FR
-    - SOL:FR
-    - TNK:FR
-    - CR:T
-    - BR:T
-    - SOL:1:V
-    - SOL:1:I
-    - SOL:2:V
-    - SOL:2:I
-    - SOL:3:V
-    - SOL:3:I
-    - F1DSTR.VALA
-    - F2DSTR.VALA
-    - F3DSTR.VALA
-    - F4DSTR.VALA
-    - F5DSTR.VALA
-    - F6DSTR.VALA
-    - F7DSTR.VALA
-    - F8DSTR.VALA
-    - F9DSTR.VALA
-    - F10DSTR.VALA
-    - F11DSTR.VALA
-    - F12DSTR.VALA
-    - F13DSTR.VALA
-    - F14DSTR.VALA
-    - F15DSTR.VALA
-    - F16DSTR.VALA
-    - F17DSTR.VALA
-    - F18DSTR.VALA
-    - F19DSTR.VALA
-    - F20DSTR.VALA
-    - F1STR.VALA
-    - F2STR.VALA
-    - F3STR.VALA
-    - F4STR.VALA
-    - F5STR.VALA
-    - F6STR.VALA
-    - F7STR.VALA
-    - F8STR.VALA
-    - F9STR.VALA
-    - F10STR.VALA
-    - F11STR.VALA
-    - F12STR.VALA
-    - F13STR.VALA
-    - F14STR.VALA
-    - F15STR.VALA
-    - F16STR.VALA
-    - F17STR.VALA
-    - F18STR.VALA
-    - F19STR.VALA
-    - F20STR.VALA
+    - TEST1
+    - TEST2
   RFHOLD:
-    - OpMode
+    - TEST1
+    - TEST2
   LSR:
-    - 'On'
-    - 'Off'
-    - Sta
-    - Cmi
+    - TEST1
+    - TEST2
   VALV:
-    - 'On'
-    - 'Off'
-    - Sta
-    - Open
-    - Close
+    - TEST1
+    - TEST2
   PROTE:
-    - 'On'
-    - 'Off'
-    - 'Rst'
-    - 'Sta'
-    - 'Cmi'
+    - TEST1
+    - TEST2
   PROTCH: PROTE
   PROTCL: PROTE
   PROTG: PROTE
@@ -627,498 +206,84 @@ classPVRecords:
   PROTVL: PROTE
   PROTL01: PROTE
   4C-PM:
-    - H:MREL
-    - V:MREL
-    - H:POS
-    - V:POS
-    - POSBTN
+    - TEST1
+    - TEST2
   LIN:
-    - CAV
+    - TEST1
+    - TEST2
   SHTR:
-    - STATE
-    - OPEN
-    - CLOSE
-    - CMI
+    - TEST1
+    - TEST2
 classPVNames:
   MAG:
-    - RILK
-    - SETI
-    - GETSETI
-    - READI
-    - SPOWER
-    - RPOWER
-    - K_DIP_P
-    - INT_STR_MM
-    - INT_STR
-    - K_SET_P
-    - K_ANG
-    - K_MRAD
-    - K_VAL
-    - ILK_RESET: Rst
+    - EX1: TEST1
+    - EX2: TEST1
   BPM:
-    - SA1
-    - SA2
-    - SD1
-    - SD2
-    - RA1
-    - RA2
-    - RD1
-    - RD2
-    - X
-    - Y
-    - AWAK
-    - RDY
-    - DATA: DATA:B2V.VALA
+    - EX1: TEST1
+    - EX2: TEST1
   BAM:
-    - SA1
-    - SA2
-    - SD1
-    - SD2
-    - RA1
-    - RA2
-    - RD1
-    - RD2
-    - AWAK
-    - RDY
-    - DATA: DATA:B2V.VALA
+    - EX1: TEST1
+    - EX2: TEST1
   BLM:
-    - AWAK
-    - RDY
+    - EX1: TEST1
+    - EX2: TEST1
   CAM:
-    - ROIandMask_SetX: ANA:SetX
-    - ROIandMask_SetY: ANA:SetY
-    - ROIandMask_SetXrad: ANA:SetXrad
-    - ROIandMask_SetYrad: ANA:SetYrad
-    - ANA_MaskXCenter: ANA:MaskXCenter
-    - ANA_MaskYCenter: ANA:MaskYCenter
-    - ANA_MaskXRad: ANA:MaskXRad
-    - ANA_MaskYRad: ANA:MaskYRad
-    - ANA_MaskYRad_RBV: ANA:MaskYRad_RBV
-    - ANA_MaskXRad_RBV: ANA:MaskXRad_RBV
-    - ANA_MaskWidth_RBV: ANA:MaskWidth_RBV
-    - ANA_MaskHeight_RBV: ANA:MaskHeight_RBV
-    - ANA_MaskYCenter_RBV: ANA:MaskYCenter_RBV
-    - ANA_MaskXCenter_RBV: ANA:MaskXCenter_RBV
-    - ROI1_MinX: ROI1:MinX
-    - ROI1_MinY: ROI1:MinY
-    - ROI1_SizeX: ROI1:SizeX
-    - ROI1_SizeY: ROI1:SizeY
-    - ROI1_MinY_RBV: ROI1:MinY_RBV
-    - ROI1_MinX_RBV: ROI1:MinX_RBV
-    - ROI1_SizeY_RBV: ROI1:SizeY_RBV
-    - ROI1_SizeX_RBV: ROI1:SizeX_RBV
-    - ROI1_ImageData_RBV: CAM3:ArrayData
-    - ANA_CenterX: ANA:CenterX
-    - ANA_CenterY: ANA:CenterY
-    - ANA_CenterX_RBV: ANA:CenterX_RBV
-    - ANA_CenterY_RBV: ANA:CenterY_RBV
-    - CAM_Acquire_RBV: CAM:Acquire_RBV
-    - CAM_Active_Count: cameraCount
-    - CAM_Active_Limit: cameraLimit
-    - CAM_Stop_Acquire: CAM:Stop
-    - CAM_Start_Acquire: CAM:Start
-    - ANA_EnableCallbacks: ANA:EnableCallbacks
-    - ANA_EnableCallbacks_RBV: ANA:EnableCallbacks_RBV
-    - ANA_OVERLAY_3_MASK: OVER:3:Use
-    - ANA_OVERLAY_1_CROSS: OVER:1:Use
-    - ANA_OVERLAY_2_RESULT: OVER:2:Use
-    - ANA_OVERLAY_3_MASK_RBV: OVER:3:Use_RBV
-    - ANA_OVERLAY_1_CROSS_RBV: OVER:1:Use_RBV
-    - ANA_OVERLAY_2_RESULT_RBV: OVER:2:Use_RBV
-    - ANA_NewBkgrnd: ANA:NewBkgrnd
-    - ANA_UseBkgrnd: ANA:UseBkgrnd
-    - ANA_UseBkgrnd_RBV: ANA:UseBkgrnd_RBV
-    - ANA_NewBkgrnd_RBV: ANA:NewBkgrnd_RBV
-    - ANA_UseFloor: ANA:UseFloor
-    - ANA_FloorLevel: ANA:Floor
-    - ANA_UseFloor_RBV: ANA:UseFloor_RBV
-    - ANA_FloorLevel_RBV: ANA:Floor_RBV
-    - ANA_FlooredPoints_RBV: ANA:FLOORED_PTS
-    - ANA_FlooredPercent_RBV: ANA:FLOORED_PCENT
-    - ANA_CPU_RBV: ANA:ANA_CPU
-    - ANA_CPU_Dot_RBV: ANA:DP_CPU
-    - ANA_CPU_Npoint_RBV: ANA:NP_CPU
-    - ANA_CPU_CropSubMask_RBV: ANA:CSM_CPU
-    - ANA_PixMM: ANA:PixMM
-    - ANA_PixW_RBV: ANA:PixW_RBV
-    - ANA_PixH_RBV: ANA:PixH_RBV
-    - ANA_PixMM_RBV: ANA:PixMM_RBV
-    - ANA_UseNPoint: ANA:UseNPoint
-    - ANA_UseNPoint_RBV: ANA:UseNPoint_RBV
-    - ANA_NPointStepSize: ANA:StepSize
-    - ANA_NPointStepSize_RBV: ANA:StepSize_RBV
-    - ANA_X_RBV: ANA:X_RBV
-    - ANA_Y_RBV: ANA:Y_RBV
-    - ANA_XPix_RBV: ANA:XPix_RBV
-    - ANA_YPix_RBV: ANA:YPix_RBV
-    - ANA_CovXY_RBV: ANA:CovXY_RBV
-    - ANA_SigmaY_RBV: ANA:SigmaY_RBV
-    - ANA_SigmaX_RBV: ANA:SigmaX_RBV
-    - ANA_CovXYPix_RBV: ANA:CovXYPix_RBV
-    - ANA_SigmaYPix_RBV: ANA:SigmaYPix_RBV
-    - ANA_SigmaXPix_RBV: ANA:SigmaXPix_RBV
-    - ANA_Intensity_RBV: ANA:Intensity_RBV
-    - ANA_MMResults_RBV: ANA:MMResults_RBV
-    - ANA_PixelResults_RBV: ANA:PixelResults_RBV
-    - ANA_AvgIntensity_RBV: ANA:AvgIntensity_RBV
-    - CAM1_ArrayData: CAM1:ArrayData
-    - CAM2_ArrayData: CAM2:ArrayData
-    - HDFB_Buffer_FileNumber: HDFB:FileNumber
-    - HDFB_image_buffer_trigger: CAM:Trigger.PROC
-    - HDFB_Buffer_FileNumber_RBV: HDFB:FileNumber_RBV
-    - HDFB_image_buffer_filePath: HDFB:FilePath
-    - HDFB_image_buffer_fileName: HDFB:FileName
-    - HDFB_image_buffer_fileName_RBV: HDFB:FileName_RBV
-    - HDFB_image_buffer_filePath_RBV: HDFB:FilePath_RBV
-    - CAM_ArrayRate_RBV: CAM:ArrayRate_RBV
-    - CAM_Temperature_RBV: CAM:Temperature_RBV
-    - CAM_AcquireTime_RBV: CAM:AcquireTime_RBV
-    - CAM_AcquirePeriod_RBV: CAM:AcquirePeriod_RBV
-    - HDF_Capture: HDF:Capture
-    - HDF_FilePath: HDF:FilePath
-    - HDF_FileName: HDF:FileName
-    - HDF_WriteFile: HDF:WriteFile
-    - HDF_FileNumber: HDF:FileNumber
-    - HDF_NumCapture: HDF:NumCapture
-    - HDF_WriteStatus: HDF:WriteStatus
-    - HDF_Capture_RBV: HDF:Capture_RBV
-    - HDF_WriteMessage: HDF:WriteMessage
-    - HDF_FilePath_RBV: HDF:FilePath_RBV
-    - HDF_FileName_RBV: HDF:FileName_RBV
-    - HDF_WriteFile_RBV: HDF:WriteFile_RBV
-    - HDF_FileNumber_RBV: HDF:FileNumber_RBV
-    - HDF_NumCapture_RBV: HDF:NumCapture_RBV
-    - LED_Sta: Sta
-    - LED_Off: "Off"
-    - LED_On: "On"
+    - EX1: TEST1
+    - EX2: TEST1
   CS:
-    - CAM_Active_Count
-    - CAM_Active_Limit
+    - EX1: TEST1
+    - EX2: TEST1
   LED:
-    - LED_Sta
-    - LED_Off
-    - LED_On
+    - EX1: TEST1
+    - EX2: TEST1
   Lighting:
-    - CLARA_LED_Sta
-    - CLARA_LED_Off
-    - CLARA_LED_On
-    - VELA_LED_Sta
-    - VELA_LED_Off
-    - VELA_LED_On
-    - ACCELERATOR_HALL_LIGHT_On
-    - ACCELERATOR_HALL_LIGHT_Off
-    - ACCELERATOR_HALL_LIGHT_Sta
-    - BA1_LIGHT_On
-    - BA1_LIGHT_Off
-    - BA1_LIGHT_Sta
+    - EX1: TEST1
+    - EX2: TEST1
   SCR:
-    - H_SDEV: H:SDEV
-    - H_TRIGGER: H:TRIGGER
-    - H_EX: H:EX
-    - H_TGTPOS: H:TGTPOS
-    - H_JOG: H:JOG
-    - H_JDIFF: H:JDIFF
-    - H_MOVING: H:MOVING
-    - H_READY: H:READY
-    - H_GET_DEV: H:GET_DEV
-    - H_DEV_STATE: H:DEV_STATE
-    - H_MAX_POS: H:MAX_POS
-    - H_DEV_CENT: H:DEV_CENT
-    - H_ACTPOS: H:ACTPOS
-    - H_EN: H:EN
-    - V_SDEV: V:SDEV
-    - V_TRIGGER: V:TRIGGER
-    - V_EX: V:EX
-    - V_TGTPOS: V:TGTPOS
-    - V_JOG: V:JOG
-    - V_JDIFF: V:JDIFF
-    - V_MOVING: V:MOVING
-    - V_READY: V:READY
-    - V_GET_DEV: V:GET_DEV
-    - V_DEV_STATE: V:DEV_STATE
-    - V_MAX_POS: V:MAX_POS
-    - V_DEV_CENT: V:DEV_CENT
-    - V_ACTPOS: V:ACTPOS
-    - V_EN: V:EN
+    - EX1: TEST1
+    - EX2: TEST1
   WCM:
-    - Q
+    - EX1: TEST1
+    - EX2: TEST1
   ICT:
-    - Q
+    - EX1: TEST1
+    - EX2: TEST1
   FCUP:
-    - Q
+    - EX1: TEST1
+    - EX2: TEST1
   IMG:
-    - Sta
-    - P
+    - EX1: TEST1
+    - EX2: TEST1
   EM:
-    - OVERRANGE: OverRange_RB
-    - RUNSP: Run_SP
-    - RANGESP: Range_SP
-    - ENERGYREADBACK: E_RB
+    - EX1: TEST1
+    - EX2: TEST1
   HWP:
-    - "ROT:MABS"
-    - "ROT:RPOS"
-    - ENABLE
+    - EX1: TEST1
+    - EX2: TEST1
   PICO:
-    - H_MREL: H:MREL
-    - V_MREL: V:MREL
-    - H_POS: H:POS
-    - V_POS: V:POS
-    - POSBTN: POSBTN
-#    - H_MREL_RBV: H:MREL:POS
-#    - V_MREL_RBV
+    - EX1: TEST1
+    - EX2: TEST1
   PID:
-    - AVG_PHASE
-    - FORWARD_PHASE_WEIGHT
-    - PROBE_PHASE_WEIGHT
-    - SCAN
-    - PID_OVAL
-    - FORWARD_PHASE_WRAPPED
-    - PROBE_PHASE_WRAPPED
+    - EX1: TEST1
+    - EX2: TEST1
   LLRF:
-    - AMP_FF
-    - TRIG_SOURCE
-    - AMP_SP
-    - MAX_AMP_SP
-    - PHI_FF
-    - PHI_SP
-    - RF_OUTPUT
-    - FF_PHASE_LOCK_STATE
-    - FF_AMP_LOCK_STATE
-    - TIME_VECTOR
-    - PULSE_OFFSET
-    - LLRF_PULSE_DURATION
-    - INTERLOCK
-    - PULSE_SHAPE
-    - PULSE_SHAPE_APPLY
-    - CH1_INTERLOCK_STATUS
-    - CH1_INTERLOCK_ENABLE
-    - CH1_INTERLOCK_U
-    - CH1_INTERLOCK_P
-    - CH1_INTERLOCK_PDBM
-    - CH2_INTERLOCK_STATUS
-    - CH2_INTERLOCK_ENABLE
-    - CH2_INTERLOCK_U
-    - CH2_INTERLOCK_P
-    - CH2_INTERLOCK_PDBM
-    - CH3_INTERLOCK_STATUS
-    - CH3_INTERLOCK_ENABLE
-    - CH3_INTERLOCK_U
-    - CH3_INTERLOCK_P
-    - CH3_INTERLOCK_PDBM
-    - CH4_INTERLOCK_STATUS
-    - CH4_INTERLOCK_ENABLE
-    - CH4_INTERLOCK_U
-    - CH4_INTERLOCK_P
-    - CH4_INTERLOCK_PDBM
-    - CH5_INTERLOCK_STATUS
-    - CH5_INTERLOCK_ENABLE
-    - CH5_INTERLOCK_U
-    - CH5_INTERLOCK_P
-    - CH5_INTERLOCK_PDBM
-    - CH6_INTERLOCK_STATUS
-    - CH6_INTERLOCK_ENABLE
-    - CH6_INTERLOCK_U
-    - CH6_INTERLOCK_P
-    - CH6_INTERLOCK_PDBM
-    - CH7_INTERLOCK_STATUS
-    - CH7_INTERLOCK_ENABLE
-    - CH7_INTERLOCK_U
-    - CH7_INTERLOCK_P
-    - CH7_INTERLOCK_PDBM
-    - CH8_INTERLOCK_STATUS
-    - CH8_INTERLOCK_ENABLE
-    - CH8_INTERLOCK_U
-    - CH8_INTERLOCK_P
-    - CH8_INTERLOCK_PDBM
-    - LLRF_TRACES
-    - LLRF_TRACES_SCAN
-    - LLRF_TRACES_ACQM
-    - CH1_PWR_REM_SCAN
-    - CH1_PWR_REM
-    - CH1_PWR_REM_ACQM
-    - CH1_PHASE_REM_SCAN
-    - CH1_PHASE_REM_ACQM
-    - CH1_PHASE_REM
-    - CH1_AMP_DER_SCAN
-    - CH1_AMP_DER_ACQM
-    - CH1_PHASE_DER_SCAN
-    - CH1_PHASE_DER_ACQM
-    - CH1_PWR_LOC_SCAN
-    - CH1_PWR_LOC_ACQM
-    - CH2_PWR_REM_SCAN
-    - CH2_PWR_REM
-    - CH2_PWR_REM_ACQM
-    - CH2_PHASE_REM_SCAN
-    - CH2_PHASE_REM_ACQM
-    - CH2_PHASE_REM
-    - CH2_AMP_DER_SCAN
-    - CH2_AMP_DER_ACQM
-    - CH2_PHASE_DER_SCAN
-    - CH2_PHASE_DER_ACQM
-    - CH2_PWR_LOC_SCAN
-    - CH2_PWR_LOC_ACQM
-    - CH3_PWR_REM_SCAN
-    - CH3_PWR_REM
-    - CH3_PWR_REM_ACQM
-    - CH3_PHASE_REM_SCAN
-    - CH3_PHASE_REM_ACQM
-    - CH3_PHASE_REM
-    - CH3_AMP_DER_SCAN
-    - CH3_AMP_DER_ACQM
-    - CH3_PHASE_DER_SCAN
-    - CH3_PHASE_DER_ACQM
-    - CH3_PWR_LOC_SCAN
-    - CH3_PWR_LOC_ACQM
-    - CH4_PWR_REM_SCAN
-    - CH4_PWR_REM
-    - CH4_PWR_REM_ACQM
-    - CH4_PHASE_REM_SCAN
-    - CH4_PHASE_REM_ACQM
-    - CH4_PHASE_REM
-    - CH4_AMP_DER_SCAN
-    - CH4_AMP_DER_ACQM
-    - CH4_PHASE_DER_SCAN
-    - CH4_PHASE_DER_ACQM
-    - CH4_PWR_LOC_SCAN
-    - CH4_PWR_LOC_ACQM
-    - CH5_PWR_REM_SCAN
-    - CH5_PWR_REM
-    - CH5_PWR_REM_ACQM
-    - CH5_PHASE_REM_SCAN
-    - CH5_PHASE_REM_ACQM
-    - CH5_PHASE_REM
-    - CH5_AMP_DER_SCAN
-    - CH5_AMP_DER_ACQM
-    - CH5_PHASE_DER_SCAN
-    - CH5_PHASE_DER_ACQM
-    - CH5_PWR_LOC_SCAN
-    - CH5_PWR_LOC_ACQM
-    - CH6_PWR_REM_SCAN
-    - CH6_PWR_REM
-    - CH6_PWR_REM_ACQM
-    - CH6_PHASE_REM_SCAN
-    - CH6_PHASE_REM_ACQM
-    - CH6_PHASE_REM
-    - CH6_AMP_DER_SCAN
-    - CH6_AMP_DER_ACQM
-    - CH6_PHASE_DER_SCAN
-    - CH6_PHASE_DER_ACQM
-    - CH6_PWR_LOC_SCAN
-    - CH6_PWR_LOC_ACQM
-    - CH7_PWR_REM_SCAN
-    - CH7_PWR_REM
-    - CH7_PWR_REM_ACQM
-    - CH7_PHASE_REM_SCAN
-    - CH7_PHASE_REM_ACQM
-    - CH7_PHASE_REM
-    - CH7_AMP_DER_SCAN
-    - CH7_AMP_DER_ACQM
-    - CH7_PHASE_DER_SCAN
-    - CH7_PHASE_DER_ACQM
-    - CH7_PWR_LOC_SCAN
-    - CH7_PWR_LOC_ACQM
-    - CH8_PWR_REM_SCAN
-    - CH8_PWR_REM
-    - CH8_PWR_REM_ACQM
-    - CH8_PHASE_REM_SCAN
-    - CH8_PHASE_REM_ACQM
-    - CH8_PHASE_REM
-    - CH8_AMP_DER_SCAN
-    - CH8_AMP_DER_ACQM
-    - CH8_PHASE_DER_SCAN
-    - CH8_PHASE_DER_ACQM
-    - CH8_PWR_LOC_SCAN
-    - CH8_PWR_LOC_ACQM
+    - EX1: TEST1
+    - EX2: TEST1
   RFModulator:
-    - SYSTEM_STATE_PUT
-    - HOLD_RF_ON
-    - L01_FAULT
-    - SYSTEM_STATE_READ
-    - L01_MOD_WARMUPT
-    - HVPS_VOLTAGE_SET_READ
-    - HVPS_VOLTAGE_LOW_ALARM_SET_READ
-    - HVPS_VOLTAGE_HI_ALARM_SET_READ
-    - HVPS_VOLTAGE_READ
-    - HVPS_CURRENT_READ
-    - HEATER_VOLTAGE
-    - HEATER_CURRENT
-    - RESET_VOLTAGE
-    - RESET_CURRENT
-    - ION_PUMP_VOLTAGE
-    - ION_PUMP_CURRENT
-    - SUPPLY_TEMP
-    - SUPPLY_PRESSURE
-    - RETURN_TEMP
-    - RETURN_PRESSURE
-    - BODY_FLOW_RATE
-    - COLLECTOR_FLOW_RATE
-    - SOLENOID_FLOW_RATE
-    - TANK_FLOW_RATE
-    - COLLECTOR_RETURN_RATE
-    - BODY_RETURN_TEMPERATURE
-    - SOLENOID_1_VOLTAGE
-    - SOLENOID_2_VOLTAGE
-    - SOLENOID_3_VOLTAGE
-    - SOLENOID_1_CURRENT
-    - SOLENOID_2_CURRENT
-    - SOLENOID_3_CURRENT
-    - ERROR_WORD_1
-    - ERROR_WORD_2
-    - ERROR_WORD_3
-    - ERROR_WORD_4
-    - ERROR_WORD_5
-    - ERROR_WORD_6
-    - ERROR_WORD_7
-    - ERROR_WORD_8
-    - ERROR_WORD_9
-    - ERROR_WORD_10
-    - ERROR_WORD_11
-    - ERROR_WORD_12
-    - ERROR_WORD_13
-    - ERROR_WORD_14
-    - ERROR_WORD_15
-    - ERROR_WORD_16
-    - ERROR_WORD_17
-    - ERROR_WORD_18
-    - ERROR_WORD_19
-    - ERROR_WORD_20
-    - ERROR_DESC_1
-    - ERROR_DESC_2
-    - ERROR_DESC_3
-    - ERROR_DESC_4
-    - ERROR_DESC_5
-    - ERROR_DESC_6
-    - ERROR_DESC_7
-    - ERROR_DESC_8
-    - ERROR_DESC_9
-    - ERROR_DESC_10
-    - ERROR_DESC_11
-    - ERROR_DESC_12
-    - ERROR_DESC_13
-    - ERROR_DESC_14
-    - ERROR_DESC_15
-    - ERROR_DESC_16
-    - ERROR_DESC_17
-    - ERROR_DESC_18
-    - ERROR_DESC_19
-    - ERROR_DESC_20
+    - EX1: TEST1
+    - EX2: TEST1
   Shutter:
-    - Open
-    - Close
-    - State
-    - Cmi
+    - EX1: TEST1
+    - EX2: TEST1
   Valve:
-    - Open
-    - Close
-    - Sta
+    - EX1: TEST1
+    - EX2: TEST1
   RFProtection:
-    - 'ON'
-    - 'OFF'
-    - 'RESET': Rst
-    - 'Sta'
-    - 'Cmi'
+    - EX1: TEST1
+    - EX2: TEST1
   RFHeartbeat:
-    - KEEP_ALIVE
+    - EX1: TEST1
+    - EX2: TEST1
 elementTypes:
     DIPOLE: Dipole
     QUADRUPOLE: Quadrupole
@@ -1152,7 +317,7 @@ PVTypes:
     Camera: CameraPV
     Screen: ScreenPV
     Charge: ChargeDiagnosticPV
-    IMG: VacuumGuagePV
+    IMG: VacuumGaugePV
     LaserEnergyMeter: LaserEnergyMeterPV
     LaserHWP: LaserHWPPV
     LaserMirror: LaserMirrorPV

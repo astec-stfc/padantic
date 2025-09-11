@@ -13,7 +13,7 @@ from ..models.PV import (  # noqa
     CameraPV,
     ScreenPV,
     ChargeDiagnosticPV,
-    VacuumGuagePV,
+    VacuumGaugePV,
     LaserEnergyMeterPV,
     LaserHWPPV,
     LaserMirrorPV,
@@ -269,11 +269,10 @@ def read_SimFrame_YAML(filename):
     return elemlist
 
 
-# SF_files = glob.glob(r'C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\*.yaml', recursive=True)
 SF_files = [
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_Gun400.yaml",
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP2.yaml",
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP3.yaml",
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_FEBE.yaml",
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\masterlattice\MasterLattice\YAML\CLA_SP1.yaml",
+    r"../../masterlattice/MasterLattice/YAML/CLA_Gun400.yaml",
+    r"../../masterlattice/MasterLattice/YAML/CLA_SP2.yaml",
+    r"../../masterlattice/MasterLattice/YAML/CLA_SP3.yaml",
+    r"../../masterlattice/MasterLattice/YAML/CLA_FEBE.yaml",
+    r"../../masterlattice/MasterLattice/YAML/CLA_SP1.yaml",
 ]

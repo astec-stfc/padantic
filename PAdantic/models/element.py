@@ -12,7 +12,7 @@ from .PV import (
     CameraPV,
     ScreenPV,
     ChargeDiagnosticPV,
-    VacuumGuagePV,
+    VacuumGaugePV,
     LaserEnergyMeterPV,
     LaserHWPPV,
     LaserMirrorPV,
@@ -463,7 +463,7 @@ class VacuumGuage(PhysicalBaseElement):
     hardware_type: str = Field(default="VacuumGuage", frozen=True)
     hardware_model: str = Field(default="IMG", frozen=True)
     manufacturer: ManufacturerElement
-    controls: VacuumGuagePV
+    controls: VacuumGaugePV
 
 
 class LaserEnergyMeter(PhysicalBaseElement):

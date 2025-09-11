@@ -13,8 +13,10 @@ machine = PAdantic(
 
 machine.default_layout = "CLARA"
 
+simframe_examples = "../../SimFrame_Examples/FEBE/StandardSetups/Setups/Setup_1_250pC"
+
 with open(
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\SimFrame_Examples\FEBE\StandardSetups\Setups\Setup_1_250pC\lattice.yaml",
+    f"{simframe_examples}/lattice.yaml",
     "r",
 ) as stream:
     try:
@@ -24,7 +26,7 @@ with open(
 
 sdds_twiss = {}
 sdds_twiss_file = sddsread(
-    r"C:\Users\jkj62.CLRC\Documents\GitHub\SimFrame_Examples\FEBE\StandardSetups\Setups\Setup_1_250pC\FEBE.twi"
+    f"{simframe_examples}/FEBE.twi"
 )
 for idx, name in enumerate(sdds_twiss_file.col("ElementName").data[0]):
     sdds_twiss[name] = 0.511 * sdds_twiss_file.col("pCentral0").data[0][idx]

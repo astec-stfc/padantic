@@ -195,7 +195,7 @@ class PAdantic(MachineModel):
         self, end: str = None, start: str = None, path: str = None
     ):
         return {
-            scr: self[scr].diagnostic.camera_name
+            scr: self[scr].diagnostic
             for scr in self.elements_between(
                 start=start,
                 end=end,

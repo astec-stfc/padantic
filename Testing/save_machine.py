@@ -12,13 +12,13 @@ from PAdantic.Exporters.YAML import (  # noqa E402
 from PAdantic.models.elementList import MachineModel  # noqa E402
 
 machine = MachineModel(
-    layout_file="Machines/CLARA/layouts.yaml",
-    section_file="Machines/CLARA/sections.yaml",
+    layout_file="../../padantic-clara/CLARA/layouts.yaml",
+    section_file="../../padantic-clara/CLARA/sections.yaml",
 )
 
 for f in SF_files:
     elem = read_SimFrame_YAML(f)
     machine.update({n: e for n, e in elem.items()})
 
-print(export_machine("../PAdantic/Machines/CLARA/YAML", machine))
-export_machine_combined_file("../PAdantic/Machines/CLARA/", machine)
+print(export_machine("../../padantic-clara/CLARA_export/YAML", machine))
+export_machine_combined_file("../../padantic-clara/CLARA_export/", machine)
