@@ -25,6 +25,6 @@ for f in SF_files:
     elem = read_SimFrame_YAML(f)
     machine.update({n: e for n, e in elem.items()})
 
-export_machine("../../padantic-clara/NEW/CLARA/YAML", machine)
+export_machine("../../padantic-clara/NEW/CLARA/YAML", machine, overwrite=True)
 
 exit()

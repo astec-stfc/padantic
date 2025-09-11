@@ -53,6 +53,7 @@ class PAdantic(MachineModel):
 
     def model_post_init(self, __context):
         super().model_post_init(__context)
+        print(self.yaml_dir)
         if os.path.isfile(self.yaml_dir):
             yaml_elems = read_YAML_Combined_File(self.yaml_dir)
         elif os.path.isdir(self.yaml_dir):

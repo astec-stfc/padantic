@@ -32,18 +32,18 @@ class PVSet(YAMLBaseModel):
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
-        extra="forbid",
+        extra="allow",
         frozen=True,
     )
     ...
 
 
 class PV(PVSet):
-    pv_string: str
+    pv: str
     _pv_dict: dict
     _PV_index: List[int]
 
-    @field_validator("pv_string", mode="before")
+    @field_validator("pv", mode="before")
     def fromString(cls, pv: str) -> T:
         assert ":" in pv
         prefix, postfix = pv.split(":", 1)
@@ -225,7 +225,7 @@ class PV(PVSet):
 
     @property
     def name(self) -> str:
-        return self.pv_string
+        return self.pv
 
     def __str__(self) -> str:
         return self.name

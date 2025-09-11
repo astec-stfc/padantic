@@ -9,13 +9,13 @@ from PyQt5.QtWidgets import (
     QComboBox,
 )
 
-sys.path.append(r"C:\Users\jkj62.CLRC\Documents\GitHub\PAdantic")
+sys.path.append("..")
 from PAdantic.PAdantic import PAdantic  # noqa E402
 
 machine = PAdantic(
-    layout_file="Machines/CLARA/layouts.yaml",
-    section_file="Machines/CLARA/sections.yaml",
-    yaml_dir="Machines/CLARA/YAML/",
+    layout_file="../../../padantic-clara/CLARA/layouts.yaml",
+    section_file="../../../padantic-clara/CLARA/sections.yaml",
+    yaml_dir="../../../padantic-clara/CLARA/YAML/",
 )
 
 

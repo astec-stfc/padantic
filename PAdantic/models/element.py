@@ -111,7 +111,7 @@ class _baseElement(IgnoreExtra):
     def validate_name(cls, v: str) -> str:
         assert isinstance(v, str)
         try:
-            PV(pv_string=str(v) + ":")
+            PV(pv=str(v) + ":")
         except Exception:
             raise ValueError("name is not a valid element name")
         return v
