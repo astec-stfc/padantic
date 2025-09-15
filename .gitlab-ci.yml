@@ -1,0 +1,66 @@
+stages:
+  - linter
+  - unit_tests
+  - publish
+
+
+flake8:
+  image: python:3.10
+  stage: linter
+  before_script:
+    - python -m pip install .
+    - python -m pip install flake8
+  script:
+    - flake8 .
+
+coverage:
+  image: python:3.10
+  stage: unit_tests
+  before_script:
+    - python -m pip install .
+    - python -m pip install coverage
+  script:
+    - coverage run -m unittest discover .
+    - coverage report
+    - coverage xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+local_publish:
+  image: python:3.10
+  stage: publish
+  variables:
+    TWINE_USERNAME: gitlab-ci-token
+    TWINE_PASSWORD: $CI_JOB_TOKEN
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install --upgrade build
+    - python -m pip install twine
+  script:
+    - python -m build
+    - python -m twine upload --config-file .pypirc --repository local ./dist/* --verbose
+  only:
+    - main
+    - tags
+
+
+gitlab_publish:
+  image: python:3.10
+  stage: publish
+  variables:
+    TWINE_USERNAME: gitlab-ci-token
+    TWINE_PASSWORD: $CI_JOB_TOKEN
+  before_script:
+    - python -m pip install --upgrade pip
+    - python -m pip install --upgrade build
+    - python -m pip install twine
+  script:
+    - python -m build
+    - python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi ./dist/* --verbose
+  only:
+    - main
+    - tags
