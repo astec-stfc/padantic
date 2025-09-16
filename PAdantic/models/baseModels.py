@@ -32,7 +32,7 @@ def convert_numpy_types(v):
         return {k: convert_numpy_types(l) for k, l in v.items()}
     if isinstance(v, (np.ndarray, list, tuple)):
         return flow_list([convert_numpy_types(arr) for arr in v])
-    elif isinstance(v, (np.float64, np.float32, np.float16, np.float_)):
+    elif isinstance(v, (np.float64, np.float32, np.float16)):
         return float(v)
     elif isinstance(
         v,
