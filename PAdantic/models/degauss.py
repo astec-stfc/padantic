@@ -4,7 +4,7 @@ from typing import List, Union
 from .baseModels import IgnoreExtra
 
 
-class DegaussablElement(IgnoreExtra):
+class DegaussableElement(IgnoreExtra):
     """Degauss info model."""
 
     tolerance: float = Field(default=0.5, alias="degauss_tolerance")

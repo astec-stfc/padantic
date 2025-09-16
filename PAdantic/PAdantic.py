@@ -2,13 +2,18 @@ import os
 import glob
 from math import copysign
 from itertools import chain
+from typing import List
 from pydantic import field_validator
 from yaml.constructor import Constructor
 
 from PAdantic.models.physical import PhysicalElement, Position
-from .models.elementList import MachineModel
+from .models.elementList import MachineModel, _baseElement
 from .models.element import Drift
-from .Importers.YAML_Loader import read_YAML_Combined_File, read_YAML_Element_Files, interpret_YAML_Element
+from .Importers.YAML_Loader import (
+    read_YAML_Combined_File,
+    read_YAML_Element_Files,
+    interpret_YAML_Element,
+)
 import numpy as np
 
 
@@ -35,34 +40,39 @@ def chunks(li, n):
 
 
 class PAdantic(MachineModel):
-    yaml_dir: str
+    element_list: str | List[_baseElement]
 
-    @field_validator("yaml_dir", mode="before")
+    @field_validator("element_list", mode="before")
     @classmethod
-    def validate_yaml_dir(cls, v: str) -> str:
-        if os.path.isfile(v):
-            return v
-        elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
-            return os.path.abspath(os.path.dirname(__file__) + "/" + v)
-        elif os.path.isdir(v):
-            return v
-        elif os.path.isdir(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
-            return os.path.abspath(os.path.dirname(__file__) + "/" + v)
+    def validate_element_list(cls, v: str | list) -> str | list:
+        if isinstance(v, str):
+            if os.path.isfile(v):
+                return v
+            elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
+                return os.path.abspath(os.path.dirname(__file__) + "/" + v)
+            elif os.path.isdir(v):
+                return v
+            elif os.path.isdir(os.path.abspath(os.path.dirname(__file__) + "/" + v)):
+                return os.path.abspath(os.path.dirname(__file__) + "/" + v)
+            else:
+                raise ValueError(f"Directory {v} does not exist")
         else:
-            raise ValueError(f"Directory {v} does not exist")
+            return v
 
     def model_post_init(self, __context):
         super().model_post_init(__context)
-        print(self.yaml_dir)
-        if os.path.isfile(self.yaml_dir):
-            yaml_elems = read_YAML_Combined_File(self.yaml_dir)
-        elif os.path.isdir(self.yaml_dir):
-            YAML_files = glob.glob(
-                os.path.abspath(self.yaml_dir + "/**/*.yaml"), recursive=True
-            )
-            yaml_data = read_YAML_Element_Files(YAML_files)
-            yaml_elems = [interpret_YAML_Element(data) for data in yaml_data]
-        self.update({y.name: y for y in yaml_elems})
+        if isinstance(self.element_list, str):
+            if os.path.isfile(self.element_list):
+                elems = read_YAML_Combined_File(self.element_list)
+            elif os.path.isdir(self.element_list):
+                files = glob.glob(
+                    os.path.abspath(self.element_list + "/**/*.yaml"), recursive=True
+                )
+                data = read_YAML_Element_Files(files)
+                elems = [interpret_YAML_Element(data) for data in data]
+        else:
+            elems = self.element_list
+        self.update({y.name: y for y in elems})
 
     def createDrifts(self, end: str = None, start: str = None, path: str = None):
         """Insert drifts into a sequence of 'elements'"""
@@ -111,7 +121,7 @@ class PAdantic(MachineModel):
                             length=round(copysign(length, vector), 6),
                             middle=Position(x=x, y=y, z=z),
                             datum=Position(x=x, y=y, z=z),
-                        )
+                        ),
                     )
                     newelements[name] = newdrift
         return newelements
@@ -123,12 +133,13 @@ class PAdantic(MachineModel):
 
     def _drift_length(self, start: list[float], end: list[float]):
         return np.linalg.norm(end - start)
-        
+
     def get_elements_s_pos(self, end: str = None, start: str = None, path: str = None):
-        elements = self.createDrifts(
-            start=start, end=end, path=path
-        )
-        start_and_end = [[name, elem.physical.length, elem.hardware_type == "Drift"] for name, elem in elements.items()]
+        elements = self.createDrifts(start=start, end=end, path=path)
+        start_and_end = [
+            [name, elem.physical.length, elem.hardware_type == "Drift"]
+            for name, elem in elements.items()
+        ]
         elem_s = {}
         s_pos = 0
         for elem, l, drift in start_and_end:

@@ -154,11 +154,11 @@ def get_SimFrame_YAML_filename(original, replacement):
 
 
 def get_SimFrame_MachineArea(name):
-    return PV(pv_string=name + ":").area
+    return name.split("-")[1]
 
 
 def get_SimFrame_PV(name):
-    return PV(pv_string=name + ":")
+    return name
 
 
 def interpret_SimFrame_Element(name, elem):

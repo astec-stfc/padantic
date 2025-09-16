@@ -25,11 +25,12 @@ def create_degauss_values(maxI):
 
 def add_magnet_table_parameters(n, e, magnetPV):
     try:
+        magPVsplit = magnetPV.split("-")
         magnet = (
-            magnetPV.machine,
-            magnetPV.area.replace("HRG1", "GUN"),
-            magnetPV.typename,
-            int(magnetPV.index),
+            magPVsplit[0].replace("EBT", "CLA"),
+            magPVsplit[1].replace("HRG1", "GUN"),
+            magPVsplit[3],
+            int(magPVsplit[4]),
         )
         table = magnet_table.loc[
             magnet,

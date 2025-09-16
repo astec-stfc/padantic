@@ -25,9 +25,7 @@ with open(
         print(exc)
 
 sdds_twiss = {}
-sdds_twiss_file = sddsread(
-    f"{simframe_examples}/FEBE.twi"
-)
+sdds_twiss_file = sddsread(f"{simframe_examples}/FEBE.twi")
 for idx, name in enumerate(sdds_twiss_file.col("ElementName").data[0]):
     sdds_twiss[name] = 0.511 * sdds_twiss_file.col("pCentral0").data[0][idx]
 

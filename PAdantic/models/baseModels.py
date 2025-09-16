@@ -55,14 +55,14 @@ def convert_numpy_types(v):
         return v
 
 
-class YAMLBaseModel(BaseModel):
+class RootModel(BaseModel):
     """Base Model that ignores extra fields."""
 
-    def yaml_dump(self) -> dict:
+    def base_model_dump(self) -> dict:
         return convert_numpy_types(self.model_dump())
 
 
-class IgnoreExtra(YAMLBaseModel):
+class IgnoreExtra(RootModel):
     """Base Model that ignores extra fields."""
 
     model_config = ConfigDict(
@@ -94,7 +94,7 @@ class IgnoreExtra(YAMLBaseModel):
         self.__dict__.update(kwargs)
 
 
-class NumpyModel(YAMLBaseModel):
+class NumpyModel(RootModel):
     """Model using numpy arrays."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)

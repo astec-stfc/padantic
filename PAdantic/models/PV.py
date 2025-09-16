@@ -10,7 +10,7 @@ from pydantic import (
 from typing import Dict, Any, List, Union
 import yaml
 
-from .baseModels import T, YAMLBaseModel
+from .baseModels import T, RootModel
 
 # Load PV definitions from yaml file
 # This creates some flake8 F821 warnings that are ignored manually
@@ -27,7 +27,7 @@ with open(
     classPVNames = globals()["classPVNames"]
 
 
-class PVSet(YAMLBaseModel):
+class PVSet(RootModel):
     """Base PV model."""
 
     model_config = ConfigDict(
@@ -39,9 +39,9 @@ class PVSet(YAMLBaseModel):
 
 
 class PV(PVSet):
-    pv: str
-    _pv_dict: dict
-    _PV_index: List[int]
+    pv: str = ""
+    _pv_dict: dict = {}
+    _PV_index: List[int] = []
 
     @field_validator("pv", mode="before")
     def fromString(cls, pv: str) -> T:
@@ -241,7 +241,7 @@ class PV(PVSet):
         return self.__str__()
 
 
-class ElementPV(YAMLBaseModel):
+class ElementPV(RootModel):
     model_config = ConfigDict(validate_assignment=True)
 
     @field_validator("*", mode="before")

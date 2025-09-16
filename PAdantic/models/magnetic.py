@@ -180,9 +180,14 @@ class LinearSaturationFit(BaseModel):
         gradient = int_strength / L
         if momentum is not None:
             KL = 1 * (speed_of_light / 1e6) * int_strength / momentum
-            return {'K': KL * 1000 / L, 'KL': KL, 'gradient': gradient, 'int_strength': int_strength}
+            return {
+                "K": KL * 1000 / L,
+                "KL": KL,
+                "gradient": gradient,
+                "int_strength": int_strength,
+            }
         else:
-            return {'gradient': gradient, 'int_strength': int_strength}
+            return {"gradient": gradient, "int_strength": int_strength}
 
     def KLToCurrent(self, KL: float | dict, momentum: float) -> float:
         """
@@ -259,22 +264,21 @@ class MagneticElement(IgnoreExtra):
 
     def __init__(self, /, **data: Any) -> None:
         super().__init__(**data)
-        if "kl" in data:
-            self.kl = data["kl"]
-        if "angle" in data and self.order == 0:
-            self.kl = data["angle"]
-        if self.skew:
-            setattr(
-                self.multipoles,
-                "K" + str(self.order) + "L",
-                Multipole(skew=self.kl, order=self.order),
-            )
-        else:
-            setattr(
-                self.multipoles,
-                "K" + str(self.order) + "L",
-                Multipole(normal=self.kl, order=self.order),
-            )
+        for k in ["kl", "data"]:
+            if k in data:
+                self.kl = data["kl"]
+                if self.skew:
+                    setattr(
+                        self.multipoles,
+                        "K" + str(self.order) + "L",
+                        Multipole(skew=self.kl, order=self.order),
+                    )
+                else:
+                    setattr(
+                        self.multipoles,
+                        "K" + str(self.order) + "L",
+                        Multipole(normal=self.kl, order=self.order),
+                    )
         if "k1l" in data:
             # print('k1l', data['k1l'])
             setattr(
@@ -282,7 +286,6 @@ class MagneticElement(IgnoreExtra):
                 "K" + str(1) + "L",
                 Multipole(normal=data["k1l"], order=1),
             )
-        # print(self.multipoles)
 
     @field_validator("field_integral_coefficients", mode="before")
     @classmethod
@@ -293,9 +296,9 @@ class MagneticElement(IgnoreExtra):
             return FieldIntegral(coefficients=list(map(float, v.split(","))))
         elif isinstance(v, (list, tuple)):
             return FieldIntegral(coefficients=list(v))
-        elif isinstance(v, (dict)):
+        elif isinstance(v, dict):
             return FieldIntegral(**v)
-        elif isinstance(v, (FieldIntegral)):
+        elif isinstance(v, FieldIntegral):
             return v
         else:
             raise ValueError(

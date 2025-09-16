@@ -3,7 +3,7 @@ from pprint import pprint
 
 sys.path.append("..")
 from PAdantic.PAdantic import PAdantic  # noqa E402
-from PAdantic.Exporters.CATAP import export_machine_dict
+from PAdantic.Exporters.CATAP import export_machine_dict  # noqa E402
 
 machine = PAdantic(
     layout_file="../../padantic-clara/CLARA/layouts.yaml",
