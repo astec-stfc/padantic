@@ -1,14 +1,15 @@
 import os
 from typing import List, Dict, Any, Union
 from pydantic import field_validator, BaseModel, ValidationInfo
-
+from warnings import warn
 from ._functions import read_yaml, merge_two_dicts
 from .element import _baseElement
-from .baseModels import YAMLBaseModel
+from .baseModels import RootModel
 from .exceptions import LatticeError
+import warnings
 
 
-class BaseLatticeModel(YAMLBaseModel):
+class BaseLatticeModel(RootModel):
     name: str
     _basename: str
 
@@ -48,7 +49,7 @@ class BaseLatticeModel(YAMLBaseModel):
         return self.__str__()
 
 
-class ElementList(YAMLBaseModel):
+class ElementList(RootModel):
     elements: Dict[str, Union[BaseModel, None]]
 
     def __str__(self):
@@ -287,45 +288,92 @@ class MachineLayout(BaseLatticeModel):
         return self._get_element_names(result)
 
 
-class MachineModel(YAMLBaseModel):
-    layout_file: str
-    section_file: str
+class MachineModel(RootModel):
+    layout: str | Dict | None = None
+    section: str | Dict[str, Dict] | None = None
     elements: Dict[str, _baseElement] = {}
     sections: Dict[str, SectionLattice] = {}
     lattices: Dict[str, MachineLayout] = {}
+    _layouts: List[str]
+    _section_definitions: List[str]
+    _default_path: str = None
 
-    @field_validator("layout_file", mode="before")
+    @field_validator("layout", mode="before")
     @classmethod
-    def validate_layout_file(cls, v: str) -> str:
-        if os.path.isfile(v):
+    def validate_layout(cls, v: str | dict) -> str | dict:
+        if isinstance(v, str):
+            if os.path.isfile(v):
+                return v
+            elif os.path.isfile(
+                os.path.abspath(os.path.dirname(__file__) + "/../" + v)
+            ):
+                return os.path.abspath(os.path.dirname(__file__) + "/../" + v)
+            else:
+                raise ValueError(f"Directory {v} does not exist")
+        elif isinstance(v, dict):
+            if "layouts" not in v:
+                raise KeyError("layout must specify lines each with a list of sections")
             return v
-        elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + "/../" + v)):
-            return os.path.abspath(os.path.dirname(__file__) + "/../" + v)
         else:
-            raise ValueError(f"Directory {v} does not exist")
+            raise ValueError("layout must be a str or dict")
 
-    @field_validator("section_file", mode="before")
+    @field_validator("section", mode="before")
     @classmethod
-    def validate_section_file(cls, v: str) -> str:
-        if os.path.isfile(v):
+    def validate_section(cls, v: str | dict) -> str | dict:
+        if isinstance(v, str):
+            if os.path.isfile(v):
+                return v
+            elif os.path.isfile(
+                os.path.abspath(os.path.dirname(__file__) + "/../" + v)
+            ):
+                return os.path.abspath(os.path.dirname(__file__) + "/../" + v)
+            else:
+                raise ValueError(f"Directory {v} does not exist")
+        elif isinstance(v, dict):
+            if "sections" not in v:
+                raise KeyError(
+                    "section must specify sections each with lists of elements"
+                )
             return v
-        elif os.path.isfile(os.path.abspath(os.path.dirname(__file__) + "/../" + v)):
-            return os.path.abspath(os.path.dirname(__file__) + "/../" + v)
         else:
-            raise ValueError(f"Directory {v} does not exist")
+            warnings.warn(
+                "No sections specified. Sections will be generated from elements."
+            )
 
     def model_post_init(self, __context):
-        config = read_yaml(self.layout_file)
-        self._layouts = config.layouts
-        try:
-            self._default_path = config.default_layout
-        except AttributeError:
-            message = 'Missing "default_layout" in %s ' % self.layout_file
-            raise Exception(message)
-        config = read_yaml(self.section_file)
-        self._section_definitions = config.sections
+        if isinstance(self.layout, str):
+            config = read_yaml(self.layout)
+            self._layouts = config.layouts
+            try:
+                self._default_path = config.default_layout
+            except AttributeError:
+                message = 'Missing "default_layout" in %s ' % self.layout_file
+                warn(message)
+        elif self.layout is None:
+            self._layouts = {}
+            self._default_path = None
+            warnings.warn("No layouts specified. Lattices will be empty.")
+        else:
+            for key in ["layouts"]:
+                if key not in self.layout:
+                    raise KeyError("layout must specify layouts")
+            self._layouts = self.layout["layouts"]
+            if "default_layout" in self.layout:
+                self._default_path = self.layout["default_layout"]
+        if isinstance(self.section, str):
+            config = read_yaml(self.section)
+            self._section_definitions = config.sections
+        elif self.section is None:
+            self._section_definitions = {}
+        else:
+            if "sections" not in self.section:
+                raise KeyError("section must specify sections with a list of sections")
+            self._section_definitions = self.section["sections"]
         if len(self.elements) > 0:
-            self._build_layouts(self.elements)
+            if self.section:
+                self._build_layouts(self.elements)
+            if self.section is None:
+                self._build_sections_from_elements(self.elements)
 
     def __add__(self, other) -> dict:
         copy = self.elements.copy()
@@ -345,6 +393,7 @@ class MachineModel(YAMLBaseModel):
 
     def append(self, values: dict) -> None:
         self.elements = merge_two_dicts(values, self.elements)
+        self._build_sections_from_elements(self.elements)
         self._build_layouts(self.elements)
 
     def update(self, values: dict) -> None:
@@ -368,37 +417,93 @@ class MachineModel(YAMLBaseModel):
     def default_path(self, path: str):
         self._default_path = path
 
-    default_layout = default_path
+    def _build_sections_from_elements(self, elements: dict) -> None:
+        """build sections from the elements if no section definition is provided"""
+        # Build a unique list of machine areas from the elements
+        areas = set()
+        for elem in elements.values():
+            area = (
+                elem.get("machine_area")
+                if isinstance(elem, dict)
+                else getattr(
+                    elem,
+                    "machine_area",
+                    None,
+                )
+            )
+            if area is not None:
+                areas.add(area)
+        areas = list(areas)
+        for area in areas:
+            # collect list of elements from this machine area
+            new_elements = [
+                x
+                for x in elements.values()
+                if (
+                    x.get("machine_area")
+                    if isinstance(x, dict)
+                    else getattr(x, "machine_area", None)
+                )
+                == area
+            ]
+            self.sections[area] = SectionLattice(
+                name=area,
+                elements=new_elements,
+                order=[
+                    e["name"] if isinstance(e, dict) else e.name for e in new_elements
+                ],
+            )
+            if not self._section_definitions or area not in self._section_definitions:
+                self._section_definitions[area] = [
+                    e["name"] if isinstance(e, dict) else e.name for e in new_elements
+                ]
+        self.lattices = {}
 
     def _build_layouts(self, elements: dict) -> None:
         """build lists defining the lattice elements along each possible beam path"""
         # build dictionary with a lattice for each beam path
-        for path, areas in self._layouts.items():
+        if self._layouts:
+            for path, areas in self._layouts.items():
+                for _area in areas:
+                    if _area in self._section_definitions:
+                        # collect list of elements from this machine area
+                        new_elements = [
+                            x
+                            for x in elements.values()
+                            if (x.name in self._section_definitions[_area])
+                        ]
+                        self.sections[_area] = SectionLattice(
+                            name=_area,
+                            elements=new_elements,
+                            order=self._section_definitions[_area],
+                        )
+                    else:
+                        print("MachineModel", "_build_layouts", _area, "missing")
 
-            for _area in areas:
+                self.lattices[path] = MachineLayout(
+                    name=path,
+                    sections={
+                        _area: self.sections[_area]
+                        for _area in areas
+                        if _area in self.sections
+                    },
+                )
+            if len(self.lattices) == 1 and self._default_path is None:
+                self._default_path = list(self.lattices.keys())[0]
+        else:
+            for _area, elem_names in self._section_definitions.items():
                 # collect list of elements from this machine area
                 new_elements = [
                     x
                     for x in elements.values()
                     if (x.name in self._section_definitions[_area])
                 ]
-                if _area in self._section_definitions:
-                    self.sections[_area] = SectionLattice(
-                        name=_area,
-                        elements=new_elements,
-                        order=self._section_definitions[_area],
-                    )
-                else:
-                    print("MachineModel", "_build_layouts", _area, "missing")
-
-            self.lattices[path] = MachineLayout(
-                name=path,
-                sections={
-                    _area: self.sections[_area]
-                    for _area in areas
-                    if _area in self.sections
-                },
-            )
+                self.sections[_area] = SectionLattice(
+                    name=_area,
+                    elements=new_elements,
+                    order=elem_names,
+                )
+            self.lattices = {}
 
     def get_element(self, name: str) -> _baseElement:
         """
@@ -453,7 +558,8 @@ class MachineModel(YAMLBaseModel):
                 path = self._default_path
             else:
                 raise Exception(
-                    '"default_layout" = %s is not defined' % self._default_path
+                    '"default_layout" = %s is not defined, and more than one layout exists.'
+                    % self._default_path,
                 )
         elif path not in self.lattices:
             raise Exception('"path" = %s is not defined' % path)

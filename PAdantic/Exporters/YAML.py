@@ -11,11 +11,11 @@ def export_as_yaml(
     if filename is not None:
         with open(filename, "w") as yaml_file:
             yaml.default_flow_style = True
-            dump = ele.yaml_dump()
+            dump = ele.base_model_dump()
             # dump["hardware_subclass"] = ele.__class__.__name__
             yaml.dump(dump, yaml_file)
     else:
-        dump = ele.yaml_dump()
+        dump = ele.base_model_dump()
         # dump["hardware_subclass"] = ele.__class__.__name__
         return dump
 

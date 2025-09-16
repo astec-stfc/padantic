@@ -27,7 +27,7 @@ from .PV import (
 )
 from .manufacturer import ManufacturerElement
 from .electrical import ElectricalElement
-from .degauss import DegaussablElement
+from .degauss import DegaussableElement
 from .physical import PhysicalElement, Rotation
 from .magnetic import (
     Dipole_Magnet,
@@ -110,10 +110,10 @@ class _baseElement(IgnoreExtra):
     @classmethod
     def validate_name(cls, v: str) -> str:
         assert isinstance(v, str)
-        try:
-            PV(pv=str(v) + ":")
-        except Exception:
-            raise ValueError("name is not a valid element name")
+        # try:
+        #     PV(pv=str(v) + ":")
+        # except Exception:
+        #     raise ValueError("name is not a valid element name")
         return v
 
     @field_validator("alias", mode="before")
@@ -210,7 +210,7 @@ class _baseElement(IgnoreExtra):
 class PhysicalBaseElement(_baseElement):
     """Element with physical, degaussable, electrical, manufacturer, and controls items."""
 
-    physical: PhysicalElement
+    physical: PhysicalElement = PhysicalElement()
 
     def to_CATAP(self):
         catap_dict = super().to_CATAP()
@@ -237,8 +237,8 @@ class PhysicalBaseElement(_baseElement):
 class Element(PhysicalBaseElement):
     """Element with physical, electrical and manufacturer items."""
 
-    electrical: ElectricalElement
-    manufacturer: ManufacturerElement
+    electrical: ElectricalElement = ElectricalElement()
+    manufacturer: ManufacturerElement = ManufacturerElement()
 
     def to_CATAP(self):
         catap_dict = super().to_CATAP()
@@ -255,8 +255,8 @@ class Magnet(Element):
     """Element with physical, electrical, manufacturer, controls and degauss items."""
 
     hardware_class: str = Field(default="Magnet", frozen=True)
-    controls: MagnetPV
-    degauss: DegaussablElement
+    controls: MagnetPV | None = None
+    degauss: DegaussableElement = DegaussableElement()
     magnetic: None = None
 
     @property
@@ -308,21 +308,21 @@ class Dipole(Magnet):
     """Dipole element."""
 
     hardware_type: str = Field(default="Dipole", frozen=True)
-    magnetic: Dipole_Magnet
+    magnetic: Dipole_Magnet = Dipole_Magnet()
 
 
 class Quadrupole(Magnet):
     """Quadrupole element."""
 
     hardware_type: str = Field(default="Quadrupole", frozen=True)
-    magnetic: Quadrupole_Magnet
+    magnetic: Quadrupole_Magnet = Quadrupole_Magnet()
 
 
 class Sextupole(Magnet):
     """Sextupole element."""
 
     hardware_type: str = Field(default="Sextupole", frozen=True)
-    magnetic: Sextupole_Magnet
+    magnetic: Sextupole_Magnet = Sextupole_Magnet()
 
 
 class Horizontal_Corrector(Dipole):
@@ -362,7 +362,7 @@ class BPM(Diagnostic):
     hardware_type: str = Field(default="BPM", frozen=True)
     hardware_model: str = Field(default="Stripline", frozen=True)
     diagnostic: BPM_Diagnostic
-    controls: BPMPV
+    controls: BPMPV | None = None
 
     def to_CATAP(self):
         catap_dict = super().to_CATAP()
@@ -389,7 +389,7 @@ class BAM(Diagnostic):
     hardware_type: str = Field(default="BAM", frozen=True)
     hardware_model: str = Field(default="DESY", frozen=True)
     diagnostic: BAM_Diagnostic
-    controls: BAMPV
+    controls: BAMPV | None = None
 
 
 class BLM(Diagnostic):
@@ -398,7 +398,7 @@ class BLM(Diagnostic):
     hardware_type: str = Field(default="BLM", frozen=True)
     hardware_model: str = Field(default="CDR", frozen=True)
     diagnostic: BLM_Diagnostic
-    controls: BLMPV
+    controls: BLMPV | None = None
 
 
 class Camera(Diagnostic):
@@ -407,7 +407,7 @@ class Camera(Diagnostic):
     hardware_type: str = Field(default="Camera", frozen=True)
     hardware_model: str = Field(default="PCO", frozen=True)
     diagnostic: Camera_Diagnostic
-    controls: CameraPV
+    controls: CameraPV | None = None
 
 
 class Screen(Diagnostic):
@@ -416,7 +416,7 @@ class Screen(Diagnostic):
     hardware_type: str = Field(default="Screen", frozen=True)
     hardware_model: str = Field(default="YAG", frozen=True)
     diagnostic: Screen_Diagnostic
-    controls: ScreenPV
+    controls: ScreenPV | None = None
 
     def to_CATAP(self):
         catap_dict = super().to_CATAP()
@@ -436,7 +436,7 @@ class ChargeDiagnostic(Diagnostic):
 
     hardware_type: str = Field(default="ChargeDiagnostic", frozen=True)
     diagnostic: Charge_Diagnostic
-    controls: ChargeDiagnosticPV
+    controls: ChargeDiagnosticPV | None = None
 
 
 class WCM(ChargeDiagnostic):
@@ -463,7 +463,7 @@ class VacuumGuage(PhysicalBaseElement):
     hardware_type: str = Field(default="VacuumGuage", frozen=True)
     hardware_model: str = Field(default="IMG", frozen=True)
     manufacturer: ManufacturerElement
-    controls: VacuumGaugePV
+    controls: VacuumGaugePV | None = None
 
 
 class LaserEnergyMeter(PhysicalBaseElement):
@@ -472,7 +472,7 @@ class LaserEnergyMeter(PhysicalBaseElement):
     hardware_type: str = Field(default="LaserEnergyMeter", frozen=True)
     hardware_model: str = Field(default="Gentec Photodiode", frozen=True)
     laser: LaserEnergyMeterElement
-    controls: LaserEnergyMeterPV
+    controls: LaserEnergyMeterPV | None = None
 
 
 class LaserHalfWavePlate(LaserEnergyMeter):
@@ -481,7 +481,7 @@ class LaserHalfWavePlate(LaserEnergyMeter):
     hardware_type: str = Field(default="LaserHalfWavePlate", frozen=True)
     hardware_model: str = Field(default="Newport", frozen=True)
     laser: LaserElement
-    controls: LaserHWPPV
+    controls: LaserHWPPV | None = None
 
 
 class LaserMirror(LaserEnergyMeter):
@@ -490,7 +490,7 @@ class LaserMirror(LaserEnergyMeter):
     hardware_type: str = Field(default="LaserMirror", frozen=True)
     hardware_model: str = Field(default="Planar", frozen=True)
     laser: LaserMirrorElement
-    controls: LaserMirrorPV
+    controls: LaserMirrorPV | None = None
 
 
 class Lighting(_baseElement):
@@ -499,7 +499,7 @@ class Lighting(_baseElement):
     hardware_type: str = Field(default="Lighting", frozen=True)
     hardware_model: str = Field(default="LED", frozen=True)
     lights: LightingElement
-    controls: LightingPV
+    controls: LightingPV | None = None
 
 
 class PID(_baseElement):
@@ -508,7 +508,7 @@ class PID(_baseElement):
     hardware_type: str = Field(default="PID", frozen=True)
     hardware_model: str = Field(default="RF", frozen=True)
     PID: PIDElement
-    controls: PIDPV
+    controls: PIDPV | None = None
 
 
 class LLRF(_baseElement):
@@ -517,7 +517,7 @@ class LLRF(_baseElement):
     hardware_type: str = Field(default="LLRF", frozen=True)
     hardware_model: str = Field(default="Libera", frozen=True)
     LLRF: LLRFElement
-    controls: LLRFPV
+    controls: LLRFPV | None = None
 
 
 class RFCavity(PhysicalBaseElement):
@@ -553,7 +553,7 @@ class RFModulator(_baseElement):
     hardware_type: str = Field(default="RFModulator", frozen=True)
     hardware_model: str = Field(default="Thales", frozen=True)
     modulator: RFModulatorElement
-    controls: RFModulatorPV
+    controls: RFModulatorPV | None = None
 
 
 class RFProtection(_baseElement):
@@ -562,7 +562,7 @@ class RFProtection(_baseElement):
     hardware_type: str = Field(default="RFProtection", frozen=True)
     hardware_model: str = Field(default="PROT", frozen=True)
     modulator: RFProtectionElement
-    controls: RFProtectionPV
+    controls: RFProtectionPV | None = None
 
 
 class RFHeartbeat(_baseElement):
@@ -570,7 +570,7 @@ class RFHeartbeat(_baseElement):
 
     hardware_type: str = Field(default="RFHeartbeat", frozen=True)
     heartbeat: RFHeartbeatElement
-    controls: RFHeartbeatPV
+    controls: RFHeartbeatPV | None = None
 
 
 class Shutter(PhysicalBaseElement):
@@ -578,7 +578,7 @@ class Shutter(PhysicalBaseElement):
 
     hardware_type: str = Field(default="Shutter", frozen=True)
     shutter: ShutterElement
-    controls: ShutterPV
+    controls: ShutterPV | None = None
 
 
 class Valve(PhysicalBaseElement):
@@ -586,7 +586,7 @@ class Valve(PhysicalBaseElement):
 
     hardware_type: str = Field(default="Valve", frozen=True)
     valve: ValveElement
-    controls: ValvePV
+    controls: ValvePV | None = None
 
 
 class Marker(PhysicalBaseElement):

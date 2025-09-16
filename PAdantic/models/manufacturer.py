@@ -8,7 +8,7 @@ class ManufacturerElement(IgnoreExtra):
 
     manufacturer: str = ""
     serial_number: str = ""
-    hardware_class: str = Field(alias="hardware_type")
+    hardware_class: str = Field(alias="hardware_type", default="")
 
     @field_validator("manufacturer", "serial_number", mode="before")
     @classmethod

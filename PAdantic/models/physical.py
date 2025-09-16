@@ -1,5 +1,5 @@
 import numpy as np
-from pydantic import field_validator, confloat, Field, NonNegativeFloat, AliasChoices
+from pydantic import field_validator, confloat, Field, AliasChoices
 from typing import List, Type, Union
 
 from ._functions import _rotation_matrix

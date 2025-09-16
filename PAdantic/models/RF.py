@@ -1,7 +1,7 @@
 from pydantic import Field, field_validator, create_model
 from typing import List, Type, Union
 
-from .baseModels import IgnoreExtra, T, YAMLBaseModel
+from .baseModels import IgnoreExtra, T, RootModel
 
 
 class RFCavityElement(IgnoreExtra):
@@ -124,12 +124,12 @@ llrftimingsCATAPnames = ["kf", "kr", "cf", "cr", "cp"]
 cavitynames = ["LRRG", "HRRG", "L01", "CALIBRATION"]
 
 
-class LLRFChannelIndex(YAMLBaseModel):
+class LLRFChannelIndex(RootModel):
     power: int
     phase: int
 
 
-class LLRFChannelsBase(YAMLBaseModel):
+class LLRFChannelsBase(RootModel):
     labels: List[str] = []
 
     @classmethod
@@ -159,7 +159,7 @@ class LLRFChannelsBase(YAMLBaseModel):
         pass
 
 
-class LLRFTiming(YAMLBaseModel):
+class LLRFTiming(RootModel):
     start: Union[float, int]
     end: Union[float, int]
 

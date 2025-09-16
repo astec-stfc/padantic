@@ -5,9 +5,9 @@ sys.path.append("..")
 from PAdantic.PAdantic import PAdantic  # noqa E402
 
 machine = PAdantic(
-    layout_file="../../padantic-clara/CLARA/layouts.yaml",
-    section_file="../../padantic-clara/CLARA/sections.yaml",
-    yaml_dir="../../padantic-clara/CLARA/YAML/",
+    layout="../../padantic-lattices/CLARA/layouts.yaml",
+    section="../../padantic-lattices/CLARA/sections.yaml",
+    element_list="../../padantic-lattices/CLARA/YAML/",
 )
 
 
@@ -25,7 +25,7 @@ def unique_list(a_list):
 
 machine.default_layout = "SP3"
 print(machine.get_elements_s_pos())
-pprint({d: machine.get_element(d).yaml_dump() for d in machine.get_dipoles()})
+pprint({d: machine.get_element(d).base_model_dump() for d in machine.get_dipoles()})
 # exit()
 for magnet_name in machine.get_quadrupoles():
     linsat = machine.get_element(magnet_name).magnetic.linear_saturation_coefficients

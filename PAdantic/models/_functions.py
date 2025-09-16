@@ -1,6 +1,7 @@
 import numpy as np
-from munch import Munch
 from collections import OrderedDict
+from pydantic import create_model, BaseModel
+from yaml import safe_load
 
 
 def _rotation_matrix(theta):
@@ -13,14 +14,22 @@ def _rotation_matrix(theta):
     )
 
 
-def read_yaml(fname):
-    """read the contents of a YAML file into a munch
-    (a dictionary-type object supporting attribute-style access)
-    """
-    contents = Munch()
-    with open(fname) as file:
-        contents = contents.fromYAML(file)
-    return contents
+def read_yaml(fname: str) -> BaseModel:
+    with open(fname, "r") as f:
+        data = safe_load(f)
+
+    # Build fields: field_name: (type, default)
+    fields = {key: (type(value), value) for key, value in data.items()}
+
+    # Create and return the dynamic model class
+    DynamicModel = create_model(
+        "DynamicModel",
+        __base__=BaseModel,
+        __module__=__name__,
+        # model_config=model_config,
+        **fields,
+    )
+    return DynamicModel(**data)
 
 
 def merge_two_dicts(y, x):
