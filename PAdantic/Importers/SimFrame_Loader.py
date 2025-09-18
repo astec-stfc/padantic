@@ -67,7 +67,7 @@ with open(
 
 class SimFrame_Conversion(BaseModel):
     typeclass: Any
-    PV_class: str
+    PV_class: str = None
     hardware_class: str
     hardware_type: Union[str, None] = Field(validate_default=True, default=None)
 
@@ -80,69 +80,69 @@ class SimFrame_Conversion(BaseModel):
 
 SimFrame_Elements = {
     "quadrupole": SimFrame_Conversion(
-        typeclass=Quadrupole, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Quadrupole, hardware_class="Magnet"
     ),
     "dipole": SimFrame_Conversion(
-        typeclass=Dipole, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Dipole, hardware_class="Magnet"
     ),
     "sextupole": SimFrame_Conversion(
-        typeclass=Sextupole, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Sextupole, hardware_class="Magnet"
     ),
     "solenoid": SimFrame_Conversion(
-        typeclass=Solenoid, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Solenoid, hardware_class="Magnet"
     ),
     "marker": SimFrame_Conversion(
-        typeclass=Marker, PV_class="Simulation", hardware_class="Simulation"
+        typeclass=Marker, hardware_class="Simulation"
     ),
     "aperture": SimFrame_Conversion(
-        typeclass=Aperture, PV_class="Simulation", hardware_class="Simulation"
+        typeclass=Aperture, hardware_class="Simulation"
     ),
     "collimator": SimFrame_Conversion(
-        typeclass=Collimator, PV_class="Simulation", hardware_class="Simulation"
+        typeclass=Collimator, hardware_class="Simulation"
     ),
     "beam_position_monitor": SimFrame_Conversion(
-        typeclass=BPM, PV_class="BPM", hardware_class="Diagnostic"
+        typeclass=BPM, hardware_class="Diagnostic"
     ),
     "beam_arrival_monitor": SimFrame_Conversion(
-        typeclass=BAM, PV_class="BAM", hardware_class="Diagnostic"
+        typeclass=BAM, hardware_class="Diagnostic"
     ),
     "bunch_length_monitor": SimFrame_Conversion(
-        typeclass=BLM, PV_class="BLM", hardware_class="Diagnostic"
+        typeclass=BLM, hardware_class="Diagnostic"
     ),
     "wall_current_monitor": SimFrame_Conversion(
-        typeclass=WCM, PV_class="Charge", hardware_class="Diagnostic"
+        typeclass=WCM, hardware_class="Diagnostic"
     ),
     "faraday_cup": SimFrame_Conversion(
-        typeclass=FCM, PV_class="Charge", hardware_class="Diagnostic"
+        typeclass=FCM, hardware_class="Diagnostic"
     ),
     "integrated_current_transformer": SimFrame_Conversion(
-        typeclass=ICT, PV_class="Charge", hardware_class="Diagnostic"
+        typeclass=ICT, hardware_class="Diagnostic"
     ),
     "screen": SimFrame_Conversion(
-        typeclass=Screen, PV_class="Screen", hardware_class="Diagnostic"
+        typeclass=Screen, hardware_class="Diagnostic"
     ),
     # 'rf_deflecting_cavity': SimFrame_Conversion(typeclass=Sextupole, PV_class='Magnet'),
     "kicker": SimFrame_Conversion(
-        typeclass=Combined_Corrector, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Combined_Corrector, hardware_class="Magnet"
     ),
     "hkicker": SimFrame_Conversion(
-        typeclass=Horizontal_Corrector, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Horizontal_Corrector, hardware_class="Magnet"
     ),
     "vkicker": SimFrame_Conversion(
-        typeclass=Vertical_Corrector, PV_class="Magnet", hardware_class="Magnet"
+        typeclass=Vertical_Corrector, hardware_class="Magnet"
     ),
     # 'monitor': SimFrame_Conversion(typeclass=Sextupole, PV_class='Magnet'),
     "longitudinal_wakefield": SimFrame_Conversion(
-        typeclass=Wakefield, PV_class="Simulation", hardware_class="Simulation"
+        typeclass=Wakefield, hardware_class="Simulation"
     ),
     "cavity": SimFrame_Conversion(
-        typeclass=RFCavity, PV_class="RFCavity", hardware_class="RF"
+        typeclass=RFCavity, hardware_class="RF"
     ),
     "rf_deflecting_cavity": SimFrame_Conversion(
-        typeclass=RFDeflectingCavity, PV_class="RFCavity", hardware_class="RF"
+        typeclass=RFDeflectingCavity, hardware_class="RF"
     ),
     "shutter": SimFrame_Conversion(
-        typeclass=Shutter, PV_class="Shutter", hardware_class="Vacuum"
+        typeclass=Shutter, hardware_class="Vacuum"
     ),
 }
 
@@ -194,7 +194,7 @@ def interpret_SimFrame_Element(name, elem):
             }
         )
         elemmodel = felem(**fields)
-        if SimFrame_Elements[elem["type"]].PV_class == "Magnet":
+        if SimFrame_Elements[elem["type"]].hardware_class == "Magnet":
             elemmodel = add_magnet_table_parameters(
                 name, elemmodel, get_SimFrame_PV(name)
             )
@@ -248,7 +248,7 @@ def read_SimFrame_YAML(filename):
                     machine_area=elemmodel.machine_area,
                     physical=elemmodel.physical,
                     diagnostic=Camera_Diagnostic_Type(type=camtype),
-                    controls=CameraPV.with_defaults(elemmodel.diagnostic.camera_name),
+                    controls=None,
                 )
                 elemlist.update({elemmodel.diagnostic.camera_name: elemmodelcam})
             else:

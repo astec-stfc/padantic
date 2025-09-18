@@ -7,7 +7,7 @@ from PAdantic.PAdantic import PAdantic  # noqa E402
 machine = PAdantic(
     layout="../../padantic-lattices/CLARA/layouts.yaml",
     section="../../padantic-lattices/CLARA/sections.yaml",
-    element_list="../../padantic-lattices/CLARA/YAML/",
+    element_list="../../padantic-lattices/NEW/CLARA/YAML/",
 )
 
 
@@ -23,7 +23,7 @@ def unique_list(a_list):
     return seen
 
 
-machine.default_layout = "SP3"
+machine.default_path = "SP3"
 print(machine.get_elements_s_pos())
 pprint({d: machine.get_element(d).base_model_dump() for d in machine.get_dipoles()})
 # exit()
