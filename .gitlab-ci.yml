@@ -30,37 +30,37 @@ coverage:
         coverage_format: cobertura
         path: coverage.xml
 
-local_publish:
-  image: python:3.10
-  stage: publish
-  variables:
-    TWINE_USERNAME: gitlab-ci-token
-    TWINE_PASSWORD: $CI_JOB_TOKEN
-  before_script:
-    - python -m pip install --upgrade pip
-    - python -m pip install --upgrade build
-    - python -m pip install twine
-  script:
-    - python -m build
-    - python -m twine upload --config-file .pypirc --repository local ./dist/* --verbose
-  only:
-    - main
-    - tags
+# local_publish:
+#   image: python:3.10
+#   stage: publish
+#   variables:
+#     TWINE_USERNAME: gitlab-ci-token
+#     TWINE_PASSWORD: $CI_JOB_TOKEN
+#   before_script:
+#     - python -m pip install --upgrade pip
+#     - python -m pip install --upgrade build
+#     - python -m pip install twine
+#   script:
+#     - python -m build
+#     - python -m twine upload --config-file .pypirc --repository local ./dist/* --verbose
+#   only:
+#     - main
+#     - tags
 
 
-gitlab_publish:
-  image: python:3.10
-  stage: publish
-  variables:
-    TWINE_USERNAME: gitlab-ci-token
-    TWINE_PASSWORD: $CI_JOB_TOKEN
-  before_script:
-    - python -m pip install --upgrade pip
-    - python -m pip install --upgrade build
-    - python -m pip install twine
-  script:
-    - python -m build
-    - python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi ./dist/* --verbose
-  only:
-    - main
-    - tags
+# gitlab_publish:
+#   image: python:3.10
+#   stage: publish
+#   variables:
+#     TWINE_USERNAME: gitlab-ci-token
+#     TWINE_PASSWORD: $CI_JOB_TOKEN
+#   before_script:
+#     - python -m pip install --upgrade pip
+#     - python -m pip install --upgrade build
+#     - python -m pip install twine
+#   script:
+#     - python -m build
+#     - python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi ./dist/* --verbose
+#   only:
+#     - main
+#     - tags
